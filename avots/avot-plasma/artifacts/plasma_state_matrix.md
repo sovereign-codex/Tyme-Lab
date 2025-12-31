@@ -27,7 +27,7 @@ It exists to expose assumptions.
 | Containment | Open air / weak | Partial | Strong magnetic | Geometric / field-based |
 | Stability Mechanism | Continuous input | Mixed | Heat + confinement | Phase coherence |
 | Geometry Sensitivity | High | Moderate | High | Critical |
-| Water Interaction | Common | Occasional | Avoided | Central |
+| Water Interaction | Common † | Occasional | Avoided | Central |
 | Crystal Interaction | Observed | Rare | N/A | Core hypothesis |
 | Typical Narrative | “Low energy curiosity” | “Unstable middle” | “Only real plasma” | “Speculative” |
 | Main Blind Spot | Under-theorized | Poorly categorized | Heat assumed necessary | Unvalidated |
@@ -41,6 +41,18 @@ It exists to expose assumptions.
 - Water interaction is common in cold plasma and excluded in fusion contexts.
 - Stability is described, not explained, in most regimes.
 
+---
+
+## Cell Annotations
+
+† **Cold Plasma × Water Interaction**
+
+See focused analysis:
+- artifacts/cold_plasma_water_interaction.md
+
+This cell is experimentally real but theoretically underdeveloped.
+It introduces tension with fusion-oriented plasma models
+and motivates exploration of non-thermal stability mechanisms.
 ---
 
 ## Tensions Introduced
