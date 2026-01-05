@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tyme Phase One Test Harness</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      background: #050b0e;
+      color: #cfefff;
+      font-family: system-ui, monospace;
+      padding: 1rem;
+    }
+    h1 { font-size: 1.2rem; }
+    .pass { color: #4cffb0; }
+    .fail { color: #ff6b6b; }
+    pre {
+      background: #0b1a1f;
+      padding: 0.75rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    button {
+      margin: 0.5rem 0;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🧪 Tyme Phase One Test Harness</h1>
+
+<button id="runTests">Run Phase One Tests</button>
+
+<div id="output"></div>
+
+<script type="module">
+  import { validateAvotPayload } from "./tyme/contracts.js";
+  import { runTymeDebug } from "./tyme/debugEngine.js";
+  import {
+    computeCoherence,
+    computeDrift,
+    computeConfidenceHealth,
+    determineOverallStatus
+  } from "./tyme/scoring.js";
+  import { TymeLedger } from "./tyme/ledger.js";
+
+  const out = document.getElementById("output");
+
+  function log(title, data, ok = true) {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <h3 class="${ok ? "pass" : "fail"}">${ok ? "✔" : "✖"} ${title}</h3>
+      <pre>${JSON.stringify(data, null, 2)}</pre>
+    `;
+    out.appendChild(div);
+  }
+
+  document.getElementById("runTests").onclick = () => {
+    out.innerHTML = "";
+
+    /* --- Minimal known-good AVOT payload --- */
+    const avot = {
+      contract_version: "AVOT-RC-1.0",
+      avot_id: "AVOT-Test",
+      mission: { directive: "Test coherence", scope: "Controlled test", constraints: ["test"], success_criteria: ["works"] },
+      execution: { methods: ["analysis"], sources_consulted: ["fixture"], exploration_path: "Direct" },
+      findings: [{ statement: "Test finding", context: "test", relevance: "test" }],
+      claims: [{
+        claim_id: "C1",
+        statement: "Test claim",
+        supporting_findings: ["Test finding"],
+        confidence: 0.5,
+        evidence_type: ["test"],
+        counterpoints_considered: []
+      }],
+      uncertainties: [{ description: "Test unknown", impact: "LOW" }],
+      assumptions: [{ assumption: "Test assumption", justification: "fixture", risk_if_false: "LOW" }],
+      limitations: ["Test limit"],
+      confidence_summary: { overall_confidence: 0.5, confidence_rationale: "test" },
+      reasoning_trace: "This is a sufficient reasoning trace for testing.",
+      artifacts: [],
+      recommendations: ["Proceed"],
+      self_assessment: { mission_alignment: "HIGH", coherence_rating: "HIGH", known_failures: [], notes: "" }
+    };
+
+    /* --- Test 1: Validation --- */
+    const validation = validateAvotPayload(avot);
+    log("Contract Validation", validation, validation.ok);
+
+    /* --- Test 2: Debug Engine --- */
+    const debug = runTymeDebug(avot);
+    log("Debug Report", debug, debug.overall_status !== "INCOHERENT");
+
+    /* --- Test 3: Scoring --- */
+    const coh = computeCoherence(avot, debug.flags);
+    const dr = computeDrift(avot);
+    const ch = computeConfidenceHealth(avot);
+    const status = determineOverallStatus(avot, debug.flags, coh.coherence, dr.drift, ch.confidence_health);
+
+    log("Scoring", { coh, dr, ch, status }, status !== "INCOHERENT");
+
+    /* --- Test 4: Ledger --- */
+    const ledger = new TymeLedger();
+    const pid = ledger.dispatchProbe("MSN-TEST", "AVOT-Test", avot.mission);
+    ledger.markReturned(pid, avot);
+    ledger.markDebugged(pid, debug);
+    ledger.markRendered(pid);
+
+    log("Ledger Record", ledger.getProbe(pid), true);
+  };
+</script>
+
+</body>
+</html>
