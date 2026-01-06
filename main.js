@@ -1,12 +1,22 @@
 /* ============================================================
-   TYME — PHASE TWO ORCHESTRATOR (REFactored main.js)
+   TYME — PHASE THREE ORCHESTRATOR (Full Rewrite main.js)
    ------------------------------------------------------------
-   Responsibilities:
-   - Instantiate TymeLedger
-   - Generate mock AVOT probes
-   - Run debug + scoring (Phase One)
-   - Persist to ledger
-   - Delegate ALL UI rendering to UI modules
+   Guarantees:
+   - Ledger is the single source of truth
+   - Phase One engines are used as-is (no duplication)
+   - Meta-Debug runs on real ledger snapshots
+   - UI is projection only (render modules)
+   - iPhone-friendly: single-file drop-in replacement
+
+   Notes:
+   - This file assumes these exist:
+       ./tyme/debugEngine.js
+       ./tyme/scoring.js
+       ./tyme/ledger.js
+       ./tyme/metaDebug.js
+       ./ui/renderProbeList.js
+       ./ui/renderProbeDetail.js
+       ./ui/renderConsole.js
    ============================================================ */
 
 import { runTymeDebug } from "./tyme/debugEngine.js";
@@ -17,13 +27,14 @@ import {
   determineOverallStatus
 } from "./tyme/scoring.js";
 import { TymeLedger } from "./tyme/ledger.js";
+import { runMetaDebug } from "./tyme/metaDebug.js";
 
 import { renderProbeList } from "./ui/renderProbeList.js";
 import { renderProbeDetail } from "./ui/renderProbeDetail.js";
 import { renderConsole, pushConsole } from "./ui/renderConsole.js";
 
 /* -----------------------------
-   DOM References
+   DOM References (Phase Two layout)
 ----------------------------- */
 const probeListEl = document.getElementById("probe-list");
 const probeDetailEl = document.getElementById("probe-detail");
@@ -39,24 +50,75 @@ const btnClearLedger = document.getElementById("btn-clear-ledger");
 /* -----------------------------
    State
 ----------------------------- */
-const ledger = new TymeLedger();
+let ledger = new TymeLedger();
 let selectedProbeId = null;
 
-/** Console buffer (append-only) */
+/** Append-only console buffer */
 const consoleBuffer = [];
 
-/* -----------------------------
-   Mock AVOT Payloads (Phase Two Only)
------------------------------ */
-function mockAvotPayload(idSuffix, confidence = 0.6) {
+/** Latest meta report snapshot */
+let lastMetaReport = null;
+
+/* ============================================================
+   Helpers
+   ============================================================ */
+
+function setConsoleStatus(text) {
+  if (consoleStatusEl) consoleStatusEl.textContent = text;
+}
+
+function logInfo(msg) {
+  pushConsole(consoleBuffer, msg, "INFO");
+  setConsoleStatus("Updated");
+  renderConsole(consoleEl, consoleBuffer);
+}
+
+function logWarn(msg) {
+  pushConsole(consoleBuffer, msg, "WARN");
+  setConsoleStatus("Warning");
+  renderConsole(consoleEl, consoleBuffer);
+}
+
+function logError(msg) {
+  pushConsole(consoleBuffer, msg, "ERROR");
+  setConsoleStatus("Error");
+  renderConsole(consoleEl, consoleBuffer);
+}
+
+function getSelectedProbe() {
+  return selectedProbeId ? ledger.getProbe(selectedProbeId) : null;
+}
+
+function refreshUI() {
+  const probes = ledger.listProbes();
+  if (probeCountEl) probeCountEl.textContent = String(probes.length);
+
+  renderProbeList(probeListEl, ledger, onSelectProbe);
+  renderProbeDetail(probeDetailEl, getSelectedProbe());
+
+  if (selectedProbeBadge) {
+    const sel = getSelectedProbe();
+    selectedProbeBadge.textContent = sel ? sel.avot_id : "None selected";
+  }
+
+  renderConsole(consoleEl, consoleBuffer);
+}
+
+/* ============================================================
+   Mock Payload Factory (Phase Three still mock)
+   ============================================================ */
+
+function mockAvotPayload(idSuffix, confidence = 0.6, withCounterpoints = false) {
+  const findingStatement = "Coherence can degrade with weak evidence";
+
   return {
     contract_version: "AVOT-RC-1.0",
     avot_id: `AVOT-MOCK-${idSuffix}`,
     mission: {
       directive: "Explore coherence boundaries",
-      scope: "Phase Two mock testing",
-      constraints: ["no live sources"],
-      success_criteria: ["traceable reasoning"]
+      scope: "Phase Three mock testing (Meta-Debug active)",
+      constraints: ["no live sources", "preserve artifacts"],
+      success_criteria: ["traceable reasoning", "stable diagnostics"]
     },
     execution: {
       methods: ["analysis"],
@@ -64,172 +126,206 @@ function mockAvotPayload(idSuffix, confidence = 0.6) {
       exploration_path: "Controlled"
     },
     findings: [
-      {
-        statement: "Coherence can degrade with weak evidence",
-        context: "Mock test",
-        relevance: "System validation"
-      }
+      { statement: findingStatement, context: "Mock test", relevance: "System validation" }
     ],
     claims: [
       {
         claim_id: "CL-1",
-        statement: "The system identifies partial coherence correctly",
-        supporting_findings: ["Coherence can degrade with weak evidence"],
+        statement: "Tyme can diagnose coherence and drift conservatively",
+        supporting_findings: [findingStatement],
         confidence,
         evidence_type: ["synthetic"],
-        counterpoints_considered: []
+        counterpoints_considered: withCounterpoints ? ["Synthetic evidence is limited"] : []
       }
     ],
-    uncertainties: [
-      { description: "Synthetic data limits realism", impact: "LOW" }
-    ],
+    uncertainties: [{ description: "Synthetic data limits realism", impact: "LOW" }],
     assumptions: [
-      {
-        assumption: "Mock data approximates structure",
-        justification: "Phase Two only",
-        risk_if_false: "LOW"
-      }
+      { assumption: "Mock data approximates structure", justification: "Phase Three only", risk_if_false: "LOW" }
     ],
     limitations: ["No real-world sourcing"],
     confidence_summary: {
       overall_confidence: confidence,
-      confidence_rationale: "Synthetic confidence value"
+      confidence_rationale: "Synthetic confidence value for calibration testing"
     },
     reasoning_trace:
-      "This probe intentionally uses synthetic data to test Tyme’s scoring and rendering logic.",
+      "This probe uses synthetic evidence to test Tyme’s deterministic debug + scoring + meta-diagnostics pipeline.",
     artifacts: [],
-    recommendations: ["Proceed to UI verification"],
+    recommendations: ["Proceed to UI verification", "Inspect meta stability"],
     self_assessment: {
       mission_alignment: "HIGH",
       coherence_rating: "MEDIUM",
       known_failures: [],
-      notes: "Mock probe"
+      notes: "Mock probe for Phase Three"
     }
   };
 }
 
-/* -----------------------------
-   Core Orchestration
------------------------------ */
-function runMockProbes() {
-  clearLedger();
+/* ============================================================
+   Core Pipeline (Single probe)
+   ============================================================ */
 
-  const mocks = [
-    mockAvotPayload("A", 0.45),
-    mockAvotPayload("B", 0.65),
-    mockAvotPayload("C", 0.85)
-  ];
+function evaluateProbe(avotPayload) {
+  // 1) Dispatch
+  const probeId = ledger.dispatchProbe("MSN-PHASE3", avotPayload.avot_id, avotPayload.mission);
 
-  pushConsole(consoleBuffer, "Running mock probes…");
+  // 2) Return payload
+  ledger.markReturned(probeId, avotPayload);
 
-  mocks.forEach(avot => {
-    const probeId = ledger.dispatchProbe(
-      "MSN-PHASE2",
-      avot.avot_id,
-      avot.mission
-    );
+  // 3) Debug (Phase One)
+  const debug = runTymeDebug(avotPayload);
 
-    ledger.markReturned(probeId, avot);
+  // 4) Scoring (Phase One)
+  const coh = computeCoherence(avotPayload, debug.flags);
+  const dr = computeDrift(avotPayload);
+  const ch = computeConfidenceHealth(avotPayload);
+  const status = determineOverallStatus(
+    avotPayload,
+    debug.flags,
+    coh.coherence,
+    dr.drift,
+    ch.confidence_health
+  );
 
-    const debug = runTymeDebug(avot);
-
-    const coh = computeCoherence(avot, debug.flags);
-    const dr = computeDrift(avot);
-    const ch = computeConfidenceHealth(avot);
-
-    const status = determineOverallStatus(
-      avot,
-      debug.flags,
-      coh.coherence,
-      dr.drift,
-      ch.confidence_health
-    );
-
-    ledger.markDebugged(probeId, {
-      ...debug,
-      scores: { coh, dr, ch, status }
-    });
-
-    ledger.markRendered(probeId);
-
-    pushConsole(
-      consoleBuffer,
-      `${avot.avot_id} → ${status}`,
-      status === "INCOHERENT" ? "WARN" : "INFO"
-    );
+  // 5) Persist debug+scores
+  ledger.markDebugged(probeId, {
+    ...debug,
+    scores: { coh, dr, ch, status }
   });
 
-  renderAll();
-  pushConsole(consoleBuffer, "Mock probes complete.");
-  renderConsole(consoleEl, consoleBuffer);
+  // 6) Rendered
+  ledger.markRendered(probeId);
+
+  return { probeId, status };
 }
 
-/* -----------------------------
-   Rendering Delegation
------------------------------ */
-function renderAll() {
+/* ============================================================
+   Meta-Debug Pipeline (Cross-probe)
+   ============================================================ */
+
+function runMetaDiagnostics() {
   const probes = ledger.listProbes();
-  probeCountEl.textContent = probes.length.toString();
+  lastMetaReport = runMetaDebug(probes);
 
-  renderProbeList(probeListEl, ledger, onSelectProbe);
+  // Log top-line meta state (deterministic, minimal)
+  if (!lastMetaReport || lastMetaReport.probe_count === 0) {
+    logWarn("META → No probes available for meta diagnostics.");
+    return;
+  }
 
-  const selectedProbe = selectedProbeId
-    ? ledger.getProbe(selectedProbeId)
-    : null;
+  const stab = lastMetaReport.stability_rating;
+  const cons = lastMetaReport.consensus_score;
 
-  renderProbeDetail(probeDetailEl, selectedProbe);
+  // Severity mapping for console tone
+  if (stab === "UNSTABLE") {
+    logWarn(`META → Stability: ${stab}, Consensus: ${cons}`);
+  } else if (stab === "WATCH") {
+    logWarn(`META → Stability: ${stab}, Consensus: ${cons}`);
+  } else {
+    logInfo(`META → Stability: ${stab}, Consensus: ${cons}`);
+  }
 
-  selectedProbeBadge.textContent = selectedProbe
-    ? selectedProbe.avot_id
-    : "None selected";
-
-  renderConsole(consoleEl, consoleBuffer);
+  const top = lastMetaReport.dominant_flags?.[0];
+  if (top && top.code && top.code !== "UNKNOWN_FLAG") {
+    logWarn(`META → Dominant flag: ${top.code} (${top.count})`);
+  }
 }
 
-/* -----------------------------
-   Selection
------------------------------ */
+/* ============================================================
+   Actions
+   ============================================================ */
+
+function runMockProbesPhase3() {
+  hardResetSession();
+
+  logInfo("Running Phase Three mock probes…");
+
+  // Intentionally varied confidence / counterpoints to exercise scoring & meta layer
+  const mocks = [
+    mockAvotPayload("A", 0.45, true),
+    mockAvotPayload("B", 0.65, false),
+    mockAvotPayload("C", 0.85, false)
+  ];
+
+  const outcomes = [];
+
+  for (const avot of mocks) {
+    const { probeId, status } = evaluateProbe(avot);
+    outcomes.push({ probeId, avot: avot.avot_id, status });
+
+    if (status === "INCOHERENT") logWarn(`${avot.avot_id} → ${status}`);
+    else logInfo(`${avot.avot_id} → ${status}`);
+  }
+
+  // Select most recent by default
+  const newest = ledger.listProbes()[0];
+  if (newest) {
+    selectedProbeId = newest.probe_id;
+    ledger.selectProbe(selectedProbeId);
+  }
+
+  // Run meta diagnostics on the resulting ledger snapshot
+  runMetaDiagnostics();
+
+  refreshUI();
+  logInfo("Phase Three mock run complete.");
+}
+
 function onSelectProbe(probeId) {
   selectedProbeId = probeId;
   ledger.selectProbe(probeId);
-  pushConsole(consoleBuffer, `Selected probe ${probeId}`);
-  renderAll();
+  logInfo(`Selected probe ${probeId}`);
+  refreshUI();
 }
 
-/* -----------------------------
-   Utilities
------------------------------ */
-function clearLedger() {
-  // Re-instantiate to guarantee a clean slate
-  while (ledger.listProbes().length) {
-    // no-op; ledger is in-memory; we recreate state
-    break;
-  }
+function hardResetSession() {
+  // Recreate ledger for a deterministic clean slate
+  ledger = new TymeLedger();
   selectedProbeId = null;
+  lastMetaReport = null;
   consoleBuffer.length = 0;
 
-  // Hard reset by reloading page state
-  // (simplest deterministic reset for Phase Two)
-  probeListEl.innerHTML = `<div class="empty">No probes present.</div>`;
-  probeDetailEl.innerHTML = `<div class="empty">No probe selected.</div>`;
-  consoleEl.innerHTML = `<div class="empty">Console idle.</div>`;
-  probeCountEl.textContent = "0";
-  selectedProbeBadge.textContent = "None selected";
-  consoleStatusEl.textContent = "Cleared";
+  // Clear panels to safe defaults
+  if (probeListEl) probeListEl.innerHTML = `<div class="empty">No probes present.</div>`;
+  if (probeDetailEl) probeDetailEl.innerHTML = `<div class="empty">No probe selected.</div>`;
+  if (consoleEl) consoleEl.innerHTML = `<div class="empty">Console idle.</div>`;
 
-  pushConsole(consoleBuffer, "Ledger cleared.");
+  if (probeCountEl) probeCountEl.textContent = "0";
+  if (selectedProbeBadge) selectedProbeBadge.textContent = "None selected";
+  setConsoleStatus("Cleared");
+
+  pushConsole(consoleBuffer, "Session reset.", "INFO");
   renderConsole(consoleEl, consoleBuffer);
 }
 
-/* -----------------------------
+/* ============================================================
    Event Wiring
------------------------------ */
-btnRunMock.onclick = runMockProbes;
-btnClearLedger.onclick = clearLedger;
+   ============================================================ */
 
-/* -----------------------------
+if (btnRunMock) btnRunMock.onclick = runMockProbesPhase3;
+if (btnClearLedger) btnClearLedger.onclick = hardResetSession;
+
+/* ============================================================
+   Dev / iPhone Inspection Hooks (read-only)
+   ============================================================ */
+
+// Get last meta report snapshot
+window.__TYME_META__ = () => lastMetaReport;
+
+// Get ledger snapshot (probes only)
+window.__TYME_LEDGER__ = () => ledger.listProbes();
+
+// Force meta recompute (if you later add real probes)
+window.__TYME_META_RERUN__ = () => {
+  runMetaDiagnostics();
+  refreshUI();
+  return lastMetaReport;
+};
+
+/* ============================================================
    Init
------------------------------ */
-pushConsole(consoleBuffer, "Phase Two orchestrator ready.");
-renderAll();
+   ============================================================ */
+
+pushConsole(consoleBuffer, "Phase Three orchestrator ready (Meta-Debug enabled).", "INFO");
+setConsoleStatus("Ready");
+refreshUI();
 renderConsole(consoleEl, consoleBuffer);
