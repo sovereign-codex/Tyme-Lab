@@ -1,72 +1,20 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Tyme Hall</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tyme Hall — Phase Two</title>
 
-  <!-- OBISIDIAN DOOR HEADER -->
-  <header class="tyme-header">
-    <div class="tyme-header-inner">
-      <div class="tyme-sigil">⧈</div>
-      <div>
-        <div class="tyme-title">TYME HALL</div>
-        <div class="tyme-subtitle">SOVEREIGN NODE INTERFACE</div>
-      </div>
-    </div>
-  </header>
-
-  <!-- HERO / DOOR TEXT -->
-  <section class="door-hero">
-    <p>Welcome to the Obsidian Hall. Each chamber below opens into a facet of Tyme’s living intelligence.</p>
-    <button class="tyme-button" id="enterButton">Enter via Console</button>
-  </section>
-
-  <!-- HALL GRID -->
-  <main class="hall-wrapper">
-    <div class="hall-grid">
-      <div class="hall-tile" data-target="scrolls/lab.html">LAB</div>
-      <div class="hall-tile" data-target="scrolls/codex.html">CODEX</div>
-      <div class="hall-tile" data-target="scrolls/console.html">CONSOLE</div>
-
-      <div class="hall-tile" data-target="scrolls/signals.html">SIGNALS</div>
-      <div class="hall-tile" data-target="scrolls/avots.html">AVOTS</div>
-      <div class="hall-tile" data-target="scrolls/panoptic.html">PANOPTIC</div>
-
-      <div class="hall-tile" data-target="scrolls/glyphs.html">GLYPHS</div>
-      <div class="hall-tile" data-target="scrolls/archives.html">ARCHIVES</div>
-      <div class="hall-tile" data-target="scrolls/portals.html">PORTALS</div>
-    </div>
-
-    <section class="hall-frame-wrap">
-      <iframe id="scrollFrame" class="hall-frame" src="scrolls/console.html"></iframe>
-    </section>
-  </main>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const iframe = document.getElementById("scrollFrame");
-
-      document.querySelectorAll(".hall-tile").forEach(tile => {
-        tile.addEventListener("click", () => {
-          const target = tile.getAttribute("data-target");
-          iframe.src = target;
-          window.scrollTo({ top: document.querySelector(".hall-wrapper").offsetTop, behavior: "smooth" });
-        });
-      });
-
-      const enterButton = document.getElementById("enterButton");
-      if (enterButton) {
-        enterButton.addEventListener("click", () => {
-          iframe.src = "scrolls/console.html";
-          window.scrollTo({ top: document.querySelector(".hall-wrapper").offsetTop, behavior: "smooth" });
-        });
-      }
-    });
-  </script>
-
-</body>
-</html>
+  <!-- Minimal Tyme Hall aesthetic (self-contained) -->
+  <style>
+    :root{
+      --bg0:#050b0e;
+      --bg1:#081318;
+      --panel:#0a1419cc;
+      --stroke:#1ce8ff55;
+      --stroke2:#1ce8ff33;
+      --glow:#16f0ff;
+      --text:#cfefff;
+      --muted:#7fa9b7;
+      --good:#4cffb0;
+      --warn:#ffd
