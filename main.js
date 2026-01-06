@@ -1,229 +1,246 @@
 /* ============================================================
-   TYME HALL — Phase 1: Routing Scaffold
-   - Non-invasive: does not require HTML changes yet
-   - Hash-based routing (#lab, #glyphs...) safe for GitHub Pages
-   - Auto-detects likely nav buttons and wires click listeners
-   - Renders placeholder only if #route-view exists
+   TYME — PHASE TWO ORCHESTRATOR (MAIN.JS)
+   ------------------------------------------------------------
+   Responsibilities:
+   - Instantiate TymeLedger
+   - Generate mock AVOT probes
+   - Run debug + scoring
+   - Persist to ledger
+   - Render UI from ledger state
    ============================================================ */
 
-(() => {
-  "use strict";
+import { runTymeDebug } from "./tyme/debugEngine.js";
+import {
+  computeCoherence,
+  computeDrift,
+  computeConfidenceHealth,
+  determineOverallStatus
+} from "./tyme/scoring.js";
+import { TymeLedger } from "./tyme/ledger.js";
 
-  // ---------- Route Registry (placeholders for now) ----------
-  const ROUTES = {
-    lab: {
-      title: "Laboratory",
-      content: "Simulation systems and experimental scaffolds coming online."
+/* -----------------------------
+   DOM References
+----------------------------- */
+const probeListEl = document.getElementById("probe-list");
+const probeDetailEl = document.getElementById("probe-detail");
+const consoleEl = document.getElementById("tyme-console");
+
+const probeCountEl = document.getElementById("probe-count");
+const selectedProbeBadge = document.getElementById("selected-probe-badge");
+const consoleStatusEl = document.getElementById("console-status");
+
+const btnRunMock = document.getElementById("btn-run-mock");
+const btnClearLedger = document.getElementById("btn-clear-ledger");
+
+/* -----------------------------
+   State
+----------------------------- */
+const ledger = new TymeLedger();
+let selectedProbeId = null;
+
+/* -----------------------------
+   Mock AVOT Payloads
+----------------------------- */
+function mockAvotPayload(idSuffix, confidence = 0.6) {
+  return {
+    contract_version: "AVOT-RC-1.0",
+    avot_id: `AVOT-MOCK-${idSuffix}`,
+    mission: {
+      directive: "Explore coherence boundaries",
+      scope: "Phase Two mock testing",
+      constraints: ["no live sources"],
+      success_criteria: ["traceable reasoning"]
     },
-    codex: {
-      title: "Codex",
-      content: "Scrolls, laws, and encoded knowledge will appear here."
+    execution: {
+      methods: ["analysis"],
+      sources_consulted: ["synthetic"],
+      exploration_path: "Controlled"
     },
-    console: {
-      title: "Console",
-      content: "Direct command interface awaiting input."
+    findings: [
+      {
+        statement: "Coherence can degrade with weak evidence",
+        context: "Mock test",
+        relevance: "System validation"
+      }
+    ],
+    claims: [
+      {
+        claim_id: "CL-1",
+        statement: "The system identifies partial coherence correctly",
+        supporting_findings: ["Coherence can degrade with weak evidence"],
+        confidence,
+        evidence_type: ["synthetic"],
+        counterpoints_considered: []
+      }
+    ],
+    uncertainties: [
+      { description: "Synthetic data limits realism", impact: "LOW" }
+    ],
+    assumptions: [
+      {
+        assumption: "Mock data approximates structure",
+        justification: "Phase Two only",
+        risk_if_false: "LOW"
+      }
+    ],
+    limitations: ["No real-world sourcing"],
+    confidence_summary: {
+      overall_confidence: confidence,
+      confidence_rationale: "Synthetic confidence value"
     },
-    signals: {
-      title: "Signals",
-      content: "Telemetry, drift indices, and resonance metrics will appear here."
-    },
-    avots: {
-      title: "AVOTs",
-      content: "Autonomous Voices of Thought directory and invocation tools."
-    },
-    panoptic: {
-      title: "Panoptic",
-      content: "Evolution matrix and state vector frames."
-    },
-    glyphs: {
-      title: "Glyphs",
-      content: "Symbolic sanctuary: seals, sigils, and encoded marks."
-    },
-    archives: {
-      title: "Archives",
-      content: "Temporal memory chamber: sessions, orchestration logs, snapshots."
-    },
-    portals: {
-      title: "Portals",
-      content: "External gateways to repos, nodes, consoles, and future endpoints."
+    reasoning_trace:
+      "This probe intentionally uses synthetic data to test Tyme’s scoring and rendering logic.",
+    artifacts: [],
+    recommendations: ["Proceed to UI verification"],
+    self_assessment: {
+      mission_alignment: "HIGH",
+      coherence_rating: "MEDIUM",
+      known_failures: [],
+      notes: "Mock probe"
     }
   };
+}
 
-  // Aliases help when button labels differ slightly.
-  const ROUTE_ALIASES = {
-    "avot": "avots",
-    "avot directory": "avots",
-    "archive": "archives",
-    "portal": "portals",
-    "signal": "signals"
-  };
+/* -----------------------------
+   Core Orchestration
+----------------------------- */
+function runMockProbes() {
+  clearLedger();
 
-  // ---------- Utilities ----------
-  const log = (...args) => console.log("[Tyme]", ...args);
+  const mocks = [
+    mockAvotPayload("A", 0.45),
+    mockAvotPayload("B", 0.65),
+    mockAvotPayload("C", 0.85)
+  ];
 
-  function normalizeKey(str) {
-    return String(str || "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, " ");
-  }
+  mocks.forEach((avot, index) => {
+    const probeId = ledger.dispatchProbe(
+      "MSN-PHASE2",
+      avot.avot_id,
+      avot.mission
+    );
 
-  function inferRouteFromElement(el) {
-    if (!el) return null;
+    ledger.markReturned(probeId, avot);
 
-    // 1) Explicit route attribute wins
-    const dataRoute = el.getAttribute("data-route");
-    if (dataRoute) return normalizeKey(dataRoute).replace(/\s/g, "");
+    const debug = runTymeDebug(avot);
 
-    // 2) Try id / aria-label / title
-    const fromId = el.id && normalizeKey(el.id);
-    const fromAria = el.getAttribute("aria-label") && normalizeKey(el.getAttribute("aria-label"));
-    const fromTitle = el.getAttribute("title") && normalizeKey(el.getAttribute("title"));
+    const coh = computeCoherence(avot, debug.flags);
+    const dr = computeDrift(avot);
+    const ch = computeConfidenceHealth(avot);
 
-    // 3) Text content fallback
-    const fromText = normalizeKey(el.textContent);
+    const status = determineOverallStatus(
+      avot,
+      debug.flags,
+      coh.coherence,
+      dr.drift,
+      ch.confidence_health
+    );
 
-    const candidates = [fromId, fromAria, fromTitle, fromText].filter(Boolean);
-
-    for (const c of candidates) {
-      // Direct match
-      const key = c.replace(/\s/g, "");
-      if (ROUTES[key]) return key;
-
-      // Alias match
-      if (ROUTE_ALIASES[c]) return ROUTE_ALIASES[c];
-
-      // Common label -> route mapping (e.g., "enter via console")
-      if (c.includes("console")) return "console";
-      if (c.includes("lab")) return "lab";
-      if (c.includes("codex")) return "codex";
-      if (c.includes("glyph")) return "glyphs";
-      if (c.includes("archive")) return "archives";
-      if (c.includes("portal")) return "portals";
-      if (c.includes("signal")) return "signals";
-      if (c.includes("panoptic")) return "panoptic";
-      if (c.includes("avot")) return "avots";
-    }
-
-    return null;
-  }
-
-  function getRouteFromHash() {
-    const raw = window.location.hash.replace("#", "");
-    const norm = normalizeKey(raw).replace(/\s/g, "");
-    if (!norm) return null;
-    if (ROUTES[norm]) return norm;
-
-    // Alias support for hash too
-    const spaced = normalizeKey(raw);
-    if (ROUTE_ALIASES[spaced]) return ROUTE_ALIASES[spaced];
-
-    return null;
-  }
-
-  // ---------- Rendering (only if #route-view exists) ----------
-  function renderRoute(routeKey) {
-    const route = ROUTES[routeKey];
-    if (!route) return;
-
-    const view = document.getElementById("route-view");
-    if (!view) {
-      // Phase 1: no forced HTML edits. If no viewport exists, just log.
-      log(`Route selected: ${routeKey} (no #route-view element present — logging only)`);
-      return;
-    }
-
-    view.innerHTML = `
-      <div class="route-shell">
-        <h2 class="route-title">${route.title}</h2>
-        <p class="route-body">${route.content}</p>
-      </div>
-    `;
-
-    log(`Rendered route: ${routeKey}`);
-  }
-
-  // ---------- Wiring ----------
-  function wireNavTargets() {
-    // Priority order:
-    // A) anything explicitly marked with [data-route]
-    // B) known button classes / nav button patterns
-    // C) buttons whose text matches ROUTES keys
-
-    const explicit = Array.from(document.querySelectorAll("[data-route]"));
-
-    const likelyButtons = Array.from(
-      document.querySelectorAll("button, a, [role='button']")
-    ).filter(el => {
-      // avoid wiring obviously irrelevant controls
-      const tag = el.tagName.toLowerCase();
-      const text = normalizeKey(el.textContent);
-      const isButtonish = tag === "button" || tag === "a" || el.getAttribute("role") === "button";
-
-      if (!isButtonish) return false;
-      if (!text) return false;
-
-      // Heuristic: if it contains any route name, it’s likely a nav target
-      const containsRouteWord = Object.keys(ROUTES).some(k => text.includes(k));
-      const containsKnownLabel =
-        text.includes("enter via console") ||
-        text === "lab" ||
-        text === "codex" ||
-        text === "console" ||
-        text === "signals" ||
-        text === "avots" ||
-        text === "panoptic" ||
-        text === "glyphs" ||
-        text === "archives" ||
-        text === "portals";
-
-      return containsRouteWord || containsKnownLabel;
+    ledger.markDebugged(probeId, {
+      ...debug,
+      scores: { coh, dr, ch, status }
     });
 
-    const targets = new Set([...explicit, ...likelyButtons]);
+    ledger.markRendered(probeId);
+  });
 
-    targets.forEach(el => {
-      // Avoid double-wiring
-      if (el.__tymeRouted) return;
+  renderAll();
+  logConsole("Mock probes executed.");
+}
 
-      const routeKey = inferRouteFromElement(el);
-      if (!routeKey || !ROUTES[routeKey]) return;
+/* -----------------------------
+   Rendering
+----------------------------- */
+function renderAll() {
+  renderProbeList();
+  renderProbeDetail();
+  probeCountEl.textContent = ledger.listProbes().length;
+}
 
-      el.__tymeRouted = true;
+function renderProbeList() {
+  const probes = ledger.listProbes();
 
-      el.addEventListener("click", () => {
-        // Phase 1: do not prevent default; do not break existing onclick handlers.
-        // We only add routing intent and optional rendering.
-        window.location.hash = routeKey;
-        log(`Navigating -> #${routeKey}`);
-        renderRoute(routeKey);
-      });
-    });
-
-    log(`Routing scaffold armed. Targets wired: ${Array.from(targets).filter(t => t.__tymeRouted).length}`);
+  if (!probes.length) {
+    probeListEl.innerHTML = `<div class="empty">No probes present.</div>`;
+    return;
   }
 
-  // ---------- Boot ----------
-  function boot() {
-    wireNavTargets();
+  probeListEl.innerHTML = probes
+    .map(p => {
+      const status = p.debug_report?.scores?.status || "UNKNOWN";
+      const cls =
+        status === "COHERENT"
+          ? "good"
+          : status === "PARTIAL"
+          ? "warn"
+          : "bad";
 
-    // If user loads a direct hash route, render if possible
-    const initialRoute = getRouteFromHash();
-    if (initialRoute) {
-      log(`Direct load route detected: #${initialRoute}`);
-      renderRoute(initialRoute);
-    } else {
-      log("No initial route hash detected. Standing by.");
-    }
+      return `
+        <div class="panel"
+             style="margin-bottom:10px; cursor:pointer; border-color: var(--stroke2);"
+             data-probe="${p.probe_id}">
+          <div class="panel-body">
+            <b>${p.avot_id}</b><br/>
+            <span class="${cls}">${status}</span>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
 
-    // Respond if hash changes manually (back/forward)
-    window.addEventListener("hashchange", () => {
-      const r = getRouteFromHash();
-      if (!r) return;
-      log(`Hash changed -> #${r}`);
-      renderRoute(r);
-    });
+  probeListEl.querySelectorAll("[data-probe]").forEach(el => {
+    el.onclick = () => {
+      selectedProbeId = el.getAttribute("data-probe");
+      renderProbeDetail();
+    };
+  });
+}
+
+function renderProbeDetail() {
+  if (!selectedProbeId) {
+    probeDetailEl.innerHTML = `<div class="empty">No probe selected.</div>`;
+    selectedProbeBadge.textContent = "None selected";
+    return;
   }
 
-  document.addEventListener("DOMContentLoaded", boot);
-})();
+  const probe = ledger.getProbe(selectedProbeId);
+  if (!probe) return;
+
+  selectedProbeBadge.textContent = probe.avot_id;
+
+  probeDetailEl.innerHTML = `
+    <pre>${JSON.stringify(probe, null, 2)}</pre>
+  `;
+}
+
+/* -----------------------------
+   Console
+----------------------------- */
+function logConsole(msg) {
+  const time = new Date().toLocaleTimeString();
+  consoleEl.innerHTML =
+    `<div>[${time}] ${msg}</div>` + consoleEl.innerHTML;
+  consoleStatusEl.textContent = "Updated";
+}
+
+/* -----------------------------
+   Utilities
+----------------------------- */
+function clearLedger() {
+  ledger.reset();
+  selectedProbeId = null;
+  renderAll();
+  logConsole("Ledger cleared.");
+}
+
+/* -----------------------------
+   Event Wiring
+----------------------------- */
+btnRunMock.onclick = runMockProbes;
+btnClearLedger.onclick = clearLedger;
+
+/* -----------------------------
+   Init
+----------------------------- */
+renderAll();
+logConsole("Phase Two orchestrator ready.");
