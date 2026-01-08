@@ -26,6 +26,9 @@ import {
 import { TymeLedger } from "./tyme/ledger.js";
 import { runMetaDebug } from "./tyme/metaDebug.js";
 
+// Phase Four — Multi-Agent Consensus
+import { runPhaseFourForAllGroups } from "./tyme/phase4Orchestrator.js";
+
 import { renderProbeList } from "./ui/renderProbeList.js";
 import { renderProbeDetail } from "./ui/renderProbeDetail.js";
 import { renderConsole, pushConsole } from "./ui/renderConsole.js";
@@ -44,6 +47,8 @@ const consoleStatusEl    = document.getElementById("console-status");
 
 const btnRunMock         = document.getElementById("btn-run-mock");
 const btnClearLedger     = document.getElementById("btn-clear-ledger");
+// Optional Phase Four button (if present in DOM)
+const btnRunPhase4       = document.getElementById("btn-run-phase4");
 
 /* ============================================================
    CORE STATE (Authoritative)
@@ -66,7 +71,13 @@ function setConsoleStatus(text) {
 
 function log(level, msg) {
   pushConsole(consoleBuffer, msg, level);
-  setConsoleStatus(level === "ERROR" ? "Error" : level === "WARN" ? "Warning" : "Updated");
+  setConsoleStatus(
+    level === "ERROR"
+      ? "Error"
+      : level === "WARN"
+      ? "Warning"
+      : "Updated"
+  );
   renderConsole(consoleEl, consoleBuffer);
 }
 
@@ -131,7 +142,9 @@ function mockAvotPayload(id, confidence, withCounterpoints) {
       supporting_findings: [finding],
       confidence,
       evidence_type: ["synthetic"],
-      counterpoints_considered: withCounterpoints ? ["Synthetic evidence limits realism"] : []
+      counterpoints_considered: withCounterpoints
+        ? ["Synthetic evidence limits realism"]
+        : []
     }],
 
     uncertainties: [{ description: "Synthetic data", impact: "LOW" }],
@@ -227,6 +240,33 @@ function runMetaDiagnostics() {
 }
 
 /* ============================================================
+   PHASE FOUR — MULTI-AGENT CONSENSUS
+   ============================================================ */
+
+function runPhaseFourConsensus() {
+  logInfo("PHASE 4 → Running multi-agent consensus…");
+
+  const groups = ledger.listGroups();
+  if (!groups.length) {
+    logWarn("PHASE 4 → No groups available.");
+    return;
+  }
+
+  const results = runPhaseFourForAllGroups(ledger);
+
+  for (const r of results) {
+    const decision = r.policy_decision?.decision || "UNKNOWN";
+    const severity = r.policy_decision?.severity || "LOW";
+    logInfo(
+      `PHASE 4 → Group ${r.group_id} → ${decision} (${severity})`
+    );
+  }
+
+  refreshUI();
+  logInfo("PHASE 4 → Consensus + policy complete.");
+}
+
+/* ============================================================
    ACTIONS
    ============================================================ */
 
@@ -274,17 +314,28 @@ function clearSession() {
 
 if (btnRunMock)     btnRunMock.onclick     = runMockProbesPhase3;
 if (btnClearLedger) btnClearLedger.onclick = clearSession;
+if (btnRunPhase4)   btnRunPhase4.onclick   = runPhaseFourConsensus;
 
 /* ============================================================
    DEV / iPHONE INSPECTION HOOKS
    ============================================================ */
 
-window.__TYME_LEDGER__     = () => ledger.listProbes();
-window.__TYME_META__       = () => lastMetaReport;
-window.__TYME_META_RERUN__ = () => {
+// Phase Three
+window.__TYME_LEDGER__      = () => ledger.listProbes();
+window.__TYME_META__        = () => lastMetaReport;
+window.__TYME_META_RERUN__  = () => {
   runMetaDiagnostics();
   refreshUI();
   return lastMetaReport;
+};
+
+// Phase Four
+window.__TYME_LEDGER_OBJ__  = () => ledger;
+window.__TYME_GROUPS__      = () => ledger.listGroups();
+window.__TYME_GROUP__       = id => ledger.getGroup(id);
+window.__TYME_PHASE4_RUN__  = () => {
+  runPhaseFourConsensus();
+  return ledger.listGroups();
 };
 
 /* ============================================================
