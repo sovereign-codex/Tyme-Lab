@@ -2,18 +2,14 @@
    TYME — PROBE DETAIL RENDERER (ui/renderProbeDetail.js)
    ------------------------------------------------------------
    Responsibilities:
-   - Render a single probe in detail
-   - Reflect ledger truth only
-   - Never mutate ledger or compute diagnostics
-   - Be readable on mobile
-
-   Input:
-     probe = ledger.getProbe(probe_id)
+   - Render a single probe snapshot
+   - Display status, debug, scores, and meta hooks
+   - NEVER mutate ledger or state
 
    Design:
    - Stateless
-   - Deterministic
-   - Sectioned & collapsible-ready
+   - Defensive (handles partial / empty probes)
+   - Mobile-first (stacked, readable blocks)
    ============================================================ */
 
 /**
@@ -34,37 +30,19 @@ export function renderProbeDetail(containerEl, probe) {
     return;
   }
 
+  const avotId = probe.avot_id || "UNKNOWN";
+  const status = probe.debug_report?.scores?.status || probe.status || "UNKNOWN";
+
+  const debug = probe.debug_report || null;
+  const scores = debug?.scores || null;
+
   containerEl.innerHTML = `
     <div class="probe-detail">
-
-      ${renderHeader(probe)}
-
-      ${renderSection("Mission", renderMission(probe))}
-      ${renderSection("Status & Scores", renderScores(probe))}
-      ${renderSection("Flags", renderFlags(probe))}
-      ${renderSection("Claims", renderClaims(probe))}
-      ${renderSection("Confidence", renderConfidence(probe))}
-      ${renderSection("Uncertainties & Assumptions", renderUncertainties(probe))}
-      ${renderSection("Reasoning Trace", renderReasoning(probe))}
-
-    </div>
-  `;
-}
-
-/* ============================================================
-   Header
-   ============================================================ */
-
-function renderHeader(probe) {
-  return `
-    <div class="probe-header">
-      <div class="probe-header-main">
-        <div class="probe-avot">${probe.avot_id}</div>
-        <div class="probe-id">${probe.probe_id}</div>
-      </div>
-      <div class="probe-header-status">
-        Status: <strong>${probe.debug_report?.scores?.status || probe.status}</strong>
-      </div>
+      ${renderHeader(avotId, status)}
+      ${renderMission(probe.mission)}
+      ${renderStatusBlock(status)}
+      ${renderScores(scores)}
+      ${renderDebug(debug)}
     </div>
   `;
 }
@@ -73,140 +51,100 @@ function renderHeader(probe) {
    Sections
    ============================================================ */
 
-function renderSection(title, bodyHtml) {
+function renderHeader(avotId, status) {
+  return `
+    <div class="probe-detail-header">
+      <div class="probe-detail-title">${avotId}</div>
+      <div class="probe-detail-status badge badge-${statusClass(status)}">
+        ${status}
+      </div>
+    </div>
+  `;
+}
+
+function renderMission(mission) {
+  if (!mission) return "";
+
   return `
     <div class="probe-section">
-      <div class="probe-section-title">${title}</div>
-      <div class="probe-section-body">
-        ${bodyHtml || `<div class="muted">No data.</div>`}
+      <div class="section-title">Mission</div>
+      <div class="section-body">
+        <div><strong>Directive:</strong> ${mission.directive || "—"}</div>
+        <div><strong>Scope:</strong> ${mission.scope || "—"}</div>
       </div>
     </div>
   `;
 }
 
-/* ============================================================
-   Mission
-   ============================================================ */
-
-function renderMission(probe) {
-  const m = probe.mission;
-  if (!m) return null;
-
+function renderStatusBlock(status) {
   return `
-    <div><strong>Directive:</strong> ${m.directive}</div>
-    <div><strong>Scope:</strong> ${m.scope}</div>
-    <div><strong>Constraints:</strong> ${(m.constraints || []).join(", ")}</div>
-    <div><strong>Success Criteria:</strong> ${(m.success_criteria || []).join(", ")}</div>
-  `;
-}
-
-/* ============================================================
-   Scores
-   ============================================================ */
-
-function renderScores(probe) {
-  const s = probe.debug_report?.scores;
-  if (!s) return null;
-
-  return `
-    <div>Coherence: <strong>${s.coh?.coherence ?? "—"}</strong></div>
-    <div>Drift: <strong>${s.dr?.drift ?? "—"}</strong></div>
-    <div>Confidence Health: <strong>${s.ch?.confidence_health ?? "—"}</strong></div>
-  `;
-}
-
-/* ============================================================
-   Flags
-   ============================================================ */
-
-function renderFlags(probe) {
-  const flags = probe.debug_report?.flags;
-  if (!flags || !flags.length) {
-    return `<div class="muted">No flags.</div>`;
-  }
-
-  return `
-    <ul class="flag-list">
-      ${flags.map(f => `
-        <li>
-          <strong>${f.code}</strong>: ${f.message || ""}
-        </li>
-      `).join("")}
-    </ul>
-  `;
-}
-
-/* ============================================================
-   Claims
-   ============================================================ */
-
-function renderClaims(probe) {
-  const claims = probe.avot_payload?.claims;
-  if (!claims || !claims.length) {
-    return `<div class="muted">No claims.</div>`;
-  }
-
-  return claims.map(c => `
-    <div class="claim">
-      <div><strong>${c.claim_id}</strong>: ${c.statement}</div>
-      <div class="claim-meta">
-        Confidence: ${c.confidence ?? "—"}
+    <div class="probe-section">
+      <div class="section-title">Overall Status</div>
+      <div class="section-body status-${statusClass(status)}">
+        ${status}
       </div>
     </div>
-  `).join("");
+  `;
 }
 
-/* ============================================================
-   Confidence
-   ============================================================ */
+function renderScores(scores) {
+  if (!scores) return "";
 
-function renderConfidence(probe) {
-  const cs = probe.avot_payload?.confidence_summary;
-  if (!cs) return null;
+  const coh = scores.coh?.coherence;
+  const drift = scores.dr?.drift;
+  const conf = scores.ch?.confidence_health;
 
   return `
-    <div>Overall Confidence: <strong>${cs.overall_confidence}</strong></div>
-    <div class="muted">${cs.confidence_rationale}</div>
+    <div class="probe-section">
+      <div class="section-title">Scores</div>
+      <div class="section-body">
+        <div>Coherence: ${formatScore(coh)}</div>
+        <div>Drift: ${formatScore(drift)}</div>
+        <div>Confidence Health: ${conf || "—"}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderDebug(debug) {
+  if (!debug) return "";
+
+  return `
+    <div class="probe-section">
+      <div class="section-title">Debug Report</div>
+      <pre class="code-block">${escapeHtml(
+        JSON.stringify(debug, null, 2)
+      )}</pre>
+    </div>
   `;
 }
 
 /* ============================================================
-   Uncertainties & Assumptions
+   Helpers
    ============================================================ */
 
-function renderUncertainties(probe) {
-  const u = probe.avot_payload?.uncertainties || [];
-  const a = probe.avot_payload?.assumptions || [];
-
-  if (!u.length && !a.length) {
-    return `<div class="muted">None reported.</div>`;
+function statusClass(status) {
+  switch (status) {
+    case "COHERENT":
+      return "good";
+    case "PARTIAL":
+      return "warn";
+    case "INCOHERENT":
+      return "bad";
+    default:
+      return "unknown";
   }
-
-  return `
-    ${u.length ? `
-      <div><strong>Uncertainties:</strong></div>
-      <ul>
-        ${u.map(x => `<li>${x.description} (${x.impact})</li>`).join("")}
-      </ul>
-    ` : ""}
-
-    ${a.length ? `
-      <div><strong>Assumptions:</strong></div>
-      <ul>
-        ${a.map(x => `<li>${x.assumption}</li>`).join("")}
-      </ul>
-    ` : ""}
-  `;
 }
 
-/* ============================================================
-   Reasoning Trace
-   ============================================================ */
+function formatScore(value) {
+  if (value === null || value === undefined) return "—";
+  if (typeof value === "number") return value.toFixed(3);
+  return String(value);
+}
 
-function renderReasoning(probe) {
-  return `
-    <pre class="probe-trace">
-${probe.avot_payload?.reasoning_trace || "No reasoning trace provided."}
-    </pre>
-  `;
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
