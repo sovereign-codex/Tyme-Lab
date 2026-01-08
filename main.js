@@ -1,22 +1,23 @@
 /* ============================================================
-   TYME — PHASE THREE ORCHESTRATOR
-   Phase Five Integrated (Canonical)
+   TYME — ORCHESTRATOR (main.js)
+   Phase Six Integrated — Governance-Ready
    ============================================================
 
-   Design Invariants (Frozen):
+   Design Guarantees:
    ------------------------------------------------------------
    • Ledger is the single source of truth
-   • No implicit resets
-   • UI is pure projection
-   • Phase One engines reused verbatim
-   • Meta runs on stable snapshots
-   • Orchestrator consumes policy — never decides it
+   • No implicit resets, no implicit escalation
+   • UI is a pure projection of ledger state
+   • Phases compose upward, never overwrite
+   • Human escalation is explicit + auditable
+   • iPhone / Safari safe (no devtools required)
 
-   Phase Five Adds:
-   ------------------------------------------------------------
-   • Policy-driven arbiter spawning
-   • Zero coupling to consensus internals
-   • Forward-compatible escalation layer
+   Phases Active:
+   - Phase 3: Probe execution + meta-debug
+   - Phase 4: Multi-agent grouping + consensus storage
+   - Phase 5: Policy outputs (consumed, not enforced)
+   - Phase 6: Resolution + audit (manual invocation)
+
    ============================================================ */
 
 import { runTymeDebug } from "./tyme/debugEngine.js";
@@ -30,9 +31,11 @@ import {
 import { TymeLedger } from "./tyme/ledger.js";
 import { runMetaDebug } from "./tyme/metaDebug.js";
 
-/* Phase Five */
-import { spawnArbitersFromPolicy } from "./tyme/arbitration/spawnArbitersFromPolicy.js";
+/* Phase Five / Six imports (non-invasive) */
+import { spawnArbitersFromPolicy } from "./tyme/spawnArbitersFromPolicy.js";
+import { runPhaseSixResolution } from "./tyme/phaseSixResolution.js";
 
+/* UI */
 import { renderProbeList } from "./ui/renderProbeList.js";
 import { renderProbeDetail } from "./ui/renderProbeDetail.js";
 import { renderConsole, pushConsole } from "./ui/renderConsole.js";
@@ -53,17 +56,18 @@ const btnRunMock         = document.getElementById("btn-run-mock");
 const btnClearLedger     = document.getElementById("btn-clear-ledger");
 
 /* ============================================================
-   CORE STATE
+   AUTHORITATIVE STATE
    ============================================================ */
 
 let ledger          = new TymeLedger();
 let selectedProbeId = null;
 let lastMetaReport  = null;
 
+/* Append-only console */
 const consoleBuffer = [];
 
 /* ============================================================
-   LOGGING
+   CONSOLE HELPERS
    ============================================================ */
 
 function setConsoleStatus(text) {
@@ -73,9 +77,9 @@ function setConsoleStatus(text) {
 function log(level, msg) {
   pushConsole(consoleBuffer, msg, level);
   setConsoleStatus(
-    level === "ERROR" ? "Error" :
-    level === "WARN"  ? "Warning" :
-    "Updated"
+    level === "ERROR" ? "Error"
+    : level === "WARN" ? "Warning"
+    : "Updated"
   );
   renderConsole(consoleEl, consoleBuffer);
 }
@@ -94,6 +98,7 @@ function getSelectedProbe() {
 
 function refreshUI() {
   const probes = ledger.listProbes();
+
   if (probeCountEl) probeCountEl.textContent = String(probes.length);
 
   renderProbeList(probeListEl, ledger, onSelectProbe);
@@ -101,13 +106,69 @@ function refreshUI() {
   renderConsole(consoleEl, consoleBuffer);
 
   if (selectedProbeBadge) {
-    selectedProbeBadge.textContent =
-      getSelectedProbe()?.avot_id || "None selected";
+    const sel = getSelectedProbe();
+    selectedProbeBadge.textContent = sel ? sel.avot_id : "None selected";
   }
 }
 
 /* ============================================================
-   PHASE THREE — PROBE PIPELINE (UNCHANGED)
+   PHASE THREE — MOCK AVOT FACTORY
+   ============================================================ */
+
+function mockAvotPayload(id, confidence, withCounterpoints) {
+  const finding = "Synthetic probe for deterministic diagnostics";
+
+  return {
+    contract_version: "AVOT-RC-1.0",
+    avot_id: `AVOT-MOCK-${id}`,
+    mission: {
+      directive: "Exercise coherence + drift + meta-diagnostics",
+      scope: "Phase Three controlled environment",
+      constraints: ["synthetic-only", "no external IO"],
+      success_criteria: ["deterministic output", "stable meta state"]
+    },
+    execution: {
+      methods: ["analysis"],
+      sources_consulted: ["synthetic"],
+      exploration_path: "Controlled"
+    },
+    findings: [{ statement: finding, context: "Mock", relevance: "System test" }],
+    claims: [{
+      claim_id: "CL-1",
+      statement: "Tyme diagnostic pipeline is stable",
+      supporting_findings: [finding],
+      confidence,
+      evidence_type: ["synthetic"],
+      counterpoints_considered: withCounterpoints
+        ? ["Synthetic evidence limits realism"]
+        : []
+    }],
+    uncertainties: [{ description: "Synthetic data", impact: "LOW" }],
+    assumptions: [{
+      assumption: "Structure approximates real probes",
+      justification: "Phase Three",
+      risk_if_false: "LOW"
+    }],
+    limitations: ["No live sources"],
+    confidence_summary: {
+      overall_confidence: confidence,
+      confidence_rationale: "Injected confidence for scoring calibration"
+    },
+    reasoning_trace:
+      "This probe validates the orchestration, scoring, ledger, and meta layers.",
+    artifacts: [],
+    recommendations: ["Inspect meta stability"],
+    self_assessment: {
+      mission_alignment: "HIGH",
+      coherence_rating: "MEDIUM",
+      known_failures: [],
+      notes: "Phase Three synthetic probe"
+    }
+  };
+}
+
+/* ============================================================
+   PHASE THREE — SINGLE PROBE PIPELINE
    ============================================================ */
 
 function evaluateProbe(avotPayload) {
@@ -143,18 +204,19 @@ function evaluateProbe(avotPayload) {
 }
 
 /* ============================================================
-   PHASE THREE — META DIAGNOSTICS
+   PHASE THREE — META DEBUG
    ============================================================ */
 
 function runMetaDiagnostics() {
   const probes = ledger.listProbes();
   lastMetaReport = runMetaDebug(probes);
-  ledger.setMetaReport(lastMetaReport);
 
   if (!probes.length) {
     logWarn("META → No probes available.");
     return;
   }
+
+  ledger.setMetaReport(lastMetaReport);
 
   logInfo(
     `META → Stability: ${lastMetaReport.stability_rating}, ` +
@@ -163,7 +225,7 @@ function runMetaDiagnostics() {
 }
 
 /* ============================================================
-   PHASE FIVE — ARBITER ORCHESTRATION (NEW)
+   PHASE FIVE — ARBITER SPAWN (SAFE, OPTIONAL)
    ============================================================ */
 
 function runPhaseFiveArbiters() {
@@ -173,8 +235,6 @@ function runPhaseFiveArbiters() {
     const consensus = ledger.getConsensus(g.group_id);
     if (!consensus?.policy_decision) continue;
 
-    if (consensus.policy_decision.decision !== "ESCALATE") continue;
-
     const spawned = spawnArbitersFromPolicy(
       ledger,
       g.group_id,
@@ -182,10 +242,24 @@ function runPhaseFiveArbiters() {
     );
 
     if (spawned.length) {
-      logWarn(
-        `PHASE 5 → Spawned ${spawned.length} arbiters for ${g.group_id}`
-      );
+      logWarn(`PHASE 5 → Spawned ${spawned.length} arbiters for ${g.group_id}`);
     }
+  }
+
+  refreshUI();
+}
+
+/* ============================================================
+   PHASE SIX — RESOLUTION (MANUAL ONLY)
+   ============================================================ */
+
+function runPhaseSix() {
+  const results = runPhaseSixResolution(ledger);
+
+  for (const r of results) {
+    ledger.writeResolution(r.resolution);
+    ledger.writeAudit(r.audit);
+    logWarn(`PHASE 6 → Resolution recorded for ${r.group_id}`);
   }
 
   refreshUI();
@@ -198,26 +272,26 @@ function runPhaseFiveArbiters() {
 function runMockProbesPhase3() {
   logInfo("Running Phase Three mock probes…");
 
-  ["A","B","C"].forEach((id, i) => {
-    const confidence = [0.45, 0.65, 0.85][i];
-    const { probeId, status } = evaluateProbe(
-      mockAvotPayload(id, confidence, i === 0)
-    );
-    logInfo(`AVOT-MOCK-${id} → ${status}`);
+  const mocks = [
+    mockAvotPayload("A", 0.45, true),
+    mockAvotPayload("B", 0.65, false),
+    mockAvotPayload("C", 0.85, false)
+  ];
+
+  for (const avot of mocks) {
+    const { probeId, status } = evaluateProbe(avot);
+    logInfo(`${avot.avot_id} → ${status}`);
     selectedProbeId = probeId;
-  });
+  }
 
   runMetaDiagnostics();
-  runPhaseFiveArbiters(); // Phase Five hook
   refreshUI();
-
-  logInfo("Phase Three + Five run complete.");
+  logInfo("Phase Three mock run complete.");
 }
 
 function onSelectProbe(probeId) {
   selectedProbeId = probeId;
   ledger.selectProbe(probeId);
-  logInfo(`Selected probe ${probeId}`);
   refreshUI();
 }
 
@@ -226,6 +300,7 @@ function clearSession() {
   selectedProbeId = null;
   lastMetaReport = null;
   consoleBuffer.length = 0;
+
   logInfo("Session cleared.");
   refreshUI();
 }
@@ -238,16 +313,17 @@ if (btnRunMock)     btnRunMock.onclick     = runMockProbesPhase3;
 if (btnClearLedger) btnClearLedger.onclick = clearSession;
 
 /* ============================================================
-   INSPECTION HOOKS (iPhone-safe)
+   iPHONE / DEV INSPECTION HOOKS
    ============================================================ */
 
-window.__TYME_LEDGER__ = () => ledger.listProbes();
-window.__TYME_META__   = () => lastMetaReport;
-window.__TYME_PHASE5__ = runPhaseFiveArbiters;
+window.__TYME_LEDGER__      = () => ledger.exportSnapshot();
+window.__TYME_META__        = () => ledger.getMetaReport();
+window.__TYME_PHASE5_RUN__  = () => runPhaseFiveArbiters();
+window.__TYME_PHASE6_RUN__  = () => runPhaseSix();
 
 /* ============================================================
    INIT
    ============================================================ */
 
-logInfo("Tyme ready — Phase Five arbitration enabled.");
+logInfo("Tyme orchestrator ready (Phases 3–6 integrated).");
 refreshUI();
