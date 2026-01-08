@@ -1,0 +1,175 @@
+identity:
+  council_id: sol-tech-lab-001
+  name: Sol-Tech Laboratory Council
+  title: Water · Energy · Nutrition Coordination Council
+  version: 0.1.0
+  author: Shepherd J. Hagan
+  lineage: Sovereign Intelligence Codex
+  status: active
+  tags: [water, energy, nutrition, sol-tech, laboratory, council]
+
+description: >
+  The Sol-Tech Laboratory Council coordinates applied intelligence across
+  clean water, sustainable energy, and affordable nutrition domains.
+  Its mandate is to produce safe, ethical, field-ready solutions,
+  validated through multi-AVOT consensus and resonance coherence.
+
+members:
+  - avot_id: avot-water-001
+    role: specialist
+    domain: water
+    weight: 1.0
+
+  - avot_id: avot-energy-001
+    role: specialist
+    domain: energy
+    weight: 1.0
+
+  - avot_id: avot-mana-001
+    role: specialist
+    domain: nutrition
+    weight: 1.0
+
+  - avot_id: avot-guardian-001
+    role: steward
+    domain: ethics
+    weight: 1.5
+
+ethics:
+  codices:
+    - Garden Flame Codex
+    - Living Kodex for EAI
+  constraints:
+    - do_no_harm
+    - no_weaponization
+    - ecological_balance
+    - human_dignity
+    - safety_first
+    - refuse_hazardous_instructions
+
+resonance:
+  enabled: true
+  framework: HTFL
+  baseline_signature: coherence.neutral
+  coherence_threshold: 0.74
+  failure_policy: pause
+
+routing:
+  strategy: classifier
+  classifier_prompt: >
+    Classify the request into one or more domains:
+    water, energy, nutrition, ethics.
+    Return JSON with:
+    { domains: [..], primary: <domain>, confidence: 0-1 }.
+  thresholds:
+    min_confidence: 0.62
+  fallback: avot-guardian-001
+
+memory:
+  shared:
+    type: vector-scroll-hybrid
+    location: CodexNet/Councils/SolTech
+  policy:
+    write_on:
+      - approved_output
+    redact_on:
+      - ethics_flag
+      - coherence_failure
+
+logic:
+  entry: ingest_query
+
+  nodes:
+    ingest_query:
+      type: input
+      description: Receive user or system request for Sol-Tech intelligence.
+
+    route_request:
+      type: council_route
+      strategy: classifier
+      description: Determine primary domain and involved specialists.
+
+    call_specialist:
+      type: avot_call
+      target: route_request.output.primary
+      input_map:
+        query: ingest_query.output
+      description: Invoke the primary domain specialist AVOT.
+
+    parallel_review:
+      type: avot_call
+      target: route_request.output.domains
+      mode: parallel
+      input_map:
+        query: ingest_query.output
+        primary_draft: call_specialist.output
+      description: Optional parallel review by non-primary specialists.
+
+    steward_review:
+      type: avot_call
+      target: avot-guardian-001
+      input_map:
+        draft: call_specialist.output
+        reviews: parallel_review.output
+      description: Ethical, safety, and dignity review by Guardian.
+
+    council_vote:
+      type: council_vote
+      participants:
+        - avot-water-001
+        - avot-energy-001
+        - avot-mana-001
+        - avot-guardian-001
+      method: quorum
+      quorum: 3
+      policy: majority
+      steward_veto: true
+
+    merge_outputs:
+      type: council_merge
+      strategy: structured_synthesis
+      format:
+        - executive_summary
+        - assumptions_and_constraints
+        - proposed_solution
+        - materials_and_resources
+        - safety_and_ethics
+        - risks_and_failure_modes
+        - next_steps
+      inputs:
+        - call_specialist.output
+        - parallel_review.output
+        - steward_review.output
+        - council_vote.output
+
+    final_coherence_check:
+      type: resonance_eval
+      expected_signature: coherence.applied.soltech
+      threshold: 0.74
+
+    output_response:
+      type: output
+      format: structured-explanation
+      requires_coherence: true
+      description: Deliver council-approved, coherent response.
+
+  flow:
+    - ingest_query -> route_request
+    - route_request -> call_specialist
+    - call_specialist -> parallel_review
+    - parallel_review -> steward_review
+    - steward_review -> council_vote
+    - council_vote -> merge_outputs
+    - merge_outputs -> final_coherence_check
+    - final_coherence_check -> output_response
+
+interfaces:
+  chat: enabled
+  api: enabled
+  ui: optional
+  voice: future
+
+permissions:
+  external_network: restricted
+  file_write: false
+  autonomous_actions: false
