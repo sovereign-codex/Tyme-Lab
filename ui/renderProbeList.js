@@ -1,64 +1,99 @@
 /* ============================================================
-   TYME — PROBE LIST RENDERER
+   TYME — PROBE LIST RENDERER (ui/renderProbeList.js)
    ------------------------------------------------------------
-   Pure UI projection.
-   - Reads ledger state
-   - Emits DOM
-   - Emits selection events
+   Responsibilities:
+   - Render probe summaries from the ledger
+   - Reflect selection & pin state
+   - Emit selection events upward
+   - Never mutate ledger directly
+
+   Design:
+   - Stateless
+   - Deterministic
+   - Mobile-safe
    ============================================================ */
 
 /**
- * Render the probe list panel.
+ * Render the probe list.
  *
- * @param {HTMLElement} containerEl - DOM element to render into
- * @param {TymeLedger} ledger - Active Tyme ledger
- * @param {Function} onSelect - Callback(probe_id) when a probe is selected
+ * @param {HTMLElement} containerEl
+ * @param {TymeLedger} ledger
+ * @param {Function} onSelectProbe (probe_id) => void
  */
-export function renderProbeList(containerEl, ledger, onSelect) {
+export function renderProbeList(containerEl, ledger, onSelectProbe) {
+  if (!containerEl || !ledger) return;
+
   const probes = ledger.listProbes();
 
   if (!probes.length) {
     containerEl.innerHTML = `
       <div class="empty">
-        No probes present.
+        No probes available.
       </div>
     `;
     return;
   }
 
   containerEl.innerHTML = probes
-    .map(probe => {
-      const status = probe.debug_report?.scores?.status || "UNKNOWN";
-
-      const cls =
-        status === "COHERENT"
-          ? "good"
-          : status === "PARTIAL"
-          ? "warn"
-          : "bad";
-
-      return `
-        <div class="panel probe-card"
-             data-probe-id="${probe.probe_id}"
-             style="margin-bottom:10px; cursor:pointer;">
-          <div class="panel-body">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <b>${probe.avot_id}</b>
-              <span class="${cls}">${status}</span>
-            </div>
-            <div style="font-size:12px; color:var(--muted); margin-top:6px;">
-              ${probe.probe_id}
-            </div>
-          </div>
-        </div>
-      `;
-    })
+    .map(p => renderProbeRow(p))
     .join("");
 
-  containerEl.querySelectorAll("[data-probe-id]").forEach(el => {
-    el.onclick = () => {
-      const probeId = el.getAttribute("data-probe-id");
-      onSelect(probeId);
+  // Wire click handlers AFTER render (Safari-safe)
+  const rows = containerEl.querySelectorAll("[data-probe-id]");
+  rows.forEach(row => {
+    row.onclick = () => {
+      const probeId = row.getAttribute("data-probe-id");
+      if (probeId && typeof onSelectProbe === "function") {
+        onSelectProbe(probeId);
+      }
     };
   });
+}
+
+/* ============================================================
+   Single Row Renderer
+   ============================================================ */
+
+function renderProbeRow(probe) {
+  const probeId = probe.probe_id;
+  const avotId = probe.avot_id || "UNKNOWN";
+  const status = probe.debug_report?.scores?.status || probe.status || "UNKNOWN";
+
+  const selected = probe.ui_state?.selected;
+  const pinned = probe.ui_state?.pinned;
+
+  const statusClass = statusClassFor(status);
+  const selectClass = selected ? "probe-selected" : "";
+  const pinMark = pinned ? "📌" : "";
+
+  return `
+    <div class="probe-row ${statusClass} ${selectClass}"
+         data-probe-id="${probeId}">
+      <div class="probe-row-main">
+        <div class="probe-title">
+          ${pinMark} ${avotId}
+        </div>
+        <div class="probe-meta">
+          <span class="probe-status">${status}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   Helpers
+   ============================================================ */
+
+function statusClassFor(status) {
+  switch (status) {
+    case "COHERENT":
+      return "probe-good";
+    case "PARTIAL":
+      return "probe-warn";
+    case "INCOHERENT":
+      return "probe-bad";
+    default:
+      return "probe-unknown";
+  }
 }
