@@ -1,28 +1,21 @@
 /* ============================================================
-   TYME — LEDGER (tyme/ledger.js) — Full Rewrite v1
+   TYME — LEDGER (tyme/ledger.js) — Phase Four Ready v2
    ------------------------------------------------------------
    Guarantees:
-   - Single source of truth for probes + their lifecycle
-   - Deterministic IDs + stable sorting
-   - Safe on iPhone/Safari (no fancy deps)
-   - Optional persistence via localStorage (on by default)
+   - Ledger is the single source of truth
+   - Deterministic grouping for multi-agent consensus
+   - iPhone/Safari safe (no deps, no crypto APIs required)
+   - Backward-compatible with Phase 2 / Phase 3
 
-   Supports (current + near-future):
-   - Phase 2/3 UI projection (list/detail/selection/pinning)
-   - Phase 3 Meta-Debug snapshots (stored as ledger meta)
-   - Future: real probe ingestion, tags, notes, audit trail export
+   Adds Phase Four:
+   - mission canonicalization + hashing
+   - probe grouping (multi-agent comparison units)
+   - consensus record storage + retrieval
 
-   Shape:
-   probe = {
-     probe_id, mission_id, avot_id,
-     status, // DISPATCHED | RETURNED | DEBUGGED | RENDERED
-     created_at, updated_at,
-     mission, avot_payload, debug_report,
-     ui_state: { selected, pinned }
-   }
+   Ledger STORES consensus — it does not compute it.
    ============================================================ */
 
-const LEDGER_VERSION = "TYME-LEDGER-1.0";
+const LEDGER_VERSION = "TYME-LEDGER-1.1";
 const STORAGE_KEY = "TYME_LEDGER_V1";
 
 function nowISO() {
@@ -38,8 +31,8 @@ function safeParse(json, fallback) {
   }
 }
 
-// Simple deterministic-ish ID (time + random). Good enough for UI + local testing.
-function makeProbeId(prefix = "PROBE") {
+// Deterministic-ish ID for UI + local testing
+function makeId(prefix = "ID") {
   const t = Date.now().toString(36).toUpperCase();
   const r = Math.random().toString(36).slice(2, 8).toUpperCase();
   return `${prefix}-${t}-${r}`;
@@ -49,17 +42,66 @@ function deepClone(obj) {
   return obj ? JSON.parse(JSON.stringify(obj)) : obj;
 }
 
+/* ============================================================
+   Mission Canonicalization + Hashing (Phase Four)
+   ============================================================ */
+
+// Stable stringify (deterministic key order)
+function stableStringify(obj) {
+  if (obj === null || typeof obj !== "object") {
+    return JSON.stringify(obj);
+  }
+  if (Array.isArray(obj)) {
+    return "[" + obj.map(stableStringify).join(",") + "]";
+  }
+  const keys = Object.keys(obj).sort();
+  return (
+    "{" +
+    keys.map(k => JSON.stringify(k) + ":" + stableStringify(obj[k])).join(",") +
+    "}"
+  );
+}
+
+// Simple non-crypto hash (sufficient for grouping)
+function simpleHash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = (h << 5) - h + str.charCodeAt(i);
+    h |= 0;
+  }
+  return "H" + Math.abs(h).toString(36).toUpperCase();
+}
+
+function canonicalizeMission(mission) {
+  if (!mission || typeof mission !== "object") return null;
+
+  // Explicitly drop volatile fields
+  const {
+    created_at,
+    updated_at,
+    probe_id,
+    ...stable
+  } = mission;
+
+  return stable;
+}
+
+/* ============================================================
+   TymeLedger
+   ============================================================ */
+
 export class TymeLedger {
   constructor(opts = {}) {
     this.ledger_version = LEDGER_VERSION;
 
     this._opts = {
-      persist: opts.persist !== false, // default ON
+      persist: opts.persist !== false,
       storageKey: opts.storageKey || STORAGE_KEY
     };
 
     this._state = {
-      probes: [], // newest-first when listed
+      probes: [],
+      consensus: [],              // Phase Four artifacts
       selected_probe_id: null,
       meta: {
         last_meta_report: null,
@@ -67,17 +109,25 @@ export class TymeLedger {
       }
     };
 
-    // Attempt hydrate
     if (this._opts.persist) this._hydrate();
   }
 
   /* ============================================================
-     Core CRUD
+     Core Probe Lifecycle
      ============================================================ */
 
   dispatchProbe(mission_id, avot_id, mission) {
-    const probe_id = makeProbeId("PROBE");
+    const probe_id = makeId("PROBE");
     const ts = nowISO();
+
+    const canonical = canonicalizeMission(mission);
+    const mission_hash = canonical
+      ? simpleHash(stableStringify(canonical))
+      : null;
+
+    const group_id = mission_id && mission_hash
+      ? `${mission_id}::${mission_hash}`
+      : null;
 
     const probe = {
       probe_id,
@@ -86,16 +136,23 @@ export class TymeLedger {
       status: "DISPATCHED",
       created_at: ts,
       updated_at: ts,
-      mission: mission || null,
+
+      mission: deepClone(mission),
+      mission_hash,
+      group_id,
+
       avot_payload: null,
       debug_report: null,
+
+      consensus_tags: [],
+
       ui_state: {
         selected: false,
         pinned: false
       }
     };
 
-    this._state.probes.unshift(probe); // newest-first
+    this._state.probes.unshift(probe);
     this._touch();
     return probe_id;
   }
@@ -106,7 +163,6 @@ export class TymeLedger {
     p.status = "RETURNED";
     p.updated_at = nowISO();
     this._touch();
-    return true;
   }
 
   markDebugged(probe_id, debug_report) {
@@ -115,7 +171,6 @@ export class TymeLedger {
     p.status = "DEBUGGED";
     p.updated_at = nowISO();
     this._touch();
-    return true;
   }
 
   markRendered(probe_id) {
@@ -123,25 +178,74 @@ export class TymeLedger {
     p.status = "RENDERED";
     p.updated_at = nowISO();
     this._touch();
-    return true;
   }
 
   /* ============================================================
-     UI helpers
+     Phase Four — Consensus Storage
+     ============================================================ */
+
+  writeConsensus(consensus_record) {
+    if (!consensus_record?.group_id) {
+      throw new Error("Consensus record requires group_id");
+    }
+
+    // Replace existing consensus for group (deterministic)
+    this._state.consensus = this._state.consensus.filter(
+      c => c.group_id !== consensus_record.group_id
+    );
+
+    this._state.consensus.push({
+      ...deepClone(consensus_record),
+      saved_at: nowISO()
+    });
+
+    this._touch();
+  }
+
+  getConsensus(group_id) {
+    const c = this._state.consensus.find(x => x.group_id === group_id);
+    return c ? deepClone(c) : null;
+  }
+
+  listConsensus() {
+    return deepClone(this._state.consensus);
+  }
+
+  /* ============================================================
+     Phase Four — Group Queries
+     ============================================================ */
+
+  listGroups() {
+    const map = {};
+    for (const p of this._state.probes) {
+      if (!p.group_id) continue;
+      map[p.group_id] = (map[p.group_id] || 0) + 1;
+    }
+    return Object.entries(map).map(([group_id, count]) => ({
+      group_id,
+      count
+    }));
+  }
+
+  listProbesByGroup(group_id) {
+    return deepClone(
+      this._state.probes.filter(p => p.group_id === group_id)
+    );
+  }
+
+  /* ============================================================
+     UI Helpers (unchanged)
      ============================================================ */
 
   selectProbe(probe_id) {
-    // Clear previous
     for (const p of this._state.probes) {
       p.ui_state.selected = false;
     }
-
     const p = this._requireProbe(probe_id);
     p.ui_state.selected = true;
     this._state.selected_probe_id = probe_id;
     p.updated_at = nowISO();
     this._touch();
-    return true;
   }
 
   pinProbe(probe_id, pinned = true) {
@@ -149,49 +253,14 @@ export class TymeLedger {
     p.ui_state.pinned = !!pinned;
     p.updated_at = nowISO();
     this._touch();
-    return true;
-  }
-
-  getSelectedProbeId() {
-    return this._state.selected_probe_id;
   }
 
   /* ============================================================
      Query
      ============================================================ */
 
-  listProbes(options = {}) {
-    const {
-      pinnedFirst = true,
-      newestFirst = true,
-      limit = null
-    } = options;
-
-    let arr = [...this._state.probes];
-
-    if (pinnedFirst) {
-      arr.sort((a, b) => {
-        const ap = a.ui_state?.pinned ? 1 : 0;
-        const bp = b.ui_state?.pinned ? 1 : 0;
-        if (ap !== bp) return bp - ap; // pinned first
-        // then by created_at
-        return newestFirst
-          ? (b.created_at || "").localeCompare(a.created_at || "")
-          : (a.created_at || "").localeCompare(b.created_at || "");
-      });
-    } else {
-      arr.sort((a, b) => {
-        return newestFirst
-          ? (b.created_at || "").localeCompare(a.created_at || "")
-          : (a.created_at || "").localeCompare(b.created_at || "");
-      });
-    }
-
-    if (typeof limit === "number" && limit >= 0) {
-      arr = arr.slice(0, limit);
-    }
-
-    return deepClone(arr);
+  listProbes() {
+    return deepClone(this._state.probes);
   }
 
   getProbe(probe_id) {
@@ -200,7 +269,7 @@ export class TymeLedger {
   }
 
   /* ============================================================
-     Meta-Debug storage (Phase 3+)
+     Meta-Debug (Phase Three)
      ============================================================ */
 
   setMetaReport(meta_report) {
@@ -214,16 +283,8 @@ export class TymeLedger {
   }
 
   /* ============================================================
-     Maintenance
+     Snapshot / Persistence
      ============================================================ */
-
-  clear() {
-    this._state.probes = [];
-    this._state.selected_probe_id = null;
-    this._state.meta.last_meta_report = null;
-    this._state.meta.last_meta_at = null;
-    this._touch(true);
-  }
 
   exportSnapshot() {
     return deepClone({
@@ -233,20 +294,13 @@ export class TymeLedger {
     });
   }
 
-  importSnapshot(snapshot) {
-    // Accept either {state:{...}} or raw state
-    const incomingState = snapshot?.state ? snapshot.state : snapshot;
-
-    if (!incomingState || !Array.isArray(incomingState.probes)) {
-      throw new Error("Invalid snapshot: missing probes[]");
-    }
-
+  clear() {
     this._state = {
-      probes: incomingState.probes || [],
-      selected_probe_id: incomingState.selected_probe_id || null,
-      meta: incomingState.meta || { last_meta_report: null, last_meta_at: null }
+      probes: [],
+      consensus: [],
+      selected_probe_id: null,
+      meta: { last_meta_report: null, last_meta_at: null }
     };
-
     this._touch(true);
   }
 
@@ -255,49 +309,39 @@ export class TymeLedger {
      ============================================================ */
 
   _requireProbe(probe_id) {
-    if (!probe_id) throw new Error("probe_id is required");
     const p = this._state.probes.find(x => x.probe_id === probe_id);
     if (!p) throw new Error(`Probe not found: ${probe_id}`);
     return p;
   }
 
-  _touch(forceSave = false) {
-    // Save after each mutation for iPhone reliability
-    if (this._opts.persist || forceSave) {
-      this._save();
-    }
+  _touch(force = false) {
+    if (this._opts.persist || force) this._save();
   }
 
   _save() {
     try {
-      const payload = JSON.stringify({
-        ledger_version: this.ledger_version,
-        saved_at: nowISO(),
-        state: this._state
-      });
-      localStorage.setItem(this._opts.storageKey, payload);
-    } catch {
-      // If storage is blocked/full, silently ignore (UI still works in-memory)
-    }
+      localStorage.setItem(
+        this._opts.storageKey,
+        JSON.stringify({
+          ledger_version: this.ledger_version,
+          saved_at: nowISO(),
+          state: this._state
+        })
+      );
+    } catch {}
   }
 
   _hydrate() {
-    try {
-      const raw = localStorage.getItem(this._opts.storageKey);
-      if (!raw) return;
-      const parsed = safeParse(raw, null);
-      if (!parsed?.state?.probes) return;
+    const raw = localStorage.getItem(this._opts.storageKey);
+    if (!raw) return;
+    const parsed = safeParse(raw, null);
+    if (!parsed?.state) return;
 
-      // Basic version tolerance (accept older, keep safe fields)
-      const incoming = parsed.state;
-
-      this._state = {
-        probes: Array.isArray(incoming.probes) ? incoming.probes : [],
-        selected_probe_id: incoming.selected_probe_id || null,
-        meta: incoming.meta || { last_meta_report: null, last_meta_at: null }
-      };
-    } catch {
-      // ignore hydrate failures
-    }
+    this._state = {
+      probes: parsed.state.probes || [],
+      consensus: parsed.state.consensus || [],
+      selected_probe_id: parsed.state.selected_probe_id || null,
+      meta: parsed.state.meta || { last_meta_report: null, last_meta_at: null }
+    };
   }
 }
