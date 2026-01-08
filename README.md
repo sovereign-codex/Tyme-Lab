@@ -98,3 +98,109 @@ These constraints are intentional safety features.
 ---
 
 ## Repository Structure
+
+/tyme
+ledger.js                 # Authoritative state & governance memory
+debugEngine.js            # Phase 1 diagnostics
+scoring.js                # Coherence, drift, confidence scoring
+metaDebug.js              # Phase 3 cross-probe analysis
+spawnArbitersFromPolicy.js# Phase 5 arbiter reference implementation
+phaseSixResolution.js     # Phase 6 resolution logic
+
+/ui
+renderProbeList.js
+renderProbeDetail.js
+renderConsole.js
+
+/docs
+architecture.md           # Frozen system architecture
+governance.md             # Frozen governance vocabulary
+audit-log.md              # Governance audit specification
+human-escalation.md       # Human escalation contract
+phase-seven.md            # Institutional governance overview
+charter.md                # External charter (public-facing)
+
+---
+
+## Usage (Development)
+
+Tyme is designed to be **inspectable from a browser**, including mobile Safari.
+
+### Useful Runtime Hooks
+
+From the console:
+
+```js
+__TYME_LEDGER__()       // Full ledger snapshot
+__TYME_META__()         // Latest meta-diagnostics
+__TYME_PHASE5_RUN__()   // Spawn arbiters (manual)
+__TYME_PHASE6_RUN__()   // Run resolution (manual)
+
+No phase auto-executes beyond diagnostics.
+
+⸻
+
+Governance & Safety
+
+Tyme includes explicit governance artifacts:
+	•	Human Escalation Contract
+	•	Governance Audit Log
+	•	Frozen Architecture & Vocabulary
+	•	Manual resolution boundary
+
+These documents are as important as the code.
+
+If a behavior is not allowed by governance, it must not be implemented.
+
+⸻
+
+Intended Use Cases
+
+Tyme is suitable for:
+	•	AI research & evaluation
+	•	Multi-model comparison
+	•	High-stakes analysis
+	•	Institutional review workflows
+	•	Public-interest AI deployments
+
+Tyme is not intended for:
+	•	real-time autonomous control
+	•	unsupervised decision-making
+	•	hidden policy enforcement
+
+⸻
+
+Status
+
+Tyme is architecturally complete through Phase Six.
+
+Future work focuses on:
+	•	governance interfaces
+	•	institutional deployment profiles
+	•	documentation and education
+
+Core behavior is frozen to preserve integrity.
+
+⸻
+
+License & Responsibility
+
+Use of Tyme does not transfer responsibility.
+
+All users remain accountable for:
+	•	how outputs are interpreted
+	•	how decisions are made
+	•	how governance is applied
+
+Tyme exists to support responsible use — not to replace it.
+
+⸻
+
+Final Note
+
+Tyme is deliberately restrained.
+
+Its goal is not to make decisions faster,
+but to make decisions visible, reviewable, and owned.
+
+That restraint is the system.
