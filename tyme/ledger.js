@@ -1,292 +1,303 @@
 /* ============================================================
-   tyme/ledger.js
-   Tyme Hall — Probe Ledger (TYME-LEDGER-1.0)
+   TYME — LEDGER (tyme/ledger.js) — Full Rewrite v1
+   ------------------------------------------------------------
+   Guarantees:
+   - Single source of truth for probes + their lifecycle
+   - Deterministic IDs + stable sorting
+   - Safe on iPhone/Safari (no fancy deps)
+   - Optional persistence via localStorage (on by default)
 
-   Purpose:
-   - Maintain an in-memory append-only record of missions/probes
-   - Track lifecycle states:
-       DISPATCHED → RETURNED → DEBUGGED → RENDERED → FOLLOWUP_QUEUED/COMPLETE
-   - Provide deterministic getters for UI rendering
+   Supports (current + near-future):
+   - Phase 2/3 UI projection (list/detail/selection/pinning)
+   - Phase 3 Meta-Debug snapshots (stored as ledger meta)
+   - Future: real probe ingestion, tags, notes, audit trail export
 
-   Notes:
-   - v1 is in-memory only (no persistence). Later we can add:
-       - localStorage snapshots
-       - export/import packets
-       - remote backing store
-   - No DOM access. No external side effects.
+   Shape:
+   probe = {
+     probe_id, mission_id, avot_id,
+     status, // DISPATCHED | RETURNED | DEBUGGED | RENDERED
+     created_at, updated_at,
+     mission, avot_payload, debug_report,
+     ui_state: { selected, pinned }
+   }
    ============================================================ */
 
-/**
- * @typedef {"DISPATCHED"|"RETURNED"|"DEBUGGED"|"RENDERED"|"FOLLOWUP_QUEUED"|"COMPLETE"} ProbeStatus
- */
+const LEDGER_VERSION = "TYME-LEDGER-1.0";
+const STORAGE_KEY = "TYME_LEDGER_V1";
 
-/**
- * @typedef {Object} LedgerUIState
- * @property {boolean} selected
- * @property {boolean} pinned
- */
-
-/**
- * @typedef {Object} LedgerRecord
- * @property {"TYME-LEDGER-1.0"} ledger_version
- * @property {string} mission_id
- * @property {string} probe_id
- * @property {string} avot_id
- * @property {ProbeStatus} status
- * @property {string} created_at
- * @property {string} updated_at
- * @property {any|null} mission
- * @property {any|null} avot_payload
- * @property {any|null} debug_report
- * @property {LedgerUIState} ui_state
- */
-
-/**
- * Generate a deterministic-ish id (good enough for v1; replace with crypto uuid later)
- * @param {string} prefix
- */
-function genId(prefix) {
-  return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`.toUpperCase();
+function nowISO() {
+  return new Date().toISOString();
 }
 
-/**
- * @param {Date} [d]
- */
-function isoNow(d = new Date()) {
-  return d.toISOString();
+function safeParse(json, fallback) {
+  try {
+    const v = JSON.parse(json);
+    return v ?? fallback;
+  } catch {
+    return fallback;
+  }
 }
 
-/**
- * Simple in-memory ledger store.
- */
+// Simple deterministic-ish ID (time + random). Good enough for UI + local testing.
+function makeProbeId(prefix = "PROBE") {
+  const t = Date.now().toString(36).toUpperCase();
+  const r = Math.random().toString(36).slice(2, 8).toUpperCase();
+  return `${prefix}-${t}-${r}`;
+}
+
+function deepClone(obj) {
+  return obj ? JSON.parse(JSON.stringify(obj)) : obj;
+}
+
 export class TymeLedger {
-  constructor() {
-    /** @type {Map<string, LedgerRecord>} probe_id -> record */
-    this._records = new Map();
+  constructor(opts = {}) {
+    this.ledger_version = LEDGER_VERSION;
 
-    /** @type {string[]} insertion order of probe_ids */
-    this._order = [];
-
-    /** @type {Map<string, string[]> mission_id -> probe_ids */
-    this._missions = new Map();
-  }
-
-  /**
-   * Create a mission container and optionally pre-register probes.
-   * @param {any} missionObj TYME-MSN-1.0 recommended but not enforced in v1
-   * @param {string[]} targetAvots
-   * @returns {{mission_id: string, probe_ids: string[]}}
-   */
-  createMission(missionObj, targetAvots = []) {
-    const mission_id = missionObj?.mission_id || genId("MSN");
-    const probe_ids = [];
-
-    for (const avot_id of targetAvots) {
-      const probe_id = this.dispatchProbe(mission_id, avot_id, missionObj);
-      probe_ids.push(probe_id);
-    }
-
-    if (!this._missions.has(mission_id)) this._missions.set(mission_id, []);
-    if (probe_ids.length) {
-      const arr = this._missions.get(mission_id);
-      arr.push(...probe_ids);
-    }
-
-    return { mission_id, probe_ids };
-  }
-
-  /**
-   * Register a dispatched probe.
-   * @param {string} mission_id
-   * @param {string} avot_id
-   * @param {any|null} missionObj
-   * @returns {string} probe_id
-   */
-  dispatchProbe(mission_id, avot_id, missionObj = null) {
-    const probe_id = genId("PROBE");
-    const now = isoNow();
-
-    /** @type {LedgerRecord} */
-    const rec = {
-      ledger_version: "TYME-LEDGER-1.0",
-      mission_id,
-      probe_id,
-      avot_id,
-      status: "DISPATCHED",
-      created_at: now,
-      updated_at: now,
-      mission: missionObj,
-      avot_payload: null,
-      debug_report: null,
-      ui_state: { selected: false, pinned: false }
+    this._opts = {
+      persist: opts.persist !== false, // default ON
+      storageKey: opts.storageKey || STORAGE_KEY
     };
 
-    this._records.set(probe_id, rec);
-    this._order.push(probe_id);
+    this._state = {
+      probes: [], // newest-first when listed
+      selected_probe_id: null,
+      meta: {
+        last_meta_report: null,
+        last_meta_at: null
+      }
+    };
 
-    if (!this._missions.has(mission_id)) this._missions.set(mission_id, []);
-    this._missions.get(mission_id).push(probe_id);
+    // Attempt hydrate
+    if (this._opts.persist) this._hydrate();
+  }
 
+  /* ============================================================
+     Core CRUD
+     ============================================================ */
+
+  dispatchProbe(mission_id, avot_id, mission) {
+    const probe_id = makeProbeId("PROBE");
+    const ts = nowISO();
+
+    const probe = {
+      probe_id,
+      mission_id: mission_id || "MSN-UNKNOWN",
+      avot_id: avot_id || "AVOT-UNKNOWN",
+      status: "DISPATCHED",
+      created_at: ts,
+      updated_at: ts,
+      mission: mission || null,
+      avot_payload: null,
+      debug_report: null,
+      ui_state: {
+        selected: false,
+        pinned: false
+      }
+    };
+
+    this._state.probes.unshift(probe); // newest-first
+    this._touch();
     return probe_id;
   }
 
-  /**
-   * Attach AVOT payload and mark RETURNED.
-   * @param {string} probe_id
-   * @param {any} avotPayload
-   */
-  markReturned(probe_id, avotPayload) {
-    const rec = this._require(probe_id);
-    rec.avot_payload = avotPayload;
-    rec.status = "RETURNED";
-    rec.updated_at = isoNow();
-    return rec;
+  markReturned(probe_id, avot_payload) {
+    const p = this._requireProbe(probe_id);
+    p.avot_payload = deepClone(avot_payload);
+    p.status = "RETURNED";
+    p.updated_at = nowISO();
+    this._touch();
+    return true;
   }
 
-  /**
-   * Attach debug report and mark DEBUGGED.
-   * @param {string} probe_id
-   * @param {any} debugReport
-   */
-  markDebugged(probe_id, debugReport) {
-    const rec = this._require(probe_id);
-    rec.debug_report = debugReport;
-    rec.status = "DEBUGGED";
-    rec.updated_at = isoNow();
-    return rec;
+  markDebugged(probe_id, debug_report) {
+    const p = this._requireProbe(probe_id);
+    p.debug_report = deepClone(debug_report);
+    p.status = "DEBUGGED";
+    p.updated_at = nowISO();
+    this._touch();
+    return true;
   }
 
-  /**
-   * Mark rendered.
-   * @param {string} probe_id
-   */
   markRendered(probe_id) {
-    const rec = this._require(probe_id);
-    rec.status = "RENDERED";
-    rec.updated_at = isoNow();
-    return rec;
+    const p = this._requireProbe(probe_id);
+    p.status = "RENDERED";
+    p.updated_at = nowISO();
+    this._touch();
+    return true;
   }
 
-  /**
-   * Mark follow-up queued.
-   * @param {string} probe_id
-   */
-  markFollowupQueued(probe_id) {
-    const rec = this._require(probe_id);
-    rec.status = "FOLLOWUP_QUEUED";
-    rec.updated_at = isoNow();
-    return rec;
-  }
+  /* ============================================================
+     UI helpers
+     ============================================================ */
 
-  /**
-   * Mark complete.
-   * @param {string} probe_id
-   */
-  markComplete(probe_id) {
-    const rec = this._require(probe_id);
-    rec.status = "COMPLETE";
-    rec.updated_at = isoNow();
-    return rec;
-  }
-
-  /**
-   * UI state toggles
-   */
   selectProbe(probe_id) {
-    for (const id of this._order) {
-      const r = this._records.get(id);
-      if (r) r.ui_state.selected = false;
+    // Clear previous
+    for (const p of this._state.probes) {
+      p.ui_state.selected = false;
     }
-    const rec = this._require(probe_id);
-    rec.ui_state.selected = true;
-    rec.updated_at = isoNow();
-    return rec;
+
+    const p = this._requireProbe(probe_id);
+    p.ui_state.selected = true;
+    this._state.selected_probe_id = probe_id;
+    p.updated_at = nowISO();
+    this._touch();
+    return true;
   }
 
-  togglePin(probe_id) {
-    const rec = this._require(probe_id);
-    rec.ui_state.pinned = !rec.ui_state.pinned;
-    rec.updated_at = isoNow();
-    return rec;
+  pinProbe(probe_id, pinned = true) {
+    const p = this._requireProbe(probe_id);
+    p.ui_state.pinned = !!pinned;
+    p.updated_at = nowISO();
+    this._touch();
+    return true;
   }
 
-  /**
-   * Get a record (copy) by probe_id
-   * @param {string} probe_id
-   * @returns {LedgerRecord|null}
-   */
+  getSelectedProbeId() {
+    return this._state.selected_probe_id;
+  }
+
+  /* ============================================================
+     Query
+     ============================================================ */
+
+  listProbes(options = {}) {
+    const {
+      pinnedFirst = true,
+      newestFirst = true,
+      limit = null
+    } = options;
+
+    let arr = [...this._state.probes];
+
+    if (pinnedFirst) {
+      arr.sort((a, b) => {
+        const ap = a.ui_state?.pinned ? 1 : 0;
+        const bp = b.ui_state?.pinned ? 1 : 0;
+        if (ap !== bp) return bp - ap; // pinned first
+        // then by created_at
+        return newestFirst
+          ? (b.created_at || "").localeCompare(a.created_at || "")
+          : (a.created_at || "").localeCompare(b.created_at || "");
+      });
+    } else {
+      arr.sort((a, b) => {
+        return newestFirst
+          ? (b.created_at || "").localeCompare(a.created_at || "")
+          : (a.created_at || "").localeCompare(b.created_at || "");
+      });
+    }
+
+    if (typeof limit === "number" && limit >= 0) {
+      arr = arr.slice(0, limit);
+    }
+
+    return deepClone(arr);
+  }
+
   getProbe(probe_id) {
-    const rec = this._records.get(probe_id);
-    return rec ? structuredClone(rec) : null;
+    const p = this._state.probes.find(x => x.probe_id === probe_id);
+    return p ? deepClone(p) : null;
   }
 
-  /**
-   * List probes in newest-first order (pinned first optional).
-   * @param {{pinned_first?: boolean}} [opts]
-   */
-  listProbes(opts = {}) {
-    const pinned_first = !!opts.pinned_first;
+  /* ============================================================
+     Meta-Debug storage (Phase 3+)
+     ============================================================ */
 
-    const recs = this._order
-      .slice()
-      .reverse()
-      .map(id => this._records.get(id))
-      .filter(Boolean)
-      .map(r => structuredClone(r));
-
-    if (!pinned_first) return recs;
-
-    const pinned = recs.filter(r => r.ui_state.pinned);
-    const rest = recs.filter(r => !r.ui_state.pinned);
-    return [...pinned, ...rest];
+  setMetaReport(meta_report) {
+    this._state.meta.last_meta_report = deepClone(meta_report);
+    this._state.meta.last_meta_at = nowISO();
+    this._touch();
   }
 
-  /**
-   * List probes for a mission (newest-first).
-   * @param {string} mission_id
-   */
-  listMissionProbes(mission_id) {
-    const ids = this._missions.get(mission_id) || [];
-    return ids
-      .slice()
-      .reverse()
-      .map(id => this._records.get(id))
-      .filter(Boolean)
-      .map(r => structuredClone(r));
+  getMetaReport() {
+    return deepClone(this._state.meta.last_meta_report);
   }
 
-  /**
-   * Return currently selected probe or null.
-   */
-  getSelectedProbe() {
-    for (const id of this._order.slice().reverse()) {
-      const r = this._records.get(id);
-      if (r?.ui_state?.selected) return structuredClone(r);
-    }
-    return null;
+  /* ============================================================
+     Maintenance
+     ============================================================ */
+
+  clear() {
+    this._state.probes = [];
+    this._state.selected_probe_id = null;
+    this._state.meta.last_meta_report = null;
+    this._state.meta.last_meta_at = null;
+    this._touch(true);
   }
 
-  /**
-   * Export a probe packet (mission + payload + debug).
-   * @param {string} probe_id
-   */
-  exportProbePacket(probe_id) {
-    const rec = this._require(probe_id);
-    return structuredClone({
-      mission: rec.mission,
-      avot_payload: rec.avot_payload,
-      debug_report: rec.debug_report
+  exportSnapshot() {
+    return deepClone({
+      ledger_version: this.ledger_version,
+      exported_at: nowISO(),
+      state: this._state
     });
   }
 
-  /**
-   * Internal: require record
-   * @param {string} probe_id
-   * @returns {LedgerRecord}
-   */
-  _require(probe_id) {
-    const rec = this._records.get(probe_id);
-    if (!rec) throw new Error(`TymeLedger: probe_id not found: ${probe_id}`);
-    return rec;
+  importSnapshot(snapshot) {
+    // Accept either {state:{...}} or raw state
+    const incomingState = snapshot?.state ? snapshot.state : snapshot;
+
+    if (!incomingState || !Array.isArray(incomingState.probes)) {
+      throw new Error("Invalid snapshot: missing probes[]");
+    }
+
+    this._state = {
+      probes: incomingState.probes || [],
+      selected_probe_id: incomingState.selected_probe_id || null,
+      meta: incomingState.meta || { last_meta_report: null, last_meta_at: null }
+    };
+
+    this._touch(true);
+  }
+
+  /* ============================================================
+     Internals
+     ============================================================ */
+
+  _requireProbe(probe_id) {
+    if (!probe_id) throw new Error("probe_id is required");
+    const p = this._state.probes.find(x => x.probe_id === probe_id);
+    if (!p) throw new Error(`Probe not found: ${probe_id}`);
+    return p;
+  }
+
+  _touch(forceSave = false) {
+    // Save after each mutation for iPhone reliability
+    if (this._opts.persist || forceSave) {
+      this._save();
+    }
+  }
+
+  _save() {
+    try {
+      const payload = JSON.stringify({
+        ledger_version: this.ledger_version,
+        saved_at: nowISO(),
+        state: this._state
+      });
+      localStorage.setItem(this._opts.storageKey, payload);
+    } catch {
+      // If storage is blocked/full, silently ignore (UI still works in-memory)
+    }
+  }
+
+  _hydrate() {
+    try {
+      const raw = localStorage.getItem(this._opts.storageKey);
+      if (!raw) return;
+      const parsed = safeParse(raw, null);
+      if (!parsed?.state?.probes) return;
+
+      // Basic version tolerance (accept older, keep safe fields)
+      const incoming = parsed.state;
+
+      this._state = {
+        probes: Array.isArray(incoming.probes) ? incoming.probes : [],
+        selected_probe_id: incoming.selected_probe_id || null,
+        meta: incoming.meta || { last_meta_report: null, last_meta_at: null }
+      };
+    } catch {
+      // ignore hydrate failures
+    }
   }
 }
