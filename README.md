@@ -1,116 +1,100 @@
-# Tyme-Lab
-
-Tyme-Lab is the experimental research environment of the Tyme ecosystem.
-
-It exists to explore, question, test, and sometimes discard ideas before they
-are allowed anywhere near canon.
-
-Nothing in this repository is authoritative by default.
+# Tyme
+**Accountable Intelligence Coordination System**
 
 ---
 
-## Purpose
+## Overview
 
-Tyme-Lab is a **laboratory**, not a doctrine.
+Tyme is a framework for **evaluating, comparing, and governing multiple AI agents** in a way that preserves:
 
-It is designed to:
-- host experimental AVOTs (Autonomous Voices of Thought)
-- surface unanswered questions
-- test structural assumptions
-- observe emergent patterns across parallel inquiries
-- fail safely
+- human authority  
+- transparency  
+- disagreement  
+- auditability  
 
-If Tyme is the cathedral, Tyme-Lab is the workshop.
+Tyme is not an autonomous AI.
+It is an **intelligence coordination and governance substrate**.
 
----
-
-## What Lives Here
-
-Tyme-Lab may contain:
-- experimental AVOTs
-- speculative research notes
-- unfinished or contradictory models
-- exploratory file structures
-- scaffolding for future systems
-- questions that do not yet deserve answers
-
-Nothing here is protected from deletion.
+Its core purpose is to prevent silent automation and ensure that all meaningful decisions remain **explicit, reviewable, and accountable**.
 
 ---
 
-## What Does *Not* Live Here
+## Why Tyme Exists
 
-Tyme-Lab does **not** contain:
-- canonical truths
-- binding governance
-- final declarations
-- enforced consensus
-- irreversible structure
+As AI systems become more capable, the risk is no longer just incorrect answers —  
+it is **untraceable authority**.
 
-Those belong elsewhere, if they belong at all.
+Tyme addresses this by:
 
----
+- keeping agent outputs separate
+- preserving uncertainty and dissent
+- preventing automatic escalation or enforcement
+- requiring human involvement for final decisions
+- recording all governance actions immutably
 
-## AVOTs in Tyme-Lab
-
-AVOTs in Tyme-Lab are:
-- independent
-- mortal
-- allowed to be wrong
-- allowed to contradict each other
-- allowed to go quiet or be retired
-
-They do not govern.
-They do not ratify.
-They do not outlive their usefulness by default.
-
-AVOTs are spawned here so they can earn their existence.
+Tyme is designed for environments where **trust, review, and responsibility matter**.
 
 ---
 
-## Orchestration (Not Yet)
+## Core Principles
 
-Tyme-Lab does not currently orchestrate AVOTs.
+Tyme is built on four non-negotiable principles:
 
-It observes.
+1. **Ledger Sovereignty**  
+   All state, decisions, and outcomes are written to an append-only ledger.
 
-Over time, patterns may emerge:
-- repeated questions
-- overlapping domains
-- natural convergence
-- persistent divergence
+2. **No Silent Automation**  
+   Nothing escalates, resolves, or enforces itself.
 
-Only if orchestration becomes *necessary* will it be explored — and even then,
-only with human oversight.
+3. **Human Final Authority**  
+   Humans always retain responsibility for outcomes.
 
----
-
-## Relationship to Tyme
-
-- **Tyme** is canonical, protected, and slow to change.
-- **Tyme-Lab** is experimental, fast-moving, and disposable.
-
-No change graduates from Tyme-Lab to Tyme by default.
-
-Promotion is intentional, explicit, and rare.
+4. **Auditability by Design**  
+   Every governance-relevant action is logged and replayable.
 
 ---
 
-## Reversibility Principle
+## Architecture (High Level)
 
-Everything in this repository may be:
-- edited
-- relocated
-- rewritten
-- deleted
+Tyme is organized into **phases** that layer upward without overwriting prior behavior.
 
-Reversibility is a feature, not a flaw.
+### Implemented Phases
+
+- **Phase 1 — Diagnostics**  
+  Per-agent validation, coherence analysis, confidence health, and drift detection.
+
+- **Phase 2 — UI Projection**  
+  Read-only visualization of ledger state (lists, details, console).
+
+- **Phase 3 — Meta-Diagnostics**  
+  Cross-agent analysis (stability, consensus signals).
+
+- **Phase 4 — Grouping & Consensus Storage**  
+  Deterministic grouping of agents answering the same mission.
+
+- **Phase 5 — Policy Interpretation**  
+  Optional, advisory interpretation of consensus (no enforcement).
+
+- **Phase 6 — Resolution & Audit**  
+  Explicit, manual resolution with immutable governance audit logs.
+
+- **Phase 7 — Institutional Governance (Conceptual)**  
+  Review panels, stewards, and delegation structures (no automation).
 
 ---
 
-## Stewardship Note
+## What Tyme Does *Not* Do
 
-If you are reading this and wondering whether something belongs here:
+Tyme intentionally does **not**:
 
-If it feels uncertain, unfinished, or uncomfortable —
-it probably belongs in Tyme-Lab.
+- auto-decide outcomes
+- enforce policy
+- hide uncertainty
+- collapse multiple agents into one voice
+- replace human judgment
+
+These constraints are intentional safety features.
+
+---
+
+## Repository Structure
