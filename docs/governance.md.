@@ -1,229 +1,81 @@
-# TYME Governance Framework
-**Phase 7 Preview — Frozen Vocabulary**
+# TYME Governance Model
+**Frozen Vocabulary & Authority Reference — Phase 7 Preview**
 
 ---
 
-## Status
+## 0. Purpose of This Document
 
-**This document defines the governance vocabulary and authority model for Tyme.**  
-It is intentionally frozen, minimal, and non-algorithmic.
+This document defines the **governance layer of Tyme**.
 
-All future phases (4–7+) MUST conform to the definitions herein.  
-No implementation may redefine these terms implicitly or visually.
+It answers:
+- Who may decide
+- When decisions occur
+- How authority is escalated
+- What is auditable vs. advisory
 
----
-
-## Purpose
-
-Tyme is not a decision-maker.
-
-Tyme is a **decision–coordination system** whose legitimacy depends on:
-- Explicit authority boundaries
-- Deterministic escalation rules
-- Auditable resolution paths
-
-This document defines:
-- What decisions exist
-- Who or what may make them
-- When escalation is justified
-- When Tyme must stop
+This document **does not describe implementation details** — it defines **rules that implementation must obey**.
 
 ---
 
-## Core Governance Principles
+## 1. Governance First Principles
 
-1. **No Implicit Authority**  
-   Authority must be declared, not inferred.
+### 1.1 No Implicit Authority
+Tyme **never assumes authority**.
 
-2. **Ledger Supremacy**  
-   All governance-relevant state must be recorded in the ledger.
+All authority must be:
+- Explicit
+- Invoked
+- Recorded
 
-3. **Deterministic Escalation**  
-   Escalation is rule-based, not heuristic.
-
-4. **Human Authority Is Explicit**  
-   Humans act only when invoked by policy, not convenience.
-
-5. **Termination Is a First-Class Outcome**  
-   Non-resolution is a valid and recordable state.
+If authority is not written to the ledger, it **does not exist**.
 
 ---
 
-## Frozen Vocabulary (Canonical)
+### 1.2 Separation of Evaluation and Action
+Evaluation ≠ Action.
 
-The following terms are **canonical**.  
-They may not be redefined by UI, policy engines, or agents.
+Tyme may:
+- Diagnose
+- Compare
+- Score
+- Recommend
 
----
-
-### Decision
-
-A **Decision** is a discrete, addressable outcome emitted by a policy process.
-
-A decision:
-- Is enumerable (e.g. `ACCEPT`, `REJECT`, `ESCALATE`)
-- Has explicit scope
-- Is recorded immutably
-
-A decision **does not** execute actions by itself.
+Tyme may **not**:
+- Enforce
+- Escalate
+- Resolve
+- Decide outcomes autonomously
 
 ---
 
-### Authority
+### 1.3 Human Sovereignty
+All final authority **terminates in humans**.
 
-**Authority** is the right to emit a binding decision.
+Tyme:
+- Supports human judgment
+- Preserves reasoning context
+- Prevents silent automation
 
-Authority may belong to:
-- A deterministic policy
-- A consensus mechanism
-- A human arbiter
-
-Authority is:
-- Contextual
-- Scoped
-- Revocable by governance
+Tyme **never replaces human accountability**.
 
 ---
 
-### Resolution
+## 2. Governance Vocabulary (Frozen)
 
-A **Resolution** is the act of finalizing a decision such that:
-- No further arbitration is required
-- The system transitions to a terminal state
-
-Resolution may be:
-- Successful
-- Failed
-- Deferred
-- Escalated
+The following terms have **exact meanings** and must not be redefined.
 
 ---
 
-### Escalation
+### Probe
+A single AVOT execution answering a mission.
 
-**Escalation** is the formal transfer of authority from one actor to another.
-
-Escalation:
-- Is policy-driven
-- Is intentional
-- Must specify a target scope
-
-Escalation is **not** an error condition.
+- Atomic
+- Immutable after lifecycle advancement
+- Never modified retroactively
 
 ---
 
-### Consensus
+### Group
+A deterministic set of probes answering the **same canonical mission**.
 
-**Consensus** is a derived artifact summarizing agreement or disagreement across agents.
-
-Consensus:
-- Does not decide
-- Does not override authority
-- Informs policy decisions
-
-Consensus is stored, never executed.
-
----
-
-### Arbiter
-
-An **Arbiter** is an entity empowered to make a decision when policy cannot.
-
-An arbiter may be:
-- Automated (bounded)
-- Human (explicitly scoped)
-
-Arbiters **do not inherit full system authority**.
-
----
-
-### Policy
-
-A **Policy** is a deterministic rule-set that:
-- Consumes ledger state
-- Emits a decision
-- Optionally proposes next steps
-
-Policies do not mutate the ledger directly.
-
----
-
-### Termination
-
-**Termination** is the declaration that no further progress is permitted without new input.
-
-Termination:
-- Is a valid system outcome
-- Must be recorded
-- Must be explainable
-
----
-
-## Authority Layers (Conceptual)
-
-Tyme operates with **layered authority**, not hierarchy.
-
-1. **Policy Authority**
-   - Deterministic
-   - Repeatable
-   - Bounded
-
-2. **Consensus Authority**
-   - Informational
-   - Non-binding
-
-3. **Arbiter Authority**
-   - Contextual
-   - Scoped
-   - Explicit
-
-4. **Human Authority**
-   - Final within scope
-   - Logged and attributable
-
-No layer implicitly overrides another.
-
----
-
-## What Tyme Will Never Do
-
-- Tyme will never silently escalate.
-- Tyme will never fabricate authority.
-- Tyme will never collapse disagreement into a single “answer”.
-- Tyme will never hide termination.
-- Tyme will never treat UI interaction as governance.
-
----
-
-## Phase Alignment
-
-- **Phase 3**: Diagnostics (no authority)
-- **Phase 4**: Consensus formation (no authority)
-- **Phase 5**: Policy decisions (bounded authority)
-- **Phase 6**: Resolution / termination
-- **Phase 7**: Governance enforcement & auditability
-
-This document anchors Phase 7.
-
----
-
-## Change Control
-
-Any modification to this document requires:
-- Explicit versioning
-- Rationale
-- Migration notes
-
-Silent drift is forbidden.
-
----
-
-## Closing Note
-
-Governance is not a feature.
-
-It is the boundary between:
-- A system that assists judgment
-- And a system that replaces it
-
-Tyme exists to protect that boundary.
+Defined by:
