@@ -1,33 +1,41 @@
 # TYME — Human Escalation Contract
-**Governance Specification (Frozen v1.0)**
+**Frozen Governance Interface (v1.0)**
 
 ---
 
-## Status
+## 0. Status & Scope
 
-This document defines the **formal contract for human participation in Tyme**.
+This document defines the **only authorized interface for human involvement in Tyme**.
 
-It is policy-only and implementation-agnostic.
+It is:
+- Phase Six–aligned
+- Ledger-authoritative
+- Audit-mandatory
+- UI-agnostic
 
-No code, UI, or agent behavior may bypass or reinterpret this contract.
+No implementation may reinterpret or bypass this contract.
 
 ---
 
-## Purpose
+## 1. Purpose
 
 Human escalation exists to resolve situations where:
 
-- Automated consensus cannot converge
-- Arbitration fails to clarify disagreement
-- Governance requires judgment beyond machine authority
+- Automated evaluation is insufficient
+- Consensus does not converge
+- Policy interpretation cannot proceed safely
+- Resolution requires accountable judgment
 
-Human involvement is **exceptional, bounded, and auditable**.
+Human involvement is **exceptional, bounded, and recorded**.
 
-Tyme does not “hand off” problems to humans.  
-It **invites humans into a defined decision scope**.
+Tyme does not defer responsibility to humans.  
+Tyme **invites humans into a defined decision space**.
 
 ---
 
-## Trigger Conditions (Authoritative)
+## 2. Escalation Trigger (Authoritative)
 
-Humans may be invoked **only** when Phase Six emits:
+Human escalation may occur **only** when:
+
+- Phase Five policy indicates escalation **and**
+- Phase Six resolution logic emits:
