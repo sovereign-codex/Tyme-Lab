@@ -1,92 +1,144 @@
-# Tyme Architecture  
-**Canonical System Architecture (Frozen v1.0)**
+# TYME Architecture
+**Frozen Reference — Phases 1–6**
 
 ---
 
-## 1. Purpose
+## 0. Purpose of This Document
 
-Tyme is a **reasoning instrumentation and governance system**.
+This document freezes the **authoritative architecture of Tyme** as implemented through **Phase Six**.
 
-It does **not** attempt to replace intelligence models.  
-It exists to **observe, evaluate, compare, and govern reasoning artifacts** produced by those models (AVOTs).
+It defines:
+- What Tyme **is**
+- What Tyme **does**
+- What Tyme **explicitly does not do**
 
-Tyme addresses a core AGI bottleneck:
-
-> Modern systems can generate reasoning,  
-> but they cannot **persist, compare, or self-diagnose reasoning trajectories over time**.
-
-Tyme provides that missing substrate.
+Any future phase (7+) **must compose on top of this behavior** without mutating or invalidating it.
 
 ---
 
-## 2. Foundational Axioms (Non-Negotiable)
+## 1. Core Architectural Principles (Non-Negotiable)
 
-These principles **must not change**.
+### 1.1 Ledger Sovereignty
+The **TymeLedger** is the single source of truth.
 
-### Axiom 1 — Ledger Is the Single Source of Truth
+- No UI state is authoritative
+- No engine output is authoritative until written to the ledger
+- No decision exists unless persisted
 
-All system state lives in the ledger.
-
-- Probes
-- Debug reports
-- Scores
-- Meta diagnostics
-- Consensus
-- Policy decisions
-- History
-
-UI, debug tools, and exports are **pure projections** of ledger state.
+> If it is not in the ledger, it did not happen.
 
 ---
 
-### Axiom 2 — Determinism Over Cleverness
+### 1.2 Phase Composition (Never Overwrite)
+Phases **layer upward**.
 
-Given the same ledger snapshot:
+- Phase N may *read* Phase N-1 data
+- Phase N may *append* new artifacts
+- Phase N may **never mutate or reinterpret prior phase records**
 
-- Debug
-- Scoring
-- Meta-Debug
-- Consensus
-- Policy
-
-**must produce the same outputs**.
-
-No hidden randomness.  
-No implicit resets.  
-No time-dependent logic beyond explicit timestamps.
+This ensures:
+- Determinism
+- Auditability
+- Forward compatibility
 
 ---
 
-### Axiom 3 — Separation of Concerns
+### 1.3 Explicit Human Escalation
+Tyme **never self-escalates**.
 
-Each layer has a single responsibility:
+Any step that involves:
+- Arbitration
+- Resolution
+- Governance action
+- Human involvement
 
-| Layer | Responsibility |
-|---|---|
-| AVOT | Produce reasoning artifacts |
-| Phase 1 | Diagnose a single probe |
-| Phase 3 | Diagnose system stability |
-| Phase 4 | Compare agents & govern outcomes |
-| Ledger | Persist truth |
-| UI | Render only |
-
-No layer may “help” another by mutating its data.
-
----
-
-### Axiom 4 — Inspectability Without Privilege
-
-The system must be inspectable:
-
-- On iPhone
-- Without devtools
-- Without server access
-- Without hidden APIs
-
-This is enforced via explicit runtime hooks (`window.__TYME_*__`).
+must be:
+1. Explicitly invoked
+2. Logged to the ledger
+3. Auditable after the fact
 
 ---
 
-## 3. System Overview
+## 2. Phase Overview (Implemented)
 
-At a high level:
+### Phase 1 — Deterministic Diagnostics
+**Status:** Implemented (engine-level)
+
+- Payload validation
+- Structural integrity checks
+- Reasoning coherence
+- Confidence calibration
+- Drift estimation
+
+Outputs:
+- `debug_report`
+- Diagnostic flags
+- Per-probe scores
+
+---
+
+### Phase 2 — UI Projection
+**Status:** Implemented
+
+- List view
+- Detail view
+- Selection & pinning
+- Console output
+
+Key rule:
+> UI is a *pure projection* of ledger state.
+
+---
+
+### Phase 3 — Meta-Diagnostics
+**Status:** Implemented
+
+- Cross-probe analysis
+- Stability rating
+- Consensus score
+- Dominant flag aggregation
+
+Outputs:
+- `meta_report`
+- Stored in ledger via `setMetaReport`
+
+Meta-diagnostics:
+- Do **not** enforce decisions
+- Do **not** modify probes
+- Are read-only evaluative artifacts
+
+---
+
+### Phase 4 — Multi-Agent Grouping & Consensus Storage
+**Status:** Implemented
+
+Adds:
+- Mission canonicalization
+- Deterministic mission hashing
+- `group_id` for probes
+- Consensus record storage
+
+Key distinctions:
+- Ledger **stores** consensus
+- Ledger **does not compute** consensus
+
+Consensus records are immutable once written (replace-by-group only).
+
+---
+
+### Phase 5 — Policy Interpretation & Arbiter Spawning
+**Status:** Implemented (Manual)
+
+Phase Five:
+- Consumes stored consensus
+- Reads `policy_decision`
+- May spawn arbiters
+
+Critical constraints:
+- No automatic spawning
+- No automatic enforcement
+- Arbiter creation is optional and explicit
+
+Invocation:
+```js
+__TYME_PHASE5_RUN__()
