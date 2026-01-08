@@ -2,130 +2,95 @@
    TYME — CONSOLE RENDERER (ui/renderConsole.js)
    ------------------------------------------------------------
    Responsibilities:
-   - Render an append-only console buffer
-   - Provide pushConsole(buffer, msg, level)
-   - Never mutates ledger
-   - Deterministic and mobile-safe
+   - Render console entries from an append-only buffer
+   - Apply severity styling
+   - Never generate messages itself
 
-   Buffer item shape:
-     { ts, level, msg }
-
-   Levels:
-     INFO | WARN | ERROR
+   Design:
+   - Stateless renderer
+   - iPhone-safe (no virtual scrolling tricks)
+   - Deterministic ordering
    ============================================================ */
 
-function nowTimeLabel() {
-  const d = new Date();
-  // simple, consistent local time label
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-}
-
 /**
- * Append a console line to the buffer.
+ * Push a message into the console buffer.
  *
  * @param {Array} buffer
- * @param {string} msg
- * @param {string} level
+ * @param {string} message
+ * @param {"INFO"|"WARN"|"ERROR"} level
  */
-export function pushConsole(buffer, msg, level = "INFO") {
+export function pushConsole(buffer, message, level = "INFO") {
   if (!Array.isArray(buffer)) return;
 
-  const safeLevel = normalizeLevel(level);
-  const safeMsg = typeof msg === "string" ? msg : JSON.stringify(msg);
-
   buffer.push({
-    ts: nowTimeLabel(),
-    level: safeLevel,
-    msg: safeMsg
+    ts: new Date().toISOString(),
+    level,
+    message
   });
-
-  // Optional: cap buffer to prevent iPhone memory bloat
-  const MAX = 250;
-  if (buffer.length > MAX) {
-    buffer.splice(0, buffer.length - MAX);
-  }
 }
 
 /**
- * Render the console.
+ * Render console output.
  *
  * @param {HTMLElement} containerEl
  * @param {Array} buffer
- * @param {object} [opts]
- * @param {string[]} [opts.levels] - allowed levels filter
  */
-export function renderConsole(containerEl, buffer, opts = {}) {
-  if (!containerEl) return;
+export function renderConsole(containerEl, buffer) {
+  if (!containerEl || !Array.isArray(buffer)) return;
 
-  if (!Array.isArray(buffer) || buffer.length === 0) {
-    containerEl.innerHTML = `<div class="empty">Console idle.</div>`;
+  if (buffer.length === 0) {
+    containerEl.innerHTML = `
+      <div class="empty">
+        Console idle.
+      </div>
+    `;
     return;
   }
 
-  const levels = Array.isArray(opts.levels) ? opts.levels.map(normalizeLevel) : null;
-
-  const rows = (levels ? buffer.filter(x => levels.includes(normalizeLevel(x.level))) : buffer)
-    .map(renderRow)
-    .join("");
-
   containerEl.innerHTML = `
-    <div class="tyme-console">
-      ${rows}
+    <div class="console-log">
+      ${buffer.map(renderLine).join("")}
     </div>
   `;
 
-  // Auto-scroll to bottom (mobile-friendly)
-  try {
-    containerEl.scrollTop = containerEl.scrollHeight;
-  } catch {
-    // ignore
-  }
+  // Scroll to bottom (Safari-safe)
+  containerEl.scrollTop = containerEl.scrollHeight;
 }
 
 /* ============================================================
-   Row rendering
+   Line Renderer
    ============================================================ */
 
-function renderRow(line) {
-  const lvl = normalizeLevel(line.level);
-  const cls = levelClass(lvl);
+function renderLine(entry) {
+  const time = formatTime(entry.ts);
+  const level = entry.level || "INFO";
+  const msg = escapeHtml(entry.message);
 
   return `
-    <div class="console-row ${cls}">
-      <span class="console-ts">[${escapeHtml(line.ts)}]</span>
-      <span class="console-level">${lvl}</span>
-      <span class="console-msg">${escapeHtml(line.msg)}</span>
+    <div class="console-line console-${level.toLowerCase()}">
+      <span class="console-time">[${time}]</span>
+      <span class="console-level">${level}</span>
+      <span class="console-message">${msg}</span>
     </div>
   `;
 }
 
-function normalizeLevel(level) {
-  const s = String(level || "INFO").toUpperCase();
-  if (s === "WARN" || s === "WARNING") return "WARN";
-  if (s === "ERROR" || s === "ERR") return "ERROR";
-  return "INFO";
-}
+/* ============================================================
+   Helpers
+   ============================================================ */
 
-function levelClass(level) {
-  switch (level) {
-    case "ERROR":
-      return "console-error";
-    case "WARN":
-      return "console-warn";
-    default:
-      return "console-info";
+function formatTime(iso) {
+  try {
+    const d = new Date(iso);
+    return d.toLocaleTimeString();
+  } catch {
+    return "--:--:--";
   }
 }
-
-/* ============================================================
-   Minimal HTML escape
-   ============================================================ */
 
 function escapeHtml(str) {
   return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
