@@ -1,215 +1,199 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tyme Repo Debug</title>
+  <meta charset="UTF-8" />
+  <title>Tyme Debug Console — Phase Four</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 16px; }
-    h1 { font-size: 18px; margin: 0 0 12px; }
-    .row { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f1115;
+      color: #e6e6eb;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    h1, h2 {
+      margin: 0.5rem 0;
+    }
+
     button {
-      padding: 10px 12px; border-radius: 10px; border: 1px solid #ccc;
-      background: #fff; cursor: pointer;
+      background: #1e2230;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      margin: 0.25rem 0.25rem 0.25rem 0;
+      cursor: pointer;
     }
-    button:active { transform: scale(0.99); }
-    .card { border: 1px solid #e5e5e5; border-radius: 12px; padding: 12px; margin: 12px 0; }
-    .muted { color: #666; font-size: 13px; }
-    pre {
-      white-space: pre-wrap; word-break: break-word;
-      background: #0b0b0b; color: #f1f1f1;
-      padding: 12px; border-radius: 12px; overflow: auto;
-      font-size: 12px; line-height: 1.35;
+
+    button:active {
+      background: #2a2f44;
     }
-    .ok { color: #0a7a2f; font-weight: 600; }
-    .warn { color: #b36b00; font-weight: 600; }
-    .err { color: #b00020; font-weight: 600; }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+    .panel {
+      border: 1px solid #2a2f44;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #0b0d12;
+      padding: 0.5rem;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+    }
+
+    .ok { color: #6ddf8a; }
+    .warn { color: #f2c94c; }
+    .bad { color: #eb5757; }
+
+    .group {
+      padding: 0.5rem;
+      border-bottom: 1px solid #2a2f44;
+    }
+
+    .group:last-child {
+      border-bottom: none;
+    }
   </style>
 </head>
 <body>
-  <h1>Tyme Repo Debug</h1>
-  <div class="muted">
-    This page reads from Tyme’s runtime hooks if available:
-    <code>window.__TYME_LEDGER__()</code> and <code>window.__TYME_META__()</code>.
-    <br/>Use it on iPhone without devtools.
+
+  <h1>🧭 Tyme Debug Console</h1>
+  <div class="mono">
+    Phase Four — Multi-Agent Consensus & Policy
   </div>
 
-  <div class="row">
-    <button id="btn-refresh">Refresh Snapshot</button>
-    <button id="btn-run-mocks">Run Phase 3 Mock Probes</button>
-    <button id="btn-meta-rerun">Re-run Meta Only</button>
-    <button id="btn-clear">Clear Session</button>
-    <button id="btn-copy">Copy Snapshot</button>
+  <!-- Controls -->
+  <div class="panel">
+    <h2>Controls</h2>
+    <button onclick="refresh()">🔄 Refresh Snapshot</button>
+    <button onclick="runPhase4()">🧠 Run Phase 4 (All Groups)</button>
+    <button onclick="exportLedger()">📦 Export Ledger Snapshot</button>
   </div>
 
-  <div class="card">
-    <div id="status" class="muted">Status: idle</div>
+  <!-- System Status -->
+  <div class="panel">
+    <h2>System Status</h2>
+    <div id="status" class="mono">Loading…</div>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <div><strong>Ledger Snapshot</strong> <span id="ledger-badge" class="muted"></span></div>
-      <pre id="ledger-out">Loading…</pre>
-    </div>
-
-    <div class="card">
-      <div><strong>Meta Snapshot</strong> <span id="meta-badge" class="muted"></span></div>
-      <pre id="meta-out">Loading…</pre>
-    </div>
+  <!-- Groups -->
+  <div class="panel">
+    <h2>Groups</h2>
+    <div id="groups"></div>
   </div>
 
-  <div class="card">
-    <div><strong>Combined Snapshot</strong></div>
-    <div class="muted">This is what “Copy Snapshot” copies.</div>
-    <pre id="combined-out">Loading…</pre>
+  <!-- Raw Output -->
+  <div class="panel">
+    <h2>Raw Output (Selected)</h2>
+    <div id="raw" class="mono">Select a group.</div>
   </div>
 
-  <script type="module">
-    // Import the canonical Phase 3 orchestrator to ensure hooks exist on this page.
-    // If your main UI page already loads it, this page can still load it independently.
-    import "./main.js";
+<script type="module">
+  import { runPhaseFourForAllGroups } from "./tyme/phase4Orchestrator.js";
 
-    const elStatus = document.getElementById("status");
+  let lastSnapshot = null;
 
-    const elLedgerOut = document.getElementById("ledger-out");
-    const elMetaOut = document.getElementById("meta-out");
-    const elCombinedOut = document.getElementById("combined-out");
+  function $(id) {
+    return document.getElementById(id);
+  }
 
-    const elLedgerBadge = document.getElementById("ledger-badge");
-    const elMetaBadge = document.getElementById("meta-badge");
+  function safe(fn) {
+    try { return fn(); }
+    catch (e) { return { error: String(e) }; }
+  }
 
-    const btnRefresh = document.getElementById("btn-refresh");
-    const btnRunMocks = document.getElementById("btn-run-mocks");
-    const btnMetaRerun = document.getElementById("btn-meta-rerun");
-    const btnClear = document.getElementById("btn-clear");
-    const btnCopy = document.getElementById("btn-copy");
+  function refresh() {
+    const ledger = safe(() => window.__TYME_LEDGER__?.());
+    const meta = safe(() => window.__TYME_META__?.());
+    const groups = safe(() => window.__TYME_GROUPS__?.());
 
-    function setStatus(text, kind = "muted") {
+    lastSnapshot = { ledger, meta, groups };
+
+    $("status").textContent = JSON.stringify(
+      {
+        probes: ledger?.length ?? 0,
+        groups: groups?.length ?? 0,
+        meta_status: meta?.stability_rating ?? "—"
+      },
+      null,
+      2
+    );
+
+    renderGroups(groups || []);
+  }
+
+  function renderGroups(groups) {
+    if (!groups.length) {
+      $("groups").innerHTML = "<div class='mono'>No groups found.</div>";
+      return;
+    }
+
+    $("groups").innerHTML = groups.map(g => {
       const cls =
-        kind === "ok" ? "ok" :
-        kind === "warn" ? "warn" :
-        kind === "err" ? "err" : "muted";
-      elStatus.className = cls;
-      elStatus.textContent = `Status: ${text}`;
+        g.has_policy
+          ? "ok"
+          : g.has_consensus
+          ? "warn"
+          : "bad";
+
+      return `
+        <div class="group ${cls}">
+          <strong>${g.group_id}</strong><br/>
+          Probes: ${g.probe_count}<br/>
+          Consensus: ${g.has_consensus}<br/>
+          Policy: ${g.has_policy}<br/>
+          <button onclick="inspectGroup('${g.group_id}')">Inspect</button>
+        </div>
+      `;
+    }).join("");
+  }
+
+  window.inspectGroup = function (group_id) {
+    const group = safe(() => window.__TYME_GROUP__?.(group_id));
+    $("raw").textContent = JSON.stringify(group, null, 2);
+  };
+
+  function runPhase4() {
+    const ledgerObj = safe(() => window.__TYME_LEDGER_OBJ__?.());
+    if (!ledgerObj) {
+      alert("Ledger object hook not available.");
+      return;
     }
 
-    function safeCall(fnName) {
-      const fn = window[fnName];
-      if (typeof fn !== "function") return { ok: false, value: null, err: `Missing ${fnName}()` };
-      try {
-        return { ok: true, value: fn(), err: null };
-      } catch (e) {
-        return { ok: false, value: null, err: String(e?.message || e) };
-      }
+    const results = runPhaseFourForAllGroups(ledgerObj);
+    refresh();
+    alert(`Phase Four complete for ${results.length} group(s).`);
+  }
+
+  function exportLedger() {
+    const snap = safe(() => window.__TYME_LEDGER_OBJ__?.().exportSnapshot());
+    if (!snap) {
+      alert("Unable to export ledger.");
+      return;
     }
 
-    function pretty(obj) {
-      return JSON.stringify(obj, null, 2);
-    }
+    const blob = new Blob([JSON.stringify(snap, null, 2)], {
+      type: "application/json"
+    });
 
-    function buildSnapshot() {
-      const ledgerRes = safeCall("__TYME_LEDGER__");
-      const metaRes = safeCall("__TYME_META__");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "tyme-ledger-snapshot.json";
+    a.click();
+  }
 
-      const ledger = ledgerRes.ok ? ledgerRes.value : null;
-      const meta = metaRes.ok ? metaRes.value : null;
+  // Initial load
+  refresh();
+</script>
 
-      const snap = {
-        captured_at: new Date().toISOString(),
-        hooks: {
-          __TYME_LEDGER__: ledgerRes.ok,
-          __TYME_META__: metaRes.ok,
-          __TYME_META_RERUN__: typeof window.__TYME_META_RERUN__ === "function",
-        },
-        ledger_error: ledgerRes.ok ? null : ledgerRes.err,
-        meta_error: metaRes.ok ? null : metaRes.err,
-        ledger,
-        meta
-      };
-
-      return snap;
-    }
-
-    function renderSnapshot() {
-      const snap = buildSnapshot();
-
-      // Ledger badge
-      const ledgerCount = Array.isArray(snap.ledger) ? snap.ledger.length : null;
-      elLedgerBadge.textContent = ledgerCount === null ? "(unavailable)" : `(${ledgerCount} probes)`;
-
-      // Meta badge
-      const metaStatus = snap.meta?.stability_rating || snap.meta?.stability || null;
-      elMetaBadge.textContent = metaStatus ? `(${metaStatus})` : "(unavailable)";
-
-      elLedgerOut.textContent = snap.ledger ? pretty(snap.ledger) : `null\n\n${snap.ledger_error || ""}`.trim();
-      elMetaOut.textContent = snap.meta ? pretty(snap.meta) : `null\n\n${snap.meta_error || ""}`.trim();
-      elCombinedOut.textContent = pretty(snap);
-
-      // Status line
-      if (!snap.hooks.__TYME_LEDGER__ || !snap.hooks.__TYME_META__) {
-        setStatus("Hooks missing on this page. Ensure main.js defines window.__TYME_LEDGER__ and window.__TYME_META__.", "warn");
-      } else {
-        setStatus("Snapshot refreshed.", "ok");
-      }
-
-      return snap;
-    }
-
-    function clickRunMocks() {
-      // This button simulates the user clicking the UI button in the main app
-      // but without relying on DOM IDs in the UI. We call the same path indirectly:
-      // If your main.js exposes no function, we fall back to clicking btn-run-mock if present.
-      const uiBtn = document.getElementById("btn-run-mock");
-      if (uiBtn && typeof uiBtn.click === "function") {
-        uiBtn.click();
-        setStatus("Triggered Run Mock Probes via UI button.", "ok");
-      } else {
-        setStatus("Could not find #btn-run-mock in DOM. If debug.html is standalone, open the main UI first or expose a run function.", "warn");
-      }
-      // Re-render after a short tick
-      setTimeout(renderSnapshot, 50);
-    }
-
-    function clickClear() {
-      const uiBtn = document.getElementById("btn-clear-ledger");
-      if (uiBtn && typeof uiBtn.click === "function") {
-        uiBtn.click();
-        setStatus("Triggered Clear Session via UI button.", "ok");
-      } else {
-        setStatus("Could not find #btn-clear-ledger in DOM. If debug.html is standalone, open the main UI first.", "warn");
-      }
-      setTimeout(renderSnapshot, 50);
-    }
-
-    function rerunMeta() {
-      const res = safeCall("__TYME_META_RERUN__");
-      if (res.ok) setStatus("Meta recomputed.", "ok");
-      else setStatus(res.err, "warn");
-      setTimeout(renderSnapshot, 50);
-    }
-
-    async function copySnapshot() {
-      const text = elCombinedOut.textContent || "";
-      try {
-        await navigator.clipboard.writeText(text);
-        setStatus("Snapshot copied to clipboard.", "ok");
-      } catch {
-        // iOS can block clipboard: fallback instructions
-        setStatus("Clipboard blocked by iOS. Tap and hold the Combined Snapshot text to select and copy manually.", "warn");
-      }
-    }
-
-    // Wire buttons
-    btnRefresh.onclick = () => renderSnapshot();
-    btnRunMocks.onclick = () => clickRunMocks();
-    btnMetaRerun.onclick = () => rerunMeta();
-    btnClear.onclick = () => clickClear();
-    btnCopy.onclick = () => copySnapshot();
-
-    // Initial render
-    renderSnapshot();
-  </script>
 </body>
 </html>
