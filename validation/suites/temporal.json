@@ -1,0 +1,9 @@
+{
+  "suite": "temporal",
+  "threshold": 0.90,
+  "checks": [
+    { "id": "run_id_unique", "weight": 0.30 },
+    { "id": "timestamp_monotonic", "weight": 0.30 },
+    { "id": "history_append_only", "weight": 0.40 }
+  ]
+}
