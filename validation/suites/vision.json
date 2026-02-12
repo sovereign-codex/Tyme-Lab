@@ -1,0 +1,9 @@
+{
+  "suite": "vision",
+  "threshold": 0.85,
+  "checks": [
+    { "id": "vision_anchor_present", "weight": 0.60 },
+    { "id": "north_star_keywords_present", "weight": 0.40 }
+  ],
+  "north_star_keywords": ["sovereign", "coherence", "alignment", "governance", "continuity"]
+}
