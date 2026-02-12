@@ -1,0 +1,8 @@
+{
+  "suite": "ethical",
+  "threshold": 0.90,
+  "checks": [
+    { "id": "no_banned_terms", "weight": 0.60 },
+    { "id": "no_coercion_language", "weight": 0.40 }
+  ]
+}
