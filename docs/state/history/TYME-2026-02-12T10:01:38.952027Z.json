@@ -1,0 +1,26 @@
+{
+  "run_id": "TYME-2026-02-12T10:01:38.952027Z",
+  "epoch": "CONVERGENCE",
+  "probes": [
+    {
+      "probe_id": "PROBE-9341",
+      "mission_id": "ARCH-001",
+      "guardian_score": 0.95,
+      "convergence_score": 0.879,
+      "warnings": [],
+      "status": "APPROVED"
+    }
+  ],
+  "consensus": {
+    "agreement_ratio": 0.879,
+    "drift": 0.082
+  },
+  "resolution": {
+    "resolution_id": "RES-4522",
+    "action": "APPROVED"
+  },
+  "audit": {
+    "recorded_at": "2026-02-12T10:01:38.952027Z",
+    "ledger_version": "TYME-LEDGER-1.2"
+  }
+}
