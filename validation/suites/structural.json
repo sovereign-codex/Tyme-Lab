@@ -1,0 +1,10 @@
+{
+  "suite": "structural",
+  "threshold": 0.80,
+  "checks": [
+    { "id": "has_root_node", "weight": 0.25 },
+    { "id": "has_layers", "weight": 0.25 },
+    { "id": "has_lifecycle", "weight": 0.25 },
+    { "id": "has_required_headers", "weight": 0.25 }
+  ]
+}
