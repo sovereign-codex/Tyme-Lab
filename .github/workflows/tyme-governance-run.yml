@@ -22,7 +22,7 @@ jobs:
 
       - name: Run Governance Engine
         run: |
-          python scripts/MODEV_SUITE_RUNNER_V2_1
+          python scripts/MODEV_SUITE_RUNNER_V2_1.py
 
       - name: Commit State Updates
         run: |
