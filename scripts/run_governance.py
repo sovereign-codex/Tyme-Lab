@@ -1,7 +1,19 @@
 import json
-import random
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Dict, List, Tuple, Optional
+
+
+# =========================
+# TYME MoDev Suite Runner V2
+# =========================
+# Constitutional semantics:
+# - Drift scale: 0.0 = perfect coherence, 1.0 = maximum divergence
+# - Equal weights across four cornerstone suites
+# - Drift = 1 - mean(structural, ethical, vision, temporal)
+# - Drift components = 1 - suite_score
+# - Soft enforcement: BLOCK does not fail workflow (yet)
+
 
 STATE_DIR = Path("docs/state")
 HISTORY_DIR = STATE_DIR / "history"
@@ -9,195 +21,314 @@ HISTORY_DIR = STATE_DIR / "history"
 SUITES_DIR = Path("validation/suites")
 VISION_ANCHOR = Path("validation/anchors/vision_anchor.md")
 
-STATE_DIR.mkdir(parents=True, exist_ok=True)
-HISTORY_DIR.mkdir(parents=True, exist_ok=True)
 
-def utc_ts():
+def utc_ts() -> str:
     return datetime.utcnow().isoformat(timespec="seconds") + "Z"
 
-def load_json(p: Path, default=None):
-    if not p.exists():
+
+def load_json(path: Path, default: Any = None) -> Any:
+    if not path.exists():
         return default
-    return json.loads(p.read_text())
+    return json.loads(path.read_text(encoding="utf-8"))
 
-def save_json(p: Path, obj):
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(obj, indent=2))
 
-def load_suites():
-    suites = {}
-    for p in SUITES_DIR.glob("*.json"):
-        suites[p.stem] = load_json(p, {})
+def save_json(path: Path, obj: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(obj, indent=2), encoding="utf-8")
+
+
+def load_suites() -> Dict[str, Dict[str, Any]]:
+    suites: Dict[str, Dict[str, Any]] = {}
+    if SUITES_DIR.exists():
+        for p in SUITES_DIR.glob("*.json"):
+            suites[p.stem] = load_json(p, default={}) or {}
     return suites
 
-def previous_latest():
-    # Use last written latest.json as previous baseline
+
+def previous_latest() -> Optional[Dict[str, Any]]:
     return load_json(STATE_DIR / "latest.json", default=None)
 
-def compute_drift(prev, curr):
-    # Drift is cross-axis delta of the 4 cornerstone suite scores.
-    if not prev:
-        return {"drift": 0.0, "components": {}, "note": "no previous baseline"}
-    prev_s = (prev.get("suites") or {})
-    curr_s = (curr.get("suites") or {})
-    components = {}
-    for k in ["structural", "ethical", "vision", "temporal"]:
-        components[k] = round(float(curr_s.get(k, 0)) - float(prev_s.get(k, 0)), 3)
-    drift = round(sum(abs(v) for v in components.values()) / 4.0, 3)
-    return {"drift": drift, "components": components}
 
-def structural_score(spec: dict):
-    # Minimal structural assertions (v1). Later we’ll swap to AVOT-Guardian checks directly.
-    ok = 0
-    total = 4
-    if spec.get("root_node"): ok += 1
-    if isinstance(spec.get("layers"), list) and len(spec["layers"]) >= 3: ok += 1
-    if spec.get("lifecycle"): ok += 1
-    if spec.get("headers_ok", True): ok += 1
-    return round(ok / total, 3)
+# -------------------------
+# Governance classification
+# -------------------------
+def classify_governance_status(drift: float) -> str:
+    # Constitutional thresholds
+    if drift <= 0.15:
+        return "STABLE"
+    if drift <= 0.35:
+        return "WATCH"
+    if drift <= 0.60:
+        return "WARNING"
+    return "BLOCK"
 
-def ethical_score(text_blob: str):
-    # Minimal ethics scan (v1). Later we’ll plug into Guardian ethics scoring.
-    banned = ["exploit", "manipulate", "coerce"]
-    hits = [w for w in banned if w in (text_blob or "").lower()]
-    if hits:
-        return 0.0, [f"banned-term:{h}" for h in hits]
-    return 1.0, []
 
-def vision_score(text_blob: str, keywords):
-    anchor = VISION_ANCHOR.read_text() if VISION_ANCHOR.exists() else ""
-    anchor_present = 1.0 if anchor.strip() and anchor.strip()[:40] in (text_blob or "") else 0.0
-    kw_hits = sum(1 for k in keywords if k in (text_blob or "").lower())
-    kw_score = 1.0 if kw_hits >= max(2, len(keywords)//3) else round(kw_hits / max(1, len(keywords)), 3)
-    # Weighted blend
-    score = round(0.6 * anchor_present + 0.4 * kw_score, 3)
-    warnings = []
-    if anchor_present == 0.0:
-        warnings.append("vision-anchor-missing")
-    if kw_score < 0.5:
-        warnings.append("north-star-keywords-weak")
+# -------------------------
+# Suite scoring (v2 minimal)
+# -------------------------
+def suite_structural(spec: Dict[str, Any]) -> Tuple[float, List[str]]:
+    """
+    Minimal structural assertions. Replace later with AVOT-Guardian structural scoring.
+    """
+    warnings: List[str] = []
+    checks_total = 4
+    passed = 0
+
+    if spec.get("root_node"):
+        passed += 1
+    else:
+        warnings.append("missing-root-node")
+
+    layers = spec.get("layers")
+    if isinstance(layers, list) and len(layers) >= 3:
+        passed += 1
+    else:
+        warnings.append("insufficient-layers")
+
+    if spec.get("lifecycle"):
+        passed += 1
+    else:
+        warnings.append("missing-lifecycle")
+
+    if spec.get("headers_ok", True):
+        passed += 1
+    else:
+        warnings.append("missing-required-headers")
+
+    score = round(passed / checks_total, 3)
     return score, warnings
 
-def temporal_score(run_id: str, ts: str):
-    # v1: ensure run_id is unique + timestamp monotonic vs previous latest
-    prev = previous_latest()
-    warnings = []
-    ok = 0
-    total = 3
 
-    # run_id_unique
+def suite_ethical(text_blob: str) -> Tuple[float, List[str]]:
+    """
+    Minimal ethics scan. Replace later with AVOT-Guardian ethics scoring.
+    """
+    warnings: List[str] = []
+    banned = ["exploit", "manipulate", "coerce"]
+
+    blob = (text_blob or "").lower()
+    hits = [w for w in banned if w in blob]
+    if hits:
+        warnings.extend([f"banned-term:{h}" for h in hits])
+        return 0.0, warnings
+
+    return 1.0, warnings
+
+
+def suite_vision(text_blob: str, north_star_keywords: List[str]) -> Tuple[float, List[str]]:
+    """
+    Minimal vision continuity check:
+    - anchor present (60%)
+    - keyword density (40%)
+    """
+    warnings: List[str] = []
+    blob = (text_blob or "").lower()
+
+    anchor_text = VISION_ANCHOR.read_text(encoding="utf-8") if VISION_ANCHOR.exists() else ""
+    anchor_sig = (anchor_text.strip()[:64]).lower() if anchor_text.strip() else ""
+
+    anchor_present = 1.0 if (anchor_sig and anchor_sig in blob) else 0.0
+    if anchor_present == 0.0:
+        warnings.append("vision-anchor-missing")
+
+    keywords = [k.lower() for k in (north_star_keywords or []) if isinstance(k, str)]
+    if not keywords:
+        # No keywords configured → treat as neutral but warn
+        warnings.append("north-star-keywords-empty")
+        kw_score = 1.0  # avoid penalizing until you define keywords
+    else:
+        hits = sum(1 for k in keywords if k in blob)
+        # require at least 2 hits or 1/3 of keywords (whichever larger)
+        required = max(2, len(keywords) // 3)
+        if hits >= required:
+            kw_score = 1.0
+        else:
+            kw_score = round(hits / max(1, len(keywords)), 3)
+            if kw_score < 0.5:
+                warnings.append("north-star-keywords-weak")
+
+    score = round(0.6 * anchor_present + 0.4 * kw_score, 3)
+    return score, warnings
+
+
+def suite_temporal(run_id: str, recorded_at: str) -> Tuple[float, List[str]]:
+    """
+    Temporal continuity:
+    - run_id uniqueness vs latest
+    - monotonic timestamp vs latest
+    - history append-only (assumed true if we can write a new history file)
+    """
+    warnings: List[str] = []
+    prev = previous_latest()
+
+    checks_total = 3
+    passed = 0
+
+    # run_id uniqueness
     if not prev or prev.get("run_id") != run_id:
-        ok += 1
+        passed += 1
     else:
         warnings.append("run-id-not-unique")
 
-    # timestamp_monotonic
-    if not prev or (prev.get("audit", {}).get("recorded_at", "") < ts):
-        ok += 1
+    # timestamp monotonic
+    prev_ts = ""
+    if prev and isinstance(prev.get("audit"), dict):
+        prev_ts = str(prev["audit"].get("recorded_at", ""))
+
+    if (not prev_ts) or (prev_ts < recorded_at):
+        passed += 1
     else:
         warnings.append("timestamp-not-monotonic")
 
-    # history_append_only (we’ll verify we can write a new history file)
-    ok += 1
+    # history append-only: counted as pass (we always write a new history file)
+    passed += 1
 
-    return round(ok / total, 3), warnings
+    score = round(passed / checks_total, 3)
+    return score, warnings
 
-def main():
-    suites = load_suites()
 
-    timestamp = utc_ts()
-    run_id = f"TYME-{timestamp}"
+# -------------------------
+# Core drift computation v2
+# -------------------------
+def compute_drift_from_scores(scores: Dict[str, float]) -> Dict[str, Any]:
+    keys = ["structural", "ethical", "vision", "temporal"]
+    mean_score = round(sum(float(scores.get(k, 0.0)) for k in keys) / 4.0, 3)
 
-    # v1 “spec” stub — later this becomes the real architecture spec under evaluation
+    # Constitutional drift: divergence from coherence
+    drift = round(1.0 - mean_score, 3)
+
+    # Component drift: divergence per axis
+    drift_components = {k: round(1.0 - float(scores.get(k, 0.0)), 3) for k in keys}
+
+    return {
+        "agreement_ratio": mean_score,
+        "drift": drift,
+        "drift_components": drift_components,
+        "governance_status": classify_governance_status(drift),
+    }
+
+
+# -------------------------
+# Entry
+# -------------------------
+def main() -> None:
+    suites_cfg = load_suites()
+
+    recorded_at = utc_ts()
+    run_id = f"TYME-{recorded_at}"
+
+    # v2: spec stub (swap later for real architecture spec / scroll under test)
     spec = {
         "root_node": "TymeCore",
         "layers": ["interface", "orchestration", "governance", "memory"],
         "lifecycle": ["seed", "validate", "resolve", "archive"],
-        "headers_ok": True
+        "headers_ok": True,
     }
 
-    # Text blob used for ethics/vision checks (v1)
-    blob = (VISION_ANCHOR.read_text() if VISION_ANCHOR.exists() else "") + "\n" + json.dumps(spec)
+    vision_anchor = VISION_ANCHOR.read_text(encoding="utf-8") if VISION_ANCHOR.exists() else ""
+    blob = f"{vision_anchor}\n{json.dumps(spec, sort_keys=True)}"
 
-    structural = structural_score(spec)
-    ethical, ethical_warnings = ethical_score(blob)
+    # thresholds from suite configs (fallbacks are constitutional defaults)
+    thr_struct = float(suites_cfg.get("structural", {}).get("threshold", 0.80))
+    thr_eth = float(suites_cfg.get("ethical", {}).get("threshold", 0.90))
+    thr_vis = float(suites_cfg.get("vision", {}).get("threshold", 0.85))
+    thr_temp = float(suites_cfg.get("temporal", {}).get("threshold", 0.90))
+    north_star_keywords = suites_cfg.get("vision", {}).get("north_star_keywords", []) or []
 
-    vision_keywords = suites.get("vision", {}).get("north_star_keywords", [])
-    vision, vision_warnings = vision_score(blob, [k.lower() for k in vision_keywords])
+    # suite scores + warnings
+    s_score, s_warn = suite_structural(spec)
+    e_score, e_warn = suite_ethical(blob)
+    v_score, v_warn = suite_vision(blob, north_star_keywords=north_star_keywords)
+    t_score, t_warn = suite_temporal(run_id, recorded_at)
 
-    temporal, temporal_warnings = temporal_score(run_id, timestamp)
-
-    suites_out = {
-        "structural": structural,
-        "ethical": ethical,
-        "vision": vision,
-        "temporal": temporal
+    suite_scores = {
+        "structural": s_score,
+        "ethical": e_score,
+        "vision": v_score,
+        "temporal": t_score,
     }
 
-    # Aggregate governance “approval” (simple rule for now)
+    consensus = compute_drift_from_scores(suite_scores)
+    status = consensus["governance_status"]
+
+    # approval is suite-threshold based (separate from drift class)
     approved = (
-        structural >= suites.get("structural", {}).get("threshold", 0.8) and
-        ethical >= suites.get("ethical", {}).get("threshold", 0.9) and
-        vision >= suites.get("vision", {}).get("threshold", 0.85) and
-        temporal >= suites.get("temporal", {}).get("threshold", 0.9)
+        s_score >= thr_struct and
+        e_score >= thr_eth and
+        v_score >= thr_vis and
+        t_score >= thr_temp
     )
 
-    state = {
+    # probes are now explicitly tied to suites
+    probes = [
+        {
+            "probe_id": "SUITE-STRUCTURAL",
+            "mission_id": "STRUCTURAL-BASELINE",
+            "score": s_score,
+            "warnings": s_warn,
+            "status": "PASS" if s_score >= thr_struct else "FAIL",
+        },
+        {
+            "probe_id": "SUITE-ETHICAL",
+            "mission_id": "ETHICAL-BASELINE",
+            "score": e_score,
+            "warnings": e_warn,
+            "status": "PASS" if e_score >= thr_eth else "FAIL",
+        },
+        {
+            "probe_id": "SUITE-VISION",
+            "mission_id": "VISION-CONTINUITY",
+            "score": v_score,
+            "warnings": v_warn,
+            "status": "PASS" if v_score >= thr_vis else "FAIL",
+        },
+        {
+            "probe_id": "SUITE-TEMPORAL",
+            "mission_id": "TEMPORAL-INTEGRITY",
+            "score": t_score,
+            "warnings": t_warn,
+            "status": "PASS" if t_score >= thr_temp else "FAIL",
+        },
+    ]
+
+    state: Dict[str, Any] = {
         "run_id": run_id,
         "epoch": "MODEV_VALIDATION",
-        "suites": suites_out,
-        "probes": [
-            {
-                "probe_id": "SUITE-STRUCTURAL",
-                "mission_id": "STRUCTURAL-BASELINE",
-                "score": structural,
-                "warnings": [],
-                "status": "PASS" if structural >= suites.get("structural", {}).get("threshold", 0.8) else "FAIL"
-            },
-            {
-                "probe_id": "SUITE-ETHICAL",
-                "mission_id": "ETHICAL-BASELINE",
-                "score": ethical,
-                "warnings": ethical_warnings,
-                "status": "PASS" if ethical >= suites.get("ethical", {}).get("threshold", 0.9) else "FAIL"
-            },
-            {
-                "probe_id": "SUITE-VISION",
-                "mission_id": "VISION-ANCHOR",
-                "score": vision,
-                "warnings": vision_warnings,
-                "status": "PASS" if vision >= suites.get("vision", {}).get("threshold", 0.85) else "FAIL"
-            },
-            {
-                "probe_id": "SUITE-TEMPORAL",
-                "mission_id": "TEMPORAL-INTEGRITY",
-                "score": temporal,
-                "warnings": temporal_warnings,
-                "status": "PASS" if temporal >= suites.get("temporal", {}).get("threshold", 0.9) else "FAIL"
-            }
-        ],
+        "suites": suite_scores,
+        "probes": probes,
         "resolution": {
-            "action": "APPROVE" if approved else "REVIEW_REQUIRED"
+            "action": "APPROVE" if approved else "REVIEW_REQUIRED",
+            "governance_status": status,
+            "notes": (
+                "Soft enforcement active: BLOCK does not fail workflow."
+                if status == "BLOCK"
+                else "Soft enforcement active."
+            ),
         },
         "audit": {
-            "recorded_at": timestamp,
+            "recorded_at": recorded_at,
             "ledger_version": "TYME-LEDGER-2.0",
-            "engine": "MODEV_SUITE_RUNNER_V1"
-        }
+            "engine": "MODEV_SUITE_RUNNER_V2",
+            "drift_scale": "0.0=coherent,1.0=divergent",
+            "drift_model": "drift=1-mean(suite_scores)",
+        },
+        "consensus": consensus,
     }
 
-    # Drift from previous run
-    drift = compute_drift(previous_latest(), state)
-    state["consensus"] = {
-        "agreement_ratio": round(sum(suites_out.values()) / 4.0, 3),
-        "drift": drift["drift"],
-        "drift_components": drift["components"]
-    }
+    # Persist
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    HISTORY_DIR.mkdir(parents=True, exist_ok=True)
 
     save_json(STATE_DIR / "latest.json", state)
     save_json(HISTORY_DIR / f"{run_id}.json", state)
 
-    print("MoDev governance run complete:", run_id)
+    # Soft enforcement logging
+    print(f"[TYME] MoDev run complete: {run_id}")
+    print(f"[TYME] suites: {suite_scores}")
+    print(f"[TYME] drift: {consensus['drift']} status: {status}")
+    if status == "BLOCK":
+        print("[TYME] WARNING: governance_status=BLOCK (soft enforcement; workflow continues).")
+
 
 if __name__ == "__main__":
     main()
