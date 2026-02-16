@@ -1,0 +1,29 @@
+{
+  "run_id": "UUID",
+  "timestamp": "ISO-8601",
+  "goal": "High-level objective",
+  "plan_summary": "Concise description of approach",
+  "task_graph": [
+    {
+      "task_id": "T1",
+      "description": "Task description",
+      "assigned_agent": "agent_name",
+      "status": "pending|running|completed|failed",
+      "dependencies": ["T0"],
+      "evidence_links": [],
+      "output_artifacts": []
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "A1",
+      "type": "report|diagram|spec|code",
+      "location": "repo path or URI",
+      "summary": "Brief artifact description"
+    }
+  ],
+  "risks_identified": [],
+  "assumptions": [],
+  "execution_notes": "",
+  "final_status": "completed|partial|failed"
+}
