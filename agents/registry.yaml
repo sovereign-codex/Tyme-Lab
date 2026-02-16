@@ -1,0 +1,43 @@
+agents:
+
+  planner:
+    description: "Generates structured execution plans from high-level goals."
+    capabilities:
+      - task_decomposition
+      - dependency_mapping
+      - risk_flagging
+
+  researcher:
+    description: "Performs domain research and evidence gathering."
+    capabilities:
+      - literature_review
+      - competitive_analysis
+      - data_summarization
+
+  hardware_engineer:
+    description: "Designs and documents hardware modules."
+    capabilities:
+      - schematic_generation
+      - BOM_creation
+      - lifecycle_documentation
+
+  node_agent:
+    description: "Represents edge hardware nodes (TYME Node v0+)."
+    capabilities:
+      - sensor_data_collection
+      - anomaly_detection
+      - daily_field_report
+
+  synthesis_agent:
+    description: "Combines outputs into artifact-ready deliverables."
+    capabilities:
+      - report_generation
+      - executive_summary
+      - visualization_structuring
+
+  governance_agent:
+    description: "Maintains risk, compliance, and continuity safeguards."
+    capabilities:
+      - risk_analysis
+      - continuity_planning
+      - disclosure_review
