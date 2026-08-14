@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "institutional-environment-event.v0.schema.json",
+  "title": "Institutional Environment Event v0",
+  "description": "Experimental event contract for Work/branch/environment lineage. This schema grants no authority by itself.",
+  "type": "object",
+  "required": ["event_id", "timestamp", "work_id", "environment", "authority_class", "flow_state"],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "work_id": {"type": "string", "minLength": 1},
+    "objective_id": {"type": ["string", "null"]},
+    "environment": {
+      "enum": ["branch_lab", "observation", "containment", "evidence_temporal", "sovereign_execution"]
+    },
+    "branch": {
+      "type": ["object", "null"],
+      "properties": {
+        "repository": {"type": "string"},
+        "name": {"type": "string"},
+        "parent": {"type": ["string", "null"]},
+        "branch_type": {"type": ["string", "null"]},
+        "lifecycle_state": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "execution_substrate": {
+      "enum": ["github_hosted", "external_api", "rented_compute", "rented_gpu", "tyme_node_01", "qil_node", "unknown"]
+    },
+    "authority_class": {"enum": ["L0", "L1", "L2", "L3", "L4"]},
+    "authority_state": {"type": ["string", "null"]},
+    "flow_state": {"type": "string", "minLength": 1},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "causal_predecessors": {"type": "array", "items": {"type": "string"}},
+    "delta_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["operation", "subject"],
+        "properties": {
+          "operation": {"enum": ["add_relation", "strengthen_relation", "weaken_relation", "contradict_relation", "supersede_relation", "add_hypothesis", "promote_posture", "demote_posture", "request_replication", "add_unresolved_question"]},
+          "subject": {"type": "string"},
+          "object": {"type": ["string", "null"]},
+          "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+          "basis": {"type": ["string", "null"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "next_valid_action": {"type": ["string", "null"]},
+    "review_required": {"type": "boolean"},
+    "terminal_disposition": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}
