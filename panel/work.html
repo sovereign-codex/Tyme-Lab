@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TymeLab — Work</title>
+  <link rel="stylesheet" href="/panel/style.css">
+  <style>
+    .work-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:20px 0; }
+    .work-state { border:1px solid #3b6870; border-radius:12px; padding:16px; background:rgba(0,20,25,.45); }
+    .work-state strong { display:block; font-size:1.7rem; margin-top:8px; }
+    .contract { border:1px solid #3b6870; border-radius:12px; padding:18px; margin-top:18px; }
+    code { overflow-wrap:anywhere; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Tyme Hall</h2>
+    <a href="/panel/index.html">Overview</a>
+    <a href="/panel/work.html">TymeLab Work</a>
+    <a href="/panel/governance.html">Governance Summary</a>
+    <a href="/panel/drift.html">Drift & Stability</a>
+    <a href="/panel/continuum.html">Continuum Meta-Model</a>
+  </div>
+  <div class="content">
+    <h1>TymeLab — Governed Work</h1>
+    <p>Resident administrative facilitation. Prepare broadly. Execute narrowly. Never manufacture authority.</p>
+
+    <div class="work-grid" aria-label="Work state summary">
+      <div class="work-state">Active<strong id="active-count">—</strong></div>
+      <div class="work-state">Preparing<strong id="preparing-count">—</strong></div>
+      <div class="work-state">Authorized<strong id="authorized-count">—</strong></div>
+      <div class="work-state">Blocked<strong id="blocked-count">—</strong></div>
+      <div class="work-state">Awaiting Review<strong id="review-count">—</strong></div>
+    </div>
+
+    <section class="contract">
+      <h2>Authority Boundary</h2>
+      <p><b>Observe</b> what the Work record permits. <b>Prepare</b> reversible artifacts. <b>Execute</b> only explicitly granted actions. <b>Escalate</b> ambiguity, governance changes, Canon promotion, destructive actions, or unmet review gates.</p>
+      <p>Schema: <code>/schemas/work.v1.schema.json</code></p>
+      <p>Contract: <code>/docs/steward-authority-envelope.md</code></p>
+    </section>
+
+    <section class="contract">
+      <h2>Queue</h2>
+      <div id="work-queue">No Work feed is bound yet. This surface is intentionally read-only until a governed Work store is connected.</div>
+    </section>
+  </div>
+  <script>
+    // Read-only projection point. A later governed adapter may set window.__TYMELAB_WORK__.
+    const work = Array.isArray(window.__TYMELAB_WORK__) ? window.__TYMELAB_WORK__ : [];
+    const counts = work.reduce((a,w) => { a[w.state]=(a[w.state]||0)+1; return a; }, {});
+    const map = {active:'active-count',preparing:'preparing-count',authorized:'authorized-count',blocked:'blocked-count',awaiting_review:'review-count'};
+    Object.entries(map).forEach(([state,id]) => document.getElementById(id).textContent = counts[state] || 0);
+    if (work.length) {
+      document.getElementById('work-queue').innerHTML = work.map(w => `<article><h3>${String(w.title || w.work_id)}</h3><p>${String(w.state)} · ${String(w.authority?.mode || 'no authority')}</p></article>`).join('');
+    }
+  </script>
+</body>
+</html>
