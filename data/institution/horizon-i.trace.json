@@ -1,0 +1,31 @@
+{
+  "trace_id": "institution-horizon-i",
+  "event_type": "institutional_state_marker",
+  "observed_date": "2026-08-15",
+  "branch": "institution/horizon-i-declaration",
+  "declaration_ref": "docs/institution/INSTITUTIONAL_STATE_DECLARATION_HORIZON_I.md",
+  "state_snapshot_ref": "data/institution/horizon-i.state.json",
+  "preceding_lineage": [
+    "public Tyme Hall orientation deployed",
+    "external context-zero participability evaluation performed",
+    "Hall Work/Branch lifecycle established and promoted",
+    "first public /work projection established",
+    "TymeLab resident facilitator authority envelope reviewed and merged",
+    "invalid Actions workflow boundary identified and corrected",
+    "institutional environments architecture reconciled against current main",
+    "institutional environments v0 promoted to main",
+    "preservation-only institutional_context implementation branch opened"
+  ],
+  "observed_transition": {
+    "from": "architecture_and_surface_formation",
+    "to": "early_institutional_operation_and_coherent_embodiment"
+  },
+  "epistemic_posture": "institutional_observation",
+  "authority_effect": "none_until_reviewed_and_promoted",
+  "next_valid_actions": [
+    "review Horizon I declaration for accuracy and overclaiming",
+    "promote declaration and snapshot if accepted",
+    "continue preservation-only institutional_context implementation from the declared baseline",
+    "measure subsequent institutional deltas relative to Horizon I"
+  ]
+}

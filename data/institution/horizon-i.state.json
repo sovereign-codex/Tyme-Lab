@@ -1,0 +1,80 @@
+{
+  "snapshot_id": "horizon-i",
+  "snapshot_type": "institutional_state_observation",
+  "observed_date": "2026-08-15",
+  "status": "proposed_for_shared_standing",
+  "declaration": "docs/institution/INSTITUTIONAL_STATE_DECLARATION_HORIZON_I.md",
+  "core_loop": [
+    "observation",
+    "work",
+    "branch",
+    "evidence",
+    "review",
+    "authorized_execution",
+    "trace",
+    "institutional_memory",
+    "renewed_observation"
+  ],
+  "surfaces": {
+    "tyme_hall": {
+      "role": "public_orientation_and_participation",
+      "posture": "fielded_evolving"
+    },
+    "office": {
+      "role": "stewardship_routing_maturation_adjudication",
+      "posture": "operational_architecture"
+    },
+    "work_branch": {
+      "role": "intent_and_bounded_lineage",
+      "posture": "machine_readable_foundation"
+    },
+    "tyme_lab": {
+      "role": "resident_administrative_facilitator",
+      "posture": "governed_foundation",
+      "authority_rule": "prepare_broadly_execute_narrowly_never_manufacture_authority"
+    },
+    "institutional_environments": {
+      "role": "bounded_contexts_for_governed_work",
+      "posture": "architecture_merged_implementation_pending"
+    },
+    "runtime_atlas": {
+      "role": "derived_projection_of_institutional_activity",
+      "posture": "architecture_defined_projection_pending"
+    },
+    "trace": {
+      "role": "evidence_return_and_temporal_lineage",
+      "posture": "existing_substrate_reconciliation_pending"
+    },
+    "tyme": {
+      "role": "continuity_and_orchestration",
+      "posture": "directional_architecture_not_unbounded_sovereign"
+    },
+    "qil": {
+      "role": "future_federation_across_sovereign_nodes",
+      "posture": "deferred_until_local_contracts_stabilize"
+    }
+  },
+  "institutional_invariants": [
+    "vision_is_not_state",
+    "evidence_precedes_durable_promotion",
+    "capability_does_not_imply_authority",
+    "no_silent_authority_bearing_transition",
+    "branch_existence_is_not_canon",
+    "derived_views_do_not_supersede_sources",
+    "execution_requires_evidence_return",
+    "human_sovereignty_is_encoded_in_authority_boundaries",
+    "institutional_memory_preserves_why",
+    "coherence_precedes_scale"
+  ],
+  "known_unfinished_work": [
+    "preserve_institutional_context_through_archivist_and_trace",
+    "reconstruct_runtime_atlas_from_observed_sources",
+    "expose_more_real_participable_work_through_hall",
+    "reconcile_registries_with_observable_implementation",
+    "strengthen_external_evidence_and_reproducible_research",
+    "develop_observer_first_drift_semantics",
+    "define_containment_contracts_before_adversarial_expansion",
+    "measure_compute_workloads_before_node_01_specification"
+  ],
+  "authority_note": "This snapshot describes observed institutional posture. It grants no execution, Canon, governance, or autonomous authority by itself."
+}
