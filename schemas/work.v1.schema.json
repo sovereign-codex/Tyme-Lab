@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/work.v1.schema.json",
+  "title": "TymeLab Work Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["work_id", "title", "state", "origin", "authority", "review", "lineage"],
+  "properties": {
+    "work_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "summary": {"type": "string"},
+    "state": {
+      "type": "string",
+      "enum": ["active", "preparing", "authorized", "blocked", "awaiting_review", "completed", "superseded"]
+    },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ref"],
+      "properties": {
+        "kind": {"type": "string", "enum": ["hall_contribution", "office_signal", "github", "notion", "human_directive", "runtime_signal", "other"]},
+        "ref": {"type": "string", "minLength": 1},
+        "received_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "observe", "prepare", "execute", "escalate_on", "granted_by", "granted_at"],
+      "properties": {
+        "authority_id": {"type": "string"},
+        "mode": {"type": "string", "enum": ["steward", "fabricator", "executor"]},
+        "observe": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "prepare": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "execute": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "escalate_on": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+        "granted_by": {"type": "string", "minLength": 1},
+        "granted_at": {"type": "string", "format": "date-time"},
+        "expires_at": {"type": ["string", "null"], "format": "date-time"},
+        "supersedes": {"type": ["string", "null"]}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "status"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "status": {"type": "string", "enum": ["not_required", "pending", "approved", "changes_requested", "rejected"]},
+        "gate": {"type": ["string", "null"]},
+        "reviewer_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["created_at", "created_by"],
+      "properties": {
+        "created_at": {"type": "string", "format": "date-time"},
+        "created_by": {"type": "string", "minLength": 1},
+        "parent_work_id": {"type": ["string", "null"]},
+        "supersedes_work_id": {"type": ["string", "null"]},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "artifact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "last_action": {"type": ["string", "null"]},
+        "last_actor": {"type": ["string", "null"]},
+        "last_transition_at": {"type": ["string", "null"], "format": "date-time"},
+        "trace_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    }
+  }
+}
