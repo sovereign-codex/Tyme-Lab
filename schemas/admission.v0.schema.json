@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/admission.v0.schema.json",
+  "title": "TymeLab Admission Record v0",
+  "description": "Experimental non-authoritative admission envelope. Admission preserves provenance and determines Work eligibility; it does not grant execution authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["admission_id", "source_object_ref", "received_at", "origin", "content", "provenance", "assessment", "disposition", "admitted_by", "admitted_at"],
+  "properties": {
+    "admission_id": {"type": "string", "minLength": 1},
+    "source_object_ref": {"type": "string", "minLength": 1},
+    "received_at": {"type": "string", "format": "date-time"},
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "actor_ref", "implementation_ref", "context_ref"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["human", "chat_intelligence", "github", "replit", "notion", "hall", "office", "avot", "qil", "runtime", "historical", "local_device", "other"]
+        },
+        "actor_ref": {"type": ["string", "null"]},
+        "implementation_ref": {"type": ["string", "null"]},
+        "context_ref": {"type": ["string", "null"]},
+        "provider": {"type": ["string", "null"]},
+        "interface_or_surface": {"type": ["string", "null"]},
+        "source_timestamp": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "summary", "epistemic_class", "requested_action_class", "target_refs"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string"},
+        "epistemic_class": {
+          "type": "string",
+          "enum": ["OBSERVATION", "INFERENCE", "HYPOTHESIS", "PROPOSAL", "REQUEST", "UNKNOWN", "MIXED"]
+        },
+        "requested_action_class": {
+          "type": "string",
+          "enum": ["NONE", "OBSERVE", "PREPARE", "EXECUTE", "REVIEW", "ADJUDICATE", "PUBLISH", "MIGRATE", "OTHER"]
+        },
+        "target_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_refs", "artifact_refs", "lineage_refs"],
+      "properties": {
+        "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "artifact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "lineage_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["duplicate_of", "ambiguity_flags", "contamination_flags", "institutional_impact_class", "review_required"],
+      "properties": {
+        "duplicate_of": {"type": ["string", "null"]},
+        "ambiguity_flags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "contamination_flags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "institutional_impact_class": {
+          "type": "string",
+          "enum": ["NONE", "LOW", "MODERATE", "HIGH", "CONSTITUTIONAL", "UNKNOWN"]
+        },
+        "review_required": {"type": "boolean"}
+      }
+    },
+    "disposition": {
+      "type": "string",
+      "enum": ["OBSERVE_ONLY", "ADMIT_TO_WORK", "ATTACH_TO_EXISTING_WORK", "REQUIRES_REVIEW", "REJECT_AS_INVALID", "QUARANTINE"]
+    },
+    "work_ref": {"type": ["string", "null"]},
+    "admitted_by": {"type": "string", "minLength": 1},
+    "admitted_at": {"type": "string", "format": "date-time"},
+    "notes": {"type": "string"}
+  }
+}
