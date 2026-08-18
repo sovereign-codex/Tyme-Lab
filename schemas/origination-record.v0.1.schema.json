@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/origination-record.v0.1.schema.json",
+  "title": "Origination Record v0.1",
+  "description": "Experimental contract for unsolicited intelligence-originated observations. Validity grants intake/routing only; it does not grant Canon, execution, merge, governance, or truth authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_version",
+    "origination_id",
+    "originator",
+    "observation",
+    "context",
+    "proposition",
+    "evidence_refs",
+    "epistemic_posture",
+    "uncertainty",
+    "dissent",
+    "implications",
+    "requested_disposition",
+    "lineage",
+    "timestamp"
+  ],
+  "properties": {
+    "record_version": {"const": "0.1"},
+    "origination_id": {"type": "string", "minLength": 1},
+    "originator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identity", "source_class", "capability_context"],
+      "properties": {
+        "identity": {"type": "string", "minLength": 1},
+        "source_class": {
+          "type": "string",
+          "enum": ["human", "external_model", "resident_model", "avot", "tool", "instrument", "service", "unknown"]
+        },
+        "capability_context": {"type": "string", "minLength": 1}
+      }
+    },
+    "observation": {"type": "string", "minLength": 1},
+    "context": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["surface"],
+      "properties": {
+        "surface": {"type": "string", "minLength": 1},
+        "scope": {"type": ["string", "null"]},
+        "conditions": {"type": ["string", "null"]}
+      }
+    },
+    "proposition": {"type": "string", "minLength": 1},
+    "evidence_refs": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "evidence_posture": {
+      "type": "string",
+      "enum": ["inspectable", "partial", "experiential", "interpretive", "none_available"]
+    },
+    "epistemic_posture": {
+      "type": "string",
+      "enum": ["observation", "interpretation", "hypothesis", "question", "contradiction", "proposal"]
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement"],
+      "properties": {
+        "statement": {"type": "string", "minLength": 1},
+        "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+        "missing_evidence": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "dissent": {"type": "array", "items": {"type": "string"}},
+    "implications": {"type": "array", "items": {"type": "string"}},
+    "requested_disposition": {
+      "type": "string",
+      "enum": [
+        "preserve",
+        "connect",
+        "investigate",
+        "reproduce",
+        "challenge",
+        "route_for_office_review",
+        "open_bounded_work",
+        "propose_implementation",
+        "reject_or_archive"
+      ]
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "work_refs": {"type": "array", "items": {"type": "string"}},
+        "branch_refs": {"type": "array", "items": {"type": "string"}},
+        "trace_refs": {"type": "array", "items": {"type": "string"}},
+        "office_refs": {"type": "array", "items": {"type": "string"}},
+        "packet_refs": {"type": "array", "items": {"type": "string"}},
+        "prior_origination_refs": {"type": "array", "items": {"type": "string"}},
+        "canon_refs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "timestamp": {"type": "string", "format": "date-time"},
+    "state": {
+      "type": "string",
+      "enum": ["originated", "received", "reconciled", "routed", "under_inquiry", "disposition_recorded", "preserved", "challenged", "rejected", "archived", "superseded"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"evidence_refs": {"maxItems": 0}}},
+      "then": {"required": ["evidence_posture"]}
+    }
+  ]
+}

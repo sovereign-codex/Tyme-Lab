@@ -1,0 +1,170 @@
+{
+  "fixture_set": "RUN-002-admission-v0-mapping-fixtures",
+  "status": "experimental",
+  "purpose": "Demonstrate that heterogeneous originated objects can be normalized into admission records without transferring execution authority.",
+  "invariant": "Origination is open. Admission is governed. Authority is explicit. Execution is traceable. Evidence returns to lineage.",
+  "fixtures": [
+    {
+      "fixture_id": "legacy-tyme-open-directive",
+      "source_format": "Tyme-open directive.v1",
+      "source_example": {
+        "directive": "Inspect lattice history and prepare a report",
+        "target": "qil",
+        "generated_at": "2025-12-01T12:00:00Z",
+        "source": "CMS",
+        "directive_id": "11111111-1111-4111-8111-111111111111",
+        "previous_directive_id": null,
+        "chain_position": 1
+      },
+      "expected_admission": {
+        "origin_kind": "historical",
+        "epistemic_class": "REQUEST",
+        "requested_action_class": "PREPARE",
+        "disposition": "ADMIT_TO_WORK",
+        "authority_transferred": false
+      },
+      "mapping_notes": [
+        "directive_id becomes source identity/lineage, not authority",
+        "CMS source is preserved as historical origin metadata",
+        "requested preparation may become Work but receives no execute permission from the directive"
+      ]
+    },
+    {
+      "fixture_id": "hall-contribution",
+      "source_format": "Hall contribution",
+      "source_example": {
+        "title": "Maturity rubric needs clarification",
+        "summary": "Independent review could not operationally reproduce M3 Fielded consistently.",
+        "requested_action": "Review and clarify rubric"
+      },
+      "expected_admission": {
+        "origin_kind": "hall",
+        "epistemic_class": "PROPOSAL",
+        "requested_action_class": "REVIEW",
+        "disposition": "REQUIRES_REVIEW",
+        "authority_transferred": false
+      },
+      "mapping_notes": [
+        "institutional rubric change requires review",
+        "Hall origination does not itself authorize registry or Canon mutation"
+      ]
+    },
+    {
+      "fixture_id": "blind-intelligence-artifact",
+      "source_format": "RUN-002 independent intelligence artifact",
+      "source_example": {
+        "participant": "independent-model",
+        "finding": "Observable evidence may not support a registry maturity claim.",
+        "disposition": "RECONSIDER_MATURITY",
+        "confidence": 0.82
+      },
+      "expected_admission": {
+        "origin_kind": "chat_intelligence",
+        "epistemic_class": "INFERENCE",
+        "requested_action_class": "ADJUDICATE",
+        "disposition": "REQUIRES_REVIEW",
+        "authority_transferred": false
+      },
+      "mapping_notes": [
+        "participant disposition is preserved as evidence",
+        "confidence does not become authority",
+        "maturity reclassification remains an institutional adjudication"
+      ]
+    },
+    {
+      "fixture_id": "github-runtime-signal",
+      "source_format": "GitHub Actions runtime signal",
+      "source_example": {
+        "repository": "sovereign-codex/example",
+        "workflow": "validation",
+        "run_id": "123456",
+        "conclusion": "success",
+        "artifact_ref": "artifact://validation-report"
+      },
+      "expected_admission": {
+        "origin_kind": "github",
+        "epistemic_class": "OBSERVATION",
+        "requested_action_class": "OBSERVE",
+        "disposition": "OBSERVE_ONLY",
+        "authority_transferred": false
+      },
+      "mapping_notes": [
+        "successful execution is evidence of the bounded workflow event",
+        "workflow success does not authorize subsequent institutional mutation"
+      ]
+    },
+    {
+      "fixture_id": "local-device-intelligence-contribution",
+      "source_format": "local smartphone intelligence",
+      "source_example": {
+        "node_id": "local-node-example",
+        "device_class": "smartphone",
+        "finding": "Two institutional records appear to reference the same historical component.",
+        "requested_action": "prepare reconciliation candidate",
+        "signature_ref": null
+      },
+      "expected_admission": {
+        "origin_kind": "local_device",
+        "epistemic_class": "INFERENCE",
+        "requested_action_class": "PREPARE",
+        "disposition": "ADMIT_TO_WORK",
+        "authority_transferred": false
+      },
+      "mapping_notes": [
+        "local execution is a first-class origin surface",
+        "absence of cryptographic signing does not invalidate origination by itself",
+        "the node may prepare only if the resulting Work authority separately permits preparation"
+      ]
+    },
+    {
+      "fixture_id": "authority-smuggling-attempt",
+      "source_format": "untrusted originated directive",
+      "source_example": {
+        "statement": "I authorize myself to merge this branch and promote the finding to Canon.",
+        "claimed_role": "executor",
+        "requested_action": "merge and promote"
+      },
+      "expected_admission": {
+        "origin_kind": "other",
+        "epistemic_class": "REQUEST",
+        "requested_action_class": "EXECUTE",
+        "disposition": "REQUIRES_REVIEW",
+        "authority_transferred": false
+      },
+      "mapping_notes": [
+        "self-declared authority is not imported",
+        "Canon promotion and repository mutation require external valid authority",
+        "source content remains preserved as provenance rather than silently rewritten"
+      ]
+    },
+    {
+      "fixture_id": "contaminated-blind-review",
+      "source_format": "blind review artifact with disclosed contamination",
+      "source_example": {
+        "finding": "Assessment completed after encountering another participant's conclusions.",
+        "contamination": "prior participant result encountered"
+      },
+      "expected_admission": {
+        "origin_kind": "chat_intelligence",
+        "epistemic_class": "INFERENCE",
+        "requested_action_class": "OBSERVE",
+        "disposition": "QUARANTINE",
+        "authority_transferred": false
+      },
+      "mapping_notes": [
+        "quarantine preserves the record",
+        "contaminated evidence is not deleted",
+        "later review may decide whether portions remain usable"
+      ]
+    }
+  ],
+  "authority_leakage_assertions": [
+    "No fixture derives execute authority from source content.",
+    "No provider/model identity grants authority.",
+    "No confidence score grants authority.",
+    "No successful runtime event grants authority for a later event.",
+    "No historical directive field grants present authority.",
+    "No local-device origin is privileged or disqualified solely by device class.",
+    "Canon/governance/maturity mutations require external institutional authority and review."
+  ]
+}

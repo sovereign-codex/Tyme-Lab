@@ -1,0 +1,29 @@
+name: RUN-002 Admission v0 Validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "schemas/admission.v0.schema.json"
+      - "schemas/work.v1.schema.json"
+      - "tests/origination/run-002/admission-v0-mapping-fixtures.json"
+      - "tests/origination/run-002/validate_admission_v0.py"
+      - ".github/workflows/run-002-admission-v0-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-admission-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate admission boundary
+        run: python tests/origination/run-002/validate_admission_v0.py
