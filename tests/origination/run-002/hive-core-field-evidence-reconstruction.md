@@ -1,6 +1,6 @@
 # RUN 002 — Hive-Core Field Evidence Reconstruction
 
-Status: archaeological reconstruction
+Status: archaeological reconstruction with self-correction
 Authority effect: none
 Target: `sovereign-codex/Hive-core`
 
@@ -28,82 +28,117 @@ The documented quick start invokes `python setup/boot.py`.
 
 ### Boot implementation
 
-`setup/boot.py` is executable implementation, not prose. It:
+`setup/boot.py` is executable implementation, not prose. It launches four Python agent processes:
 
-- prints a boot-sequence banner and UTC timestamp;
-- launches four Python agent processes:
-  - `agents/avot_archivist.py`
-  - `agents/avot_fabricator.py`
-  - `agents/avot_tyme.py`
-  - `agents/avot_harmonia.py`
-- catches per-agent execution failures;
-- prints a lattice-synchronization completion banner.
+- `agents/avot_archivist.py`
+- `agents/avot_fabricator.py`
+- `agents/avot_tyme.py`
+- `agents/avot_harmonia.py`
 
 The four named agent source files are present in the repository.
 
 ### Scheduled synchronization implementation
 
-`.github/workflows/hive_sync.yml` defines `Hive-Core Auto-Sync` with:
-
-- hourly cron scheduling (`0 * * * *`);
-- manual `workflow_dispatch`;
-- checkout;
-- execution of `python scripts/pull_codex_updates.py`;
-- commit/push behavior under identity `AVOT-AutoSync`.
+`.github/workflows/hive_sync.yml` defines `Hive-Core Auto-Sync` with hourly scheduling, manual dispatch, checkout, execution of `python scripts/pull_codex_updates.py`, and commit/push behavior under identity `AVOT-AutoSync`.
 
 `scripts/pull_codex_updates.py` performs `git pull origin main` and prints synchronization messages.
 
-### Surviving test marker
+## GitHub test lineage — corrected interpretation
 
-`hive_log.txt` contains:
+### PR #4: timestamp marker, explicitly not tested
+
+PR #4, `Add timestamped log entry`, created `hive_log.txt` containing:
 
 `# Test Sun Nov  9 21:31:23 UTC 2025`
 
-The file's GitHub modified timestamp is 2025-11-09T21:32:17Z.
+The PR was created at 2025-11-09T21:32:18Z and merged at 21:32:39Z.
 
-This marker is not merely an untraceable orphan file. Git history preserves a dedicated merge commit:
+Crucially, the PR body explicitly states:
 
-- commit `e9a4c82cf763e4e7e24196d85e7a3cb30f8e951d`
-- merge message: `Merge pull request #4 from sovereign-codex/codex/append-timestamp-to-hive_log.txt`
-- committed at `2025-11-09T21:32:39Z`
-- diff: creation of `hive_log.txt` containing exactly the timestamped test marker.
+`## Testing`
+`- not run`
 
-This establishes a deliberate, version-controlled test event in the repository at the recorded time.
+It also preserves a Codex Task link (`task_e_69110816ca488329b9b83f6994724b7a`).
 
-### Immediate post-test runtime maintenance
+Therefore the timestamp marker **must not be treated as evidence that Hive-Core itself executed**. It is evidence of a deliberate repository mutation/test-marker task, not a runtime test.
 
-Four minutes later, a second merge commit is preserved:
+### PR #5: boot sequence explicitly tested
 
-- commit `e285d25ef404c23a4464e99f8eeafbb673badcd6`
-- committed at `2025-11-09T21:36:11Z`
-- branch/PR lineage again named `append-timestamp-to-hive_log.txt`
+PR #5, `Use timezone-aware timestamps in boot sequence`, was created at 21:35:57Z and merged at 21:36:12Z from the same branch lineage.
 
-Its diff updates:
+Its body states:
 
-- `agents/avot_archivist.py`
-- `agents/avot_fabricator.py`
-- `agents/avot_harmonia.py`
-- `agents/avot_tyme.py`
-- `setup/boot.py`
+`## Testing`
+`- python setup/boot.py`
 
-from deprecated `datetime.utcnow()` usage to `datetime.now(UTC)`.
+The change updated `setup/boot.py` and all four AVOT agent scripts from deprecated `datetime.utcnow()` usage to timezone-aware `datetime.now(UTC)`.
 
-The affected agent code reveals concrete completion messages for each simulated/implemented role:
+This is materially stronger evidence than the timestamp marker because the PR itself records the concrete runtime command used for testing.
+
+The affected agent implementations contain completion outputs:
 
 - Archivist: `State synced at ...`
 - Fabricator: `Fabrication batch completed at ...`
 - Harmonia: `Harmonic field tuned at ...`
 - Tyme: `Temporal lattice aligned at ...`
 
-The timing and shared branch lineage make it reasonable to infer that the persisted test marker and runtime timestamp corrections were part of the same short testing/maintenance episode.
+The boot script invokes these four agents sequentially.
 
-However, that is still an **inference**, not proof that the boot sequence successfully executed all four agents in Replit or GitHub Actions.
+However, the PR body records **the test command**, not the captured stdout, exit code, runtime environment, or resulting artifact. No PR comments preserve additional execution output.
 
-### Following-day synchronization blueprint merge
+Thus the responsible claim is:
 
-On `2025-11-10T07:15:00Z`, commit `b049717b8e75865f5ab12e51306a5e41d9525e6d` merged PR #6 from branch `codex/prepare-avot-hive-blueprint-for-synchronization`.
+**A contemporaneous development record explicitly states that `python setup/boot.py` was used to test the timezone-aware boot-sequence change.**
 
-This confirms that repository synchronization work continued immediately after the Nov 9 test episode. The recovered diff is largely normalization/no-newline cleanup in Codex assets and does not itself demonstrate successful Hive orchestration.
+It is reasonable to treat this as evidence that the boot path was exercised during development, but it is not yet equivalent to a fully preserved field-execution record.
+
+### Codex task provenance
+
+PRs #4 and #5 both reference the same Codex Task identifier:
+
+`task_e_69110816ca488329b9b83f6994724b7a`
+
+This establishes that the timestamp marker and subsequent boot-sequence maintenance belonged to one bounded Codex task lineage.
+
+The surviving GitHub evidence therefore reconstructs:
+
+`Codex task → timestamp-marker PR (testing not run) → boot-sequence correction PR → explicit python setup/boot.py test declaration`
+
+This is more precise than the earlier inference that the marker itself represented a Hive runtime test.
+
+### PR #6: separate Codex synchronization-preparation task
+
+PR #6, `Normalize Codex scroll file endings`, references a different Codex Task (`task_e_69119001d0288329b32d4897e9826e3d`) and records testing with `python3 scripts/codex-check.py`.
+
+Although its branch is named `codex/prepare-avot-hive-blueprint-for-synchronization`, its actual diff normalizes file endings in Codex assets. It should not be treated as Hive runtime evidence.
+
+## Self-correction record
+
+### Earlier assessment
+
+The prior archaeological record described the timestamp marker and immediate runtime edits as a likely real testing episode and suggested searching Replit for a five-minute runtime window.
+
+### New evidence
+
+PR metadata provides explicit testing declarations:
+
+- PR #4: `Testing - not run`
+- PR #5: `Testing - python setup/boot.py`
+
+### Corrected assessment
+
+The timestamp marker itself is **not runtime evidence**.
+
+The stronger runtime evidence is PR #5's contemporaneous declaration that `python setup/boot.py` was used for testing.
+
+### Effect on disposition
+
+This correction simultaneously weakens one inference and strengthens another:
+
+- weakens: `hive_log.txt` cannot support a claim that Hive executed;
+- strengthens: the boot path has explicit contemporaneous test-command provenance.
+
+The overall M3 disposition remains unchanged because preserved execution output and field-environment provenance are still absent.
 
 ## Evidence classification
 
@@ -115,67 +150,48 @@ This confirms that repository synchronization work continued immediately after t
 | Executable boot implementation existed | Direct code evidence | Confirmed |
 | Four AVOT launch targets existed | Direct repository evidence | Confirmed |
 | Hourly sync workflow was configured | Direct workflow evidence | Confirmed |
-| A historical test marker was persisted | Direct artifact + commit evidence | Confirmed |
-| Test marker came from a deliberate version-controlled test branch/PR | Direct commit evidence | Confirmed |
-| Runtime/agent timestamp code was edited within minutes of the test marker | Direct commit evidence | Confirmed |
-| The edits were caused by a successful or failed runtime test | Inference | Plausible but unproven |
-| Replit project executed the boot sequence | No event-level output recovered | Unproven |
-| All four AVOT agents successfully executed | No event-level output recovered | Unproven |
-| Hourly GitHub workflow actually ran successfully | Run-level evidence not recovered in this investigation | Unproven |
-| Hive-Core satisfied M3/Fielded criteria | Event evidence still incomplete | Not adjudicated |
+| Timestamp marker was deliberately committed | Direct PR/commit evidence | Confirmed |
+| Timestamp marker represented a runtime test | Directly contradicted by PR #4 testing metadata | No |
+| `python setup/boot.py` was recorded as the test for PR #5 | Direct PR evidence | Confirmed |
+| Boot command successfully completed | No captured stdout/exit status | Not independently reproducible from surviving evidence |
+| Test occurred in Replit | No environment identity in PR | Unproven |
+| All four AVOT agents completed | No captured execution output | Unproven |
+| Hive-Core satisfied M3/Fielded criteria | Field provenance incomplete | Not adjudicated |
 
-## Important correction to the archaeological posture
+## Current archaeological classification
 
-Hive-Core is stronger than a mere design/specification repository.
+`IMPLEMENTED_WITH_HISTORICAL_RUNTIME_SUBSTRATE_AND_EXPLICIT_BOOT_TEST_PROVENANCE__FIELD_EXECUTION_RECORD_INCOMPLETE`
 
-The combined evidence now establishes:
+This replaces the earlier `...TEST_TRACE...` wording because we can now characterize the evidence more accurately.
 
-**implementation → historical Replit substrate → explicit test event in Git history → immediate runtime/agent code maintenance → synchronization development continuation**.
+Hive-Core is demonstrably beyond documentation-only status: it has implementation, a historical Replit substrate, and a contemporaneous PR that explicitly records `python setup/boot.py` as testing.
 
-This is a stronger engineering-history chain than the first pass recovered.
+What remains missing is a durable record of the test's execution result and environment.
 
-It still lacks the decisive event-level bridge that QIL has: a preserved console/runtime record demonstrating the bounded Hive function actually completing.
+## Highest-value missing evidence
 
-Therefore the archaeological classification remains:
+The most valuable next artifact is now the **Codex task / execution context for PR #5**, followed by the Replit project history.
 
-`IMPLEMENTED_WITH_HISTORICAL_RUNTIME_SUBSTRATE_AND_TEST_TRACE__FIELD_EVENT_NOT_YET_RECOVERED`
+Search targets:
 
-but with substantially increased confidence that a real testing episode occurred around **2025-11-09 21:31–21:36 UTC**.
+1. Codex Task `task_e_69110816ca488329b9b83f6994724b7a`;
+2. any preserved output/exit status from `python setup/boot.py`;
+3. Replit `Hive-core` history around Nov 9, 2025;
+4. console output containing `Hive-Core Boot Sequence Initiated` or `Hive Lattice Synchronization Complete`;
+5. outputs `State synced`, `Fabrication batch completed`, `Harmonic field tuned`, `Temporal lattice aligned`;
+6. deployment/import metadata linking Replit `Hive-core` to the GitHub revision tested in PR #5.
 
-## Most valuable missing evidence
-
-The next Hive-Core evidence should come from the historical Replit project, specifically this narrow temporal window.
-
-Search for any of the following inside the `Hive-core` Replit project:
-
-1. checkpoint/history around **Nov 9, 2025 21:31–21:36 UTC**;
-2. console output containing `Hive-Core Boot Sequence Initiated`;
-3. console output containing `Hive Lattice Synchronization Complete`;
-4. output containing `Launching avot_archivist.py`, `avot_fabricator.py`, `avot_tyme.py`, or `avot_harmonia.py`;
-5. output containing `State synced`, `Fabrication batch completed`, `Harmonic field tuned`, or `Temporal lattice aligned`;
-6. errors involving `datetime.utcnow` or timestamp handling near the test event;
-7. Replit import/repository metadata linking the project to `sovereign-codex/Hive-core`;
-8. generated files or logs attributable to those agent runs.
-
-These exact strings and the 5-minute window should make the Replit search much more efficient than broad browsing.
+If the Codex task preserves a successful command result, we can establish local/tool execution. If Replit history independently preserves the same run or revision, we can establish the stronger field-substrate bridge.
 
 ## Falsification conditions
 
-The field-operation hypothesis should be weakened if recovered Replit evidence shows that:
-
-- the project never successfully booted;
-- agent imports/files were missing at runtime;
-- the project was only used as an editor/import staging area;
-- the test marker was manually inserted without exercising the runtime;
-- timestamp fixes were unrelated maintenance rather than responses to a run;
-- workflow attempts consistently failed;
-- the Replit project was unrelated despite the exact name match.
+The field-operation hypothesis should be weakened if surviving execution evidence shows that `python setup/boot.py` failed, agents were missing, subprocesses returned errors, or the Replit project was merely an editor/import staging area.
 
 ## Current disposition
 
 Do **not** modify Hive-Core's canonical maturity classification from this evidence alone.
 
-Preserve the implementation/runtime-substrate/test-episode finding and continue the excavation at the Replit event layer.
+Preserve the explicit boot-test provenance while continuing to seek the execution result and environment identity.
 
 ## Authority boundary
 
