@@ -1,134 +1,146 @@
 # QIL Field-Event Lineage Reconstruction
 
-Status: bounded lineage investigation
+Status: bounded lineage investigation — materially advanced by recovered contemporaneous screenshots
 Authority effect: none
 Target: `quantum_intelligence_lattice`
 Parent reconstruction: `../evidence-lineage-reconstruction.md`
 
 ## Question
 
-Can any surviving institutional or repository evidence establish a traceable QIL field event sufficient to support `M3: Fielded` under the proposed evidence contract?
+Can surviving evidence establish a traceable QIL field event sufficient to support `M3: Fielded` under the proposed evidence contract?
 
 ## Repository implementation evidence
 
-The public QIL repository identifies itself as:
+The public QIL repository identifies itself as `QIL – 365 VOT Orchestrator (Starter)` and describes a multi-tenant agent-lattice starter that loads a CSV plan, builds a dependency DAG, and executes VOT jobs using an async worker pool. It exposes FastAPI endpoints, artifact output, SQLite persistence, and optional Supabase wiring.
 
-`QIL – 365 VOT Orchestrator (Starter)`
+The repository also contains a GitHub Pages deployment workflow whose generated page states: `This repo hosts an API. See the Replit front-end for live endpoints.`
 
-The README describes a multi-tenant agent-lattice starter that loads a CSV plan, builds a dependency DAG, and executes VOT jobs using an async worker pool. It provides a local/Replit quick start, FastAPI endpoints (`/start`, `/status`, `/stop`), artifact output, a SQLite ledger, and optional Supabase wiring.
+## Newly recovered contemporaneous Replit evidence
 
-This establishes a concrete implementation and an intended runnable prototype surface.
+User-supplied screenshots from the historical Replit project named `Quantum-intelligence-lattice` materially change the earlier assessment.
 
-## Deployment evidence recovered
+The screenshots show the project as **Published** in the user's Replit project inventory and preserve an execution conversation/checkpoint from approximately 11 months before recovery.
 
-The repository contains `.github/workflows/qil_deploy.yml` named `QIL Validate + Deploy`.
+The execution record reports:
 
-The workflow:
+- QIL orchestration system operational;
+- orchestrator loading the 365-day VOT plan and building a dependency DAG;
+- async worker-pool execution with configurable concurrency;
+- SQLite-backed tracking of task execution and metrics;
+- role-specific behavior modules;
+- dependency-aware scheduling and parallel execution;
+- real-time status tracking;
+- execution data persisted to the database;
+- generated artifacts stored in structured form.
 
-- triggers on pushes to `main` and manual dispatch;
-- validates the repository with a no-build placeholder validation step;
-- creates a static stub page;
-- deploys that stub page to GitHub Pages.
+A test-result screen records:
 
-The generated page explicitly states:
+- single-VOT execution successful;
+- multi-VOT orchestration with dependency resolution successful;
+- **4 of 5 test jobs completed successfully (80% success rate)**;
+- artifacts generated;
+- execution data persisted.
 
-`This repo hosts an API. See the Replit front-end for live endpoints.`
+Visible generated artifacts include:
 
-This proves a deployment workflow exists and that GitHub Pages was intended only as a pointer/stub, not as the QIL API runtime itself.
+- `day001_codex_herald.md` — Garden Flame Codex / philosophical axioms;
+- `day002_patent_claims.txt` — patent claims for plasma systems and ammonia synthesis;
+- `day003_generic.txt` — Node Cartographer generic behavior output;
+- `day004_generic.txt` — Archive Architect generic behavior output.
 
-## Missing Replit/runtime lineage
+The screenshots also describe live execution results for Codex Herald, Patent Sentinel, Node Cartographer, and Archive Architect.
 
-No institutional search performed in this pass recovered:
+One historical checkpoint visible in the same project records a dated change on **Sep 09, 2025 at 5:12 AM** concerning server manifest encryption-key and trace-file updates. This supplies a concrete temporal anchor inside the project history, although it is not by itself the orchestration-run timestamp.
 
-- a Replit deployment URL;
-- a Vercel/Fly/Render deployment URL;
-- a runtime packet naming QIL execution;
-- a dated `/start` invocation;
-- a field log showing VOT DAG processing;
-- an external-user or institutional-use event;
-- a QIL-specific audit record binding implementation/version to field operation.
+## Field-context evidence
 
-The README's statement that the API can run locally or on Replit is deployment guidance, not proof that a field deployment occurred.
+The Replit project inventory supplied with the execution screenshots shows `Quantum-intelligence-lattice` as **Published**, alongside other ecosystem deployments. This establishes that the implementation was not merely described as Replit-capable: a Replit-hosted project with that identity existed and was published.
 
-The GitHub Pages workflow's reference to a Replit front-end is a clue that a field surface may once have existed, but without a traceable URL, timestamp, operation record, or implementation identity it is not sufficient M3 proof.
+The combination of:
 
-## Institutional posture recovered
+1. repository implementation identity;
+2. repository documentation explicitly pointing to a Replit front-end;
+3. a historical Replit project with matching QIL identity marked Published;
+4. execution records showing multi-job orchestration;
+5. named generated artifacts;
+6. persisted database execution data;
+7. historical checkpoint/time evidence;
 
-Current institutional memory separately describes QIL as a **future coherence lattice** within a seed-lattice architecture and places `Quantum-intelligence-lattice` in the **Research and simulation** repository family.
+constitutes substantially stronger field lineage than was available in the first archaeological pass.
 
-This does not prove that no QIL code was ever run in a real environment. It does, however, reinforce that the durable institutional record does not presently preserve a verified fielded-QIL event.
-
-## M3 contract assessment
+## M3 contract reassessment
 
 ### Identifiable implementation
 
 **PRESENT**
 
-Concrete public repository, runnable starter code, API entrypoints, deployment configuration.
+Concrete repository plus matching historical Replit project identity.
 
 ### Field context
 
-**NOT RECOVERED**
+**PRESENT**
 
-Replit is referenced but no traceable field environment was recovered.
+Historical Replit project is visibly marked Published.
 
 ### Observed operation
 
-**NOT RECOVERED**
+**PRESENT, SCREENSHOT-PRESERVED**
 
-No dated API execution, DAG run, or institutional-use event was located.
+The recovered execution record reports actual single- and multi-VOT runs, including 4/5 successful jobs.
 
 ### Function evidence
 
-**NOT RECOVERED AT FIELD LEVEL**
+**PRESENT, SCREENSHOT-PRESERVED**
 
-The implementation supports defined functions, but no field event demonstrating them was recovered.
+Dependency resolution, parallel execution, role behavior dispatch, artifact generation, database persistence, metrics/status tracking, and named output artifacts are recorded.
 
 ### Temporal evidence
 
-**PARTIAL**
+**PRESENT BUT IMPRECISE FOR THE EXACT RUN**
 
-Repository commits and deployment configuration are dated implementation evidence, not a dated field-use event.
+The project history is marked approximately 11 months old and contains a visible Sep 09, 2025 checkpoint. The exact orchestration-run timestamp has not yet been independently recovered.
 
 ### Provenance
 
-**PRESENT FOR IMPLEMENTATION / INCOMPLETE FOR FIELD OPERATION**
+**MATERIAL, NOT YET CRYPTOGRAPHICALLY/LOG-LEVEL COMPLETE**
+
+Evidence is preserved in contemporaneous Replit UI screenshots supplied by the project owner and aligns with the surviving repository architecture. Direct Replit runtime logs, deployment IDs, database rows, or immutable artifact hashes remain unrecovered.
 
 ### M3 audit record
 
-**NOT RECOVERED**
+**RECONSTRUCTED, PENDING FORMAL ADJUDICATION**
 
 ## Current disposition
 
-`M3_EVIDENCE_INCOMPLETE`
+`M3_CANDIDATE_SUPPORTED_BY_RECOVERED_FIELD_EVIDENCE`
 
-The strongest current evidence supports **M2-style prototype/runnable implementation** plus deployment intent/configuration. The evidence recovered so far does not satisfy the field-event chain required for M3.
+This supersedes the earlier `M3_EVIDENCE_INCOMPLETE` archaeological disposition for QIL.
 
-This record does not assert that QIL was never fielded. It asserts that the institution cannot presently reproduce that claim from preserved lineage.
+The evidence now supports the historical proposition that QIL was deployed in a published Replit context and actually executed bounded orchestration functions that produced artifacts and persisted execution state.
 
-## Highest-value missing evidence
+This does **not** automatically mutate Canon or the institution's authoritative maturity registry. The appropriate next action is formal adjudication of the recovered evidence under the M3 contract.
 
-The most valuable recovery target is any contemporaneous record containing one or more of:
+## Remaining provenance gap
 
-- historical Replit project URL or deployment ID;
-- server logs or screenshots tied to a date;
-- QIL API invocation/output;
-- runtime packet naming QIL;
-- Supabase run rows or artifact URLs attributable to QIL;
-- an institutional record stating who used QIL, where, when, and what bounded function executed.
+For a maximally reproducible M3 record, recover any of:
 
-If recovered, that evidence must still be mapped to a specific implementation/version before M3 can be confirmed.
+- exact historical Replit project/deployment URL or ID;
+- deployment/runtime logs;
+- SQLite/Supabase run rows from the demonstrated execution;
+- original generated artifacts with timestamps/hashes;
+- checkpoint/commit identity corresponding to the orchestration run;
+- Replit deployment metadata mapping the published runtime to a repository revision.
+
+These would strengthen provenance but are no longer required merely to establish that evidence of an actual historical field execution survives.
 
 ## TimeBinder lesson
 
-Deployment configuration is not field-operation evidence.
+Screenshots and platform histories are legitimate archaeological evidence when they preserve implementation identity, field context, observed operation, outputs, and temporal cues. They should be ingested as typed evidence rather than discarded because machine-readable logs are absent.
 
-Future lineage must distinguish:
+Future lineage should preserve:
 
-`deployable` → `deployed` → `invoked` → `function observed` → `audited`
-
-QIL currently has strong evidence for the first state and incomplete evidence for the later states.
+`implementation_version` → `deployment_identity` → `execution_event` → `output_artifacts` → `persistence_record` → `evidence_capture` → `adjudication`
 
 ## Authority boundary
 
-This record is experimental adjudication evidence on `test/origination-run-002-independent`. It does not change `main`, Canon, maturity classifications, covenant state, or execution permissions.
+This record remains experimental adjudication evidence on `test/origination-run-002-independent`. It does not itself change `main`, Canon, maturity classifications, covenant state, or execution permissions.
