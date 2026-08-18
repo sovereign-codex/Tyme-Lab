@@ -1,14 +1,19 @@
 # Proposed M3 — Fielded Evidence Contract
 
-Status: adjudication proposal
+Status: historical/provisional precursor — retained for epistemic lineage
 Authority effect: none
 Derived from: RUN-002 cross-intelligence convergence
+Successor candidates:
+- `adjudication/m3-fielded-rubric-v0.1.md`
+- `adjudication/m3-audit-contract-v0.1.md`
+
+> **Lineage notice:** This document records the first bounded attempt to operationalize `M3: Fielded` after RUN-002 convergence. It is preserved rather than silently rewritten or deleted because its evolution is part of the experimental record. It is **not a competing active adjudication contract**. The later adjudication pair separates maturity semantics from audit/evidence semantics and is the current candidate surface for Office/human review. Until that pair is accepted or revised, no document in this lineage authorizes maturity mutation.
 
 ## Purpose
 
 Define a falsifiable, independently inspectable meaning for `M3: Fielded` and the minimum audit record required by `M3_and_above_require_audit_trail`.
 
-This proposal does not reclassify any existing system. It creates the contract against which classification can later be adjudicated.
+This proposal does not reclassify any existing system. It records the precursor contract from which the later adjudication pair was refined.
 
 ## Design principle
 
@@ -115,6 +120,8 @@ The appropriate challenge disposition is not automatically "downgrade." It is:
 - `M3_RECONSIDER` — observable evidence materially conflicts with the M3 claim;
 - `M3_MAPPING_UNRESOLVED` — the registry system cannot be reliably mapped to the implementation being evaluated.
 
+These precursor dispositions are preserved as historical design vocabulary. The successor adjudication pair defines the current candidate adjudication vocabulary and should govern future review if accepted.
+
 ## Relationship to M4
 
 This contract intentionally does not fully define M4.
@@ -133,7 +140,7 @@ Two independent investigators given the same accessible audit record should be a
 4. identify the bounded function demonstrated;
 5. identify when it occurred;
 6. identify limitations/restrictions;
-7. reach a disposition using the same four adjudication states above.
+7. reach a disposition using the same four precursor adjudication states above.
 
 They need not assign identical confidence values or interpretations to secondary evidence.
 
@@ -141,16 +148,18 @@ They need not assign identical confidence values or interpretations to secondary
 
 > `M3: Fielded` means demonstrated operation of an identifiable implementation in a real-use context, supported by a traceable audit record. Registry presence, implementation existence, or deployment availability alone does not establish M3.
 
+This rule is historical proposal material. The successor rubric/audit pair is the current candidate for review.
+
 ## Adjudication sequence for existing M3 systems
 
-After this contract is reviewed and accepted as the working rubric:
+After a successor contract is reviewed and accepted as the working rubric:
 
 1. do not begin by changing registry labels;
 2. create or locate an audit record for each existing M3 system;
 3. map registry identifier → implementation → field event → evidence;
 4. record restricted evidence transparently where applicable;
-5. evaluate the record against the seven M3 requirements;
-6. assign one bounded adjudication disposition;
+5. evaluate the record against the accepted M3 requirements;
+6. assign one bounded adjudication disposition from the accepted contract;
 7. only then propose a maturity change, confirmation, or evidence-remediation action.
 
 ## RUN-002 targets
@@ -165,6 +174,6 @@ They are first because RUN-002 generated independent evidence challenging the re
 
 ## Authority boundary
 
-This document is a proposed evidence contract on `test/origination-run-002-independent`.
+This document is preserved precursor evidence on `test/origination-run-002-independent`.
 
-It does not modify Canon, `main`, maturity classifications, covenant state, execution permissions, or system authority.
+It does not modify Canon, `main`, maturity classifications, covenant state, execution permissions, or system authority. It must not be used as an active adjudication contract while the successor candidate pair remains under review.
