@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/actor-authority-envelope-v0.1.schema.json",
+  "title": "Actor + Authority Envelope v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "actor_id",
+    "actor_type",
+    "origin_surface",
+    "authority",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "actor_id": { "type": "string", "minLength": 1 },
+    "actor_type": {
+      "type": "string",
+      "enum": ["human", "agent", "service"]
+    },
+    "origin_surface": { "type": "string", "minLength": 1 },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "scope"],
+      "properties": {
+        "mode": { "type": "string", "enum": ["direct", "delegated"] },
+        "delegator_id": { "type": "string", "minLength": 1 },
+        "scope": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "issued_at": { "type": "string", "format": "date-time" },
+        "expires_at": { "type": "string", "format": "date-time" },
+        "revocation_ref": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "delegated" } }, "required": ["mode"] },
+          "then": { "required": ["delegator_id", "issued_at"] }
+        },
+        {
+          "if": { "properties": { "mode": { "const": "direct" } }, "required": ["mode"] },
+          "then": { "not": { "required": ["delegator_id"] } }
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_ref"],
+      "properties": {
+        "event_ref": { "type": "string", "minLength": 1 },
+        "repository": { "type": "string", "minLength": 1 },
+        "thread_ref": { "type": "string", "minLength": 1 },
+        "workflow_ref": { "type": "string", "minLength": 1 },
+        "session_ref": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
