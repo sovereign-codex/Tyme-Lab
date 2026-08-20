@@ -3,37 +3,17 @@ name: Mobile Event Relay
 on:
   workflow_dispatch:
     inputs:
-      event_type:
-        description: "Institutional event type"
+      intent:
+        description: "Intent: OBSERVE | REQUEST | PROPOSE | REVIEW | RESEARCH | PRESERVE | SYNC"
         required: true
-        default: "shepherd.intent"
-      target_surface:
-        description: "office | hall | repository | lab | canon_review | runtime"
+        default: "OBSERVE"
+      target:
+        description: "Target: office, repo/work reference, or stable identifier"
         required: true
         default: "office"
-      target_ref:
-        description: "Target repository, work item, office surface, or other stable reference"
+      message:
+        description: "Message: short human intent; do not place secrets here"
         required: true
-      classification:
-        description: "REQUEST | PROPOSAL | REVIEW | RESEARCH | PRESERVATION | SYNCHRONIZATION | OBSERVATION"
-        required: true
-        default: "REQUEST"
-      requested_disposition:
-        description: "OBSERVE_ONLY | INSTITUTIONAL_INTAKE | ATTACH_TO_WORK | REQUIRES_REVIEW | PRESERVE | ROUTE_ONLY"
-        required: true
-        default: "INSTITUTIONAL_INTAKE"
-      summary:
-        description: "Short human intent; do not place secrets here"
-        required: true
-      primary_route:
-        description: "Primary institutional route"
-        required: true
-        default: "notion_bridge"
-      human_review_required:
-        description: "Require human review downstream"
-        required: true
-        type: boolean
-        default: false
 
 permissions:
   contents: write
@@ -53,29 +33,38 @@ jobs:
 
       - name: Create pending Institutional Event Envelope
         env:
-          EVENT_TYPE: ${{ inputs.event_type }}
-          TARGET_SURFACE: ${{ inputs.target_surface }}
-          TARGET_REF: ${{ inputs.target_ref }}
-          CLASSIFICATION: ${{ inputs.classification }}
-          REQUESTED_DISPOSITION: ${{ inputs.requested_disposition }}
-          SUMMARY: ${{ inputs.summary }}
-          PRIMARY_ROUTE: ${{ inputs.primary_route }}
-          HUMAN_REVIEW_REQUIRED: ${{ inputs.human_review_required }}
+          MOBILE_INTENT: ${{ inputs.intent }}
+          MOBILE_TARGET: ${{ inputs.target }}
+          MOBILE_MESSAGE: ${{ inputs.message }}
         run: |
           python3 - <<'PY'
-          import json, os, pathlib, re
+          import json, os, pathlib
           from datetime import datetime, timezone
 
+          intent_map = {
+            "OBSERVE": ("OBSERVATION", "OBSERVE_ONLY"),
+            "REQUEST": ("REQUEST", "INSTITUTIONAL_INTAKE"),
+            "PROPOSE": ("PROPOSAL", "REQUIRES_REVIEW"),
+            "REVIEW": ("REVIEW", "REQUIRES_REVIEW"),
+            "RESEARCH": ("RESEARCH", "INSTITUTIONAL_INTAKE"),
+            "PRESERVE": ("PRESERVATION", "PRESERVE"),
+            "SYNC": ("SYNCHRONIZATION", "ROUTE_ONLY"),
+          }
           allowed_surface = {"office","hall","repository","lab","canon_review","runtime"}
-          allowed_class = {"OBSERVATION","REQUEST","PROPOSAL","REVIEW","RESEARCH","PRESERVATION","SYNCHRONIZATION","OTHER"}
-          allowed_disposition = {"OBSERVE_ONLY","INSTITUTIONAL_INTAKE","ATTACH_TO_WORK","REQUIRES_REVIEW","PRESERVE","ROUTE_ONLY"}
 
-          surface = os.environ["TARGET_SURFACE"]
-          classification = os.environ["CLASSIFICATION"]
-          disposition = os.environ["REQUESTED_DISPOSITION"]
-          if surface not in allowed_surface: raise SystemExit(f"invalid target_surface: {surface}")
-          if classification not in allowed_class: raise SystemExit(f"invalid classification: {classification}")
-          if disposition not in allowed_disposition: raise SystemExit(f"invalid requested_disposition: {disposition}")
+          mobile_intent = os.environ["MOBILE_INTENT"].strip().upper()
+          target = os.environ["MOBILE_TARGET"].strip()
+          message = os.environ["MOBILE_MESSAGE"].strip()
+          if mobile_intent not in intent_map:
+              raise SystemExit(f"invalid intent: {mobile_intent}")
+          if not target:
+              raise SystemExit("target must not be empty")
+          if not message:
+              raise SystemExit("message must not be empty")
+
+          classification, disposition = intent_map[mobile_intent]
+          surface = target.lower() if target.lower() in allowed_surface else "office"
+          human_review = disposition == "REQUIRES_REVIEW"
 
           now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
           run_id = os.environ["GITHUB_RUN_ID"]
@@ -83,7 +72,7 @@ jobs:
           envelope = {
             "event_id": event_id,
             "event_version": "0.1",
-            "event_type": os.environ["EVENT_TYPE"],
+            "event_type": "shepherd.intent",
             "occurred_at": now,
             "received_at": now,
             "source": {
@@ -100,10 +89,10 @@ jobs:
               "provider": "github",
               "implementation_ref": None
             },
-            "target": {"surface": surface, "refs": [os.environ["TARGET_REF"]]},
+            "target": {"surface": surface, "refs": [target]},
             "intent": {
               "classification": classification,
-              "summary": os.environ["SUMMARY"],
+              "summary": message,
               "requested_disposition": disposition
             },
             "provenance": {
@@ -114,14 +103,14 @@ jobs:
             "governance": {
               "authority_effect": "none",
               "mutation_allowed": False,
-              "human_review_required": os.environ["HUMAN_REVIEW_REQUIRED"].lower() == "true",
+              "human_review_required": human_review,
               "authority_ref": None
             },
-            "routing": {"primary": os.environ["PRIMARY_ROUTE"], "observers": ["avot_archivist"]},
+            "routing": {"primary": "notion_bridge", "observers": ["avot_archivist"]},
             "state": "pending",
             "work_ref": None,
             "admission_ref": None,
-            "notes": "Created by Mobile Event Relay v0. Event transport conveys no institutional authority."
+            "notes": "Created by Mobile Event Relay v0.1. Event transport conveys no institutional authority."
           }
           out = pathlib.Path("institutional-events/pending")
           out.mkdir(parents=True, exist_ok=True)
