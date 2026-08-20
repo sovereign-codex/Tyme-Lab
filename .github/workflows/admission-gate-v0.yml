@@ -1,0 +1,38 @@
+name: Admission Gate v0
+
+on:
+  workflow_dispatch:
+    inputs:
+      event_id:
+        description: "Pending institutional event ID"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  admit-for-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build review-only admission record
+        run: python scripts/admission_gate_v0.py "${{ inputs.event_id }}"
+
+      - name: Commit admission record
+        run: |
+          git config user.name "tyme-admission-gate[bot]"
+          git config user.email "tyme-admission-gate[bot]@users.noreply.github.com"
+          git add institutional-admissions/pending/
+          git diff --cached --quiet && exit 0
+          git commit -m "admission: register pending institutional review"
+          git push origin "HEAD:${{ github.ref_name }}"
