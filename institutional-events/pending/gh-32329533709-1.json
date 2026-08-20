@@ -1,0 +1,55 @@
+{
+  "event_id": "gh-32329533709-1",
+  "event_version": "0.1",
+  "event_type": "shepherd.intent",
+  "occurred_at": "2026-08-20T03:48:11.689088Z",
+  "received_at": "2026-08-20T03:48:11.689088Z",
+  "source": {
+    "surface": "github",
+    "ref": "github-actions:Mobile Event Relay:32329533709",
+    "repository": "sovereign-codex/Tyme-Lab",
+    "branch": "main",
+    "commit": "936b401636c556d90133a662671bc4d9246009aa",
+    "context_ref": "run:32329533709"
+  },
+  "actor": {
+    "actor_id": "sovereign-codex",
+    "actor_class": "human",
+    "provider": "github",
+    "implementation_ref": null
+  },
+  "target": {
+    "surface": "office",
+    "refs": [
+      "office"
+    ]
+  },
+  "intent": {
+    "classification": "REQUEST",
+    "summary": "Mobile-003 REQUEST admission boundary test",
+    "requested_disposition": "INSTITUTIONAL_INTAKE"
+  },
+  "provenance": {
+    "evidence_refs": [
+      "github-run:32329533709"
+    ],
+    "artifact_refs": [],
+    "lineage_refs": []
+  },
+  "governance": {
+    "authority_effect": "none",
+    "mutation_allowed": false,
+    "human_review_required": false,
+    "authority_ref": null
+  },
+  "routing": {
+    "primary": "notion_bridge",
+    "observers": [
+      "avot_archivist"
+    ]
+  },
+  "state": "pending",
+  "work_ref": null,
+  "admission_ref": null,
+  "notes": "Created by Mobile Event Relay v0.1. Event transport conveys no institutional authority."
+}
