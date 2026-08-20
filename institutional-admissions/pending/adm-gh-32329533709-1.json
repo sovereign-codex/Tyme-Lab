@@ -1,0 +1,43 @@
+{
+  "admission_id": "adm-gh-32329533709-1",
+  "source_object_ref": "institutional-event:gh-32329533709-1",
+  "received_at": "2026-08-20T03:48:11.689088Z",
+  "origin": {
+    "kind": "github",
+    "actor_ref": "sovereign-codex",
+    "implementation_ref": null,
+    "context_ref": "run:32329533709",
+    "provider": "github",
+    "interface_or_surface": "github",
+    "source_timestamp": "2026-08-20T03:48:11.689088Z"
+  },
+  "content": {
+    "title": "Mobile-003 REQUEST admission boundary test",
+    "summary": "Mobile-003 REQUEST admission boundary test",
+    "epistemic_class": "REQUEST",
+    "requested_action_class": "REVIEW",
+    "target_refs": [
+      "office"
+    ]
+  },
+  "provenance": {
+    "evidence_refs": [
+      "github-run:32329533709",
+      "institutional-event:gh-32329533709-1"
+    ],
+    "artifact_refs": [],
+    "lineage_refs": []
+  },
+  "assessment": {
+    "duplicate_of": null,
+    "ambiguity_flags": [],
+    "contamination_flags": [],
+    "institutional_impact_class": "UNKNOWN",
+    "review_required": true
+  },
+  "disposition": "REQUIRES_REVIEW",
+  "work_ref": null,
+  "admitted_by": "admission-gate-v0",
+  "admitted_at": "2026-08-20T10:45:05.518599Z",
+  "notes": "Admission Gate v0 registered this intake for review only. No Work or execution authority was created."
+}
