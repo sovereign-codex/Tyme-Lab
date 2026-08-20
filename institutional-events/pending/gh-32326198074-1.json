@@ -1,0 +1,55 @@
+{
+  "event_id": "gh-32326198074-1",
+  "event_version": "0.1",
+  "event_type": "shepherd.intent",
+  "occurred_at": "2026-08-20T02:52:40.417071Z",
+  "received_at": "2026-08-20T02:52:40.417071Z",
+  "source": {
+    "surface": "github",
+    "ref": "github-actions:Mobile Event Relay:32326198074",
+    "repository": "sovereign-codex/Tyme-Lab",
+    "branch": "main",
+    "commit": "257542d79ff88cd975ece9ae5dbb10f9d7ce9c20",
+    "context_ref": "run:32326198074"
+  },
+  "actor": {
+    "actor_id": "sovereign-codex",
+    "actor_class": "human",
+    "provider": "github",
+    "implementation_ref": null
+  },
+  "target": {
+    "surface": "office",
+    "refs": [
+      "Institutional event type: shepherd.mobile_test  Institutional surface: office  Target reference: mobile-event-relay-v0  Classification: OBSERVATION  Requested disposition: OBSERVE_ONLY  Summary: First iPhone-originated Institutional Event Envelope test.  Primary institutional route: notion_bridge  Require human review downstream: OFF"
+    ]
+  },
+  "intent": {
+    "classification": "OBSERVATION",
+    "summary": "Office",
+    "requested_disposition": "OBSERVE_ONLY"
+  },
+  "provenance": {
+    "evidence_refs": [
+      "github-run:32326198074"
+    ],
+    "artifact_refs": [],
+    "lineage_refs": []
+  },
+  "governance": {
+    "authority_effect": "none",
+    "mutation_allowed": false,
+    "human_review_required": false,
+    "authority_ref": null
+  },
+  "routing": {
+    "primary": "notion_bridge",
+    "observers": [
+      "avot_archivist"
+    ]
+  },
+  "state": "pending",
+  "work_ref": null,
+  "admission_ref": null,
+  "notes": "Created by Mobile Event Relay v0. Event transport conveys no institutional authority."
+}
