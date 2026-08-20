@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/institutional-event.v0.schema.json",
+  "title": "Institutional Event Envelope v0",
+  "description": "Transport-neutral event envelope for mobile, cloud, agent, repository, and future sovereign-node event ingress. The envelope records intent and provenance; it does not grant execution authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_version",
+    "event_type",
+    "occurred_at",
+    "received_at",
+    "source",
+    "actor",
+    "target",
+    "intent",
+    "provenance",
+    "governance",
+    "routing",
+    "state"
+  ],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "event_version": {"const": "0.1"},
+    "event_type": {"type": "string", "minLength": 1},
+    "occurred_at": {"type": "string", "format": "date-time"},
+    "received_at": {"type": "string", "format": "date-time"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surface", "ref"],
+      "properties": {
+        "surface": {"type": "string", "enum": ["github", "notion", "chatgpt", "replit", "local_device", "avot", "qil", "runtime", "human", "other"]},
+        "ref": {"type": "string"},
+        "repository": {"type": ["string", "null"]},
+        "branch": {"type": ["string", "null"]},
+        "commit": {"type": ["string", "null"]},
+        "context_ref": {"type": ["string", "null"]}
+      }
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actor_id", "actor_class"],
+      "properties": {
+        "actor_id": {"type": "string", "minLength": 1},
+        "actor_class": {"type": "string", "enum": ["human", "chat_intelligence", "office_agent", "avot", "github_action", "local_runtime", "sovereign_node", "other"]},
+        "provider": {"type": ["string", "null"]},
+        "implementation_ref": {"type": ["string", "null"]}
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surface", "refs"],
+      "properties": {
+        "surface": {"type": "string", "enum": ["office", "hall", "repository", "lab", "canon_review", "runtime", "other"]},
+        "refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "summary", "requested_disposition"],
+      "properties": {
+        "classification": {"type": "string", "enum": ["OBSERVATION", "REQUEST", "PROPOSAL", "REVIEW", "RESEARCH", "PRESERVATION", "SYNCHRONIZATION", "OTHER"]},
+        "summary": {"type": "string", "minLength": 1},
+        "requested_disposition": {"type": "string", "enum": ["OBSERVE_ONLY", "INSTITUTIONAL_INTAKE", "ATTACH_TO_WORK", "REQUIRES_REVIEW", "PRESERVE", "ROUTE_ONLY"]}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_refs", "artifact_refs", "lineage_refs"],
+      "properties": {
+        "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "artifact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "lineage_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority_effect", "mutation_allowed", "human_review_required"],
+      "properties": {
+        "authority_effect": {"const": "none"},
+        "mutation_allowed": {"const": false},
+        "human_review_required": {"type": "boolean"},
+        "authority_ref": {"type": ["string", "null"]}
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary", "observers"],
+      "properties": {
+        "primary": {"type": "string"},
+        "observers": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "state": {"type": "string", "enum": ["pending", "admitted", "dispatched", "completed", "rejected"]},
+    "work_ref": {"type": ["string", "null"]},
+    "admission_ref": {"type": ["string", "null"]},
+    "notes": {"type": "string"}
+  }
+}
