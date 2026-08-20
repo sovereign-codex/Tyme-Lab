@@ -1,0 +1,55 @@
+{
+  "event_id": "gh-32327211305-1",
+  "event_version": "0.1",
+  "event_type": "shepherd.intent",
+  "occurred_at": "2026-08-20T03:09:21.151886Z",
+  "received_at": "2026-08-20T03:09:21.151886Z",
+  "source": {
+    "surface": "github",
+    "ref": "github-actions:Mobile Event Relay:32327211305",
+    "repository": "sovereign-codex/Tyme-Lab",
+    "branch": "architecture/mobile-event-relay-v0.1",
+    "commit": "3ec1c06ca6045ce4f712f732ce3d2e8cb77ad533",
+    "context_ref": "run:32327211305"
+  },
+  "actor": {
+    "actor_id": "sovereign-codex",
+    "actor_class": "human",
+    "provider": "github",
+    "implementation_ref": null
+  },
+  "target": {
+    "surface": "office",
+    "refs": [
+      "office"
+    ]
+  },
+  "intent": {
+    "classification": "OBSERVATION",
+    "summary": "Mobile-002 v0.1 three-field ingress test",
+    "requested_disposition": "OBSERVE_ONLY"
+  },
+  "provenance": {
+    "evidence_refs": [
+      "github-run:32327211305"
+    ],
+    "artifact_refs": [],
+    "lineage_refs": []
+  },
+  "governance": {
+    "authority_effect": "none",
+    "mutation_allowed": false,
+    "human_review_required": false,
+    "authority_ref": null
+  },
+  "routing": {
+    "primary": "notion_bridge",
+    "observers": [
+      "avot_archivist"
+    ]
+  },
+  "state": "pending",
+  "work_ref": null,
+  "admission_ref": null,
+  "notes": "Created by Mobile Event Relay v0.1. Event transport conveys no institutional authority."
+}
