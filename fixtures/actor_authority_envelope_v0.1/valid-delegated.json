@@ -9,8 +9,7 @@
     "delegator_id": "human:sovereign-codex",
     "delegation_evidence_ref": "delegation:example:001",
     "scope": ["submit-for-review"],
-    "issued_at": "2026-08-20T00:00:00Z",
-    "expires_at": "2026-08-21T00:00:00Z"
+    "issued_at": "2026-08-20T00:00:00Z"
   },
   "provenance": {
     "event_ref": "example:event:001",
