@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/review-disposition.v0.schema.json",
+  "title": "Review Disposition Record v0",
+  "description": "A governed review decision over an Admission v0 record. Eligibility for later Work promotion is not Work creation or execution authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["review_id","admission_ref","source_event_ref","reviewed_at","reviewer","decision","rationale","governance","promotion"],
+  "properties": {
+    "review_id": {"type":"string","minLength":1},
+    "admission_ref": {"type":"string","minLength":1},
+    "source_event_ref": {"type":"string","minLength":1},
+    "reviewed_at": {"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,6})?Z$"},
+    "reviewer": {
+      "type":"object","additionalProperties":false,
+      "required":["actor_id","actor_type","origin_surface","authority_envelope_ref"],
+      "properties": {
+        "actor_id":{"type":"string","minLength":1,"maxLength":2048},
+        "actor_type":{"enum":["human","agent","service"]},
+        "origin_surface":{"type":"string","pattern":"^[a-z][a-z0-9_-]{0,63}$"},
+        "authority_envelope_ref":{"type":"string","minLength":1,"maxLength":2048}
+      }
+    },
+    "decision":{"enum":["APPROVE_FOR_WORK","NEEDS_CLARIFICATION","REJECT"]},
+    "rationale":{"type":"string","minLength":1},
+    "governance": {
+      "type":"object","additionalProperties":false,
+      "required":["authority_effect","required_scope","mutation_allowed","work_created","execution_authority_granted"],
+      "properties": {
+        "authority_effect":{"const":"review_disposition_only"},
+        "required_scope":{"const":"review-disposition"},
+        "mutation_allowed":{"const":false},
+        "work_created":{"const":false},
+        "execution_authority_granted":{"const":false}
+      }
+    },
+    "promotion": {
+      "type":"object","additionalProperties":false,
+      "required":["eligible_for_work_promotion","work_ref","promotion_ref"],
+      "properties": {
+        "eligible_for_work_promotion":{"type":"boolean"},
+        "work_ref":{"const":null},
+        "promotion_ref":{"const":null}
+      }
+    }
+  },
+  "allOf": [
+    {"if":{"properties":{"decision":{"const":"APPROVE_FOR_WORK"}}},"then":{"properties":{"promotion":{"properties":{"eligible_for_work_promotion":{"const":true}}}}}},
+    {"if":{"properties":{"decision":{"enum":["NEEDS_CLARIFICATION","REJECT"]}}},"then":{"properties":{"promotion":{"properties":{"eligible_for_work_promotion":{"const":false}}}}}}
+  ]
+}
