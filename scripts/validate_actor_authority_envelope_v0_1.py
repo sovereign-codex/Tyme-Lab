@@ -4,13 +4,14 @@ import json
 import re
 import sys
 import unicodedata
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 
-RFC3339 = re.compile(r"^(\d{4}-\d{2}-\d{2})[Tt](\d{2}:\d{2}):(\d{2})(\.\d+)?([Zz]|[+-]\d{2}:\d{2})$")
+CIT_TIMESTAMP = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:[0-5]\d(?:\.\d{1,6})?Z$")
 TOKEN = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 SURFACE = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
 REFERENCE_MAX_LENGTH = 2048
+DISALLOWED_REFERENCE_CATEGORIES = {"Cc", "Cf", "Cs", "Co"}
 
 TOP_REQUIRED = {"schema_version", "actor_id", "actor_type", "origin_surface", "authority", "provenance"}
 TOP_ALLOWED = set(TOP_REQUIRED)
@@ -52,41 +53,24 @@ def require_ref(value: object, field: str) -> str:
     require(bool(value), f"{field} must not be blank")
     require(len(value) <= REFERENCE_MAX_LENGTH, f"{field} exceeds the portable reference limit")
     for ch in value:
-        category = unicodedata.category(ch)
-        require(not ch.isspace() and not category.startswith("C"), f"{field} must not contain whitespace or control/format characters")
+        require(not ch.isspace(), f"{field} must not contain whitespace")
+        require(unicodedata.category(ch) not in DISALLOWED_REFERENCE_CATEGORIES, f"{field} must not contain control, format, surrogate, or private-use characters")
     return value
 
 
 def parse_time(value: object, field: str) -> datetime:
-    if not isinstance(value, str):
-        fail(f"{field} must be an RFC3339 date-time")
-    match = RFC3339.fullmatch(value)
-    if not match:
-        fail(f"{field} must be an RFC3339 date-time")
-
-    date_part, hm_part, second_text, fraction, zone = match.groups()
-    leap_second = second_text == "60"
-    require(int(second_text) <= 60, f"{field} has an invalid seconds value")
-
-    normalized_zone = "Z" if zone in {"Z", "z"} else zone
-    normalized_second = "59" if leap_second else second_text
-    normalized = f"{date_part}T{hm_part}:{normalized_second}{fraction or ''}{normalized_zone}"
-
+    if not isinstance(value, str) or not CIT_TIMESTAMP.fullmatch(value):
+        fail(f"{field} must use the CIT v0.1 canonical UTC timestamp profile YYYY-MM-DDTHH:MM:SS[.ffffff]Z")
     try:
-        parsed = datetime.fromisoformat(normalized.replace("Z", "+00:00"))
+        return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
     except ValueError:
-        fail(f"{field} is not a valid date-time")
-    if parsed.tzinfo is None:
-        fail(f"{field} must include a timezone")
-    if leap_second:
-        parsed += timedelta(seconds=1)
-    return parsed.astimezone(timezone.utc)
+        fail(f"{field} is not a valid calendar timestamp")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("envelope")
-    parser.add_argument("--now", help="RFC3339 validation time; defaults to current UTC time")
+    parser.add_argument("--now", help="CIT v0.1 canonical UTC validation time; defaults to current UTC time")
     args = parser.parse_args()
 
     path = Path(args.envelope)
