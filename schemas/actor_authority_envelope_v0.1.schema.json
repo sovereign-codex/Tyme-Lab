@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://tymehall.org/schemas/actor-authority-envelope-v0.1.schema.json",
   "title": "Actor + Authority Envelope v0.1",
+  "description": "Portable participant identity, provenance, and asserted-authority envelope. A valid envelope never grants institutional consequence by itself.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -23,10 +24,12 @@
     "authority": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mode", "scope"],
+      "required": ["effect", "mode", "scope"],
       "properties": {
+        "effect": { "const": "none" },
         "mode": { "type": "string", "enum": ["direct", "delegated"] },
         "delegator_id": { "type": "string", "minLength": 1 },
+        "delegation_evidence_ref": { "type": "string", "minLength": 1 },
         "scope": {
           "type": "array",
           "minItems": 1,
@@ -40,11 +43,18 @@
       "allOf": [
         {
           "if": { "properties": { "mode": { "const": "delegated" } }, "required": ["mode"] },
-          "then": { "required": ["delegator_id", "issued_at"] }
+          "then": { "required": ["delegator_id", "delegation_evidence_ref", "issued_at"] }
         },
         {
           "if": { "properties": { "mode": { "const": "direct" } }, "required": ["mode"] },
-          "then": { "not": { "required": ["delegator_id"] } }
+          "then": {
+            "not": {
+              "anyOf": [
+                { "required": ["delegator_id"] },
+                { "required": ["delegation_evidence_ref"] }
+              ]
+            }
+          }
         }
       ]
     },
