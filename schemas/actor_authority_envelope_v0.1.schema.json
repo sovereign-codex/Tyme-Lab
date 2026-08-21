@@ -10,7 +10,7 @@
     "schema_version": { "const": "0.1" },
     "actor_id": { "type": "string", "minLength": 1, "maxLength": 2048 },
     "actor_type": { "type": "string", "enum": ["human", "agent", "service"] },
-    "origin_surface": { "type": "string", "minLength": 1 },
+    "origin_surface": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$" },
     "authority": {
       "type": "object",
       "additionalProperties": false,
