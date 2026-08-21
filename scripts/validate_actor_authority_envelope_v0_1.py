@@ -7,11 +7,50 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 RFC3339 = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$")
+TOKEN = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
+REF = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@#-]{0,255}$")
+SURFACE = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
+
+TOP_REQUIRED = {"schema_version", "actor_id", "actor_type", "origin_surface", "authority", "provenance"}
+TOP_ALLOWED = set(TOP_REQUIRED)
+AUTHORITY_ALLOWED = {
+    "effect",
+    "mode",
+    "delegator_id",
+    "delegation_evidence_ref",
+    "scope",
+    "issued_at",
+    "expires_at",
+    "revocation_ref",
+}
+PROVENANCE_ALLOWED = {"event_ref", "repository", "thread_ref", "workflow_ref", "session_ref"}
 
 
 def fail(message: str) -> None:
     print(f"Actor + Authority Envelope v0.1 rejected: {message}", file=sys.stderr)
     raise SystemExit(1)
+
+
+def require(condition: bool, message: str) -> None:
+    if not condition:
+        fail(message)
+
+
+def require_exact_keys(obj: object, required: set[str], allowed: set[str], field: str) -> dict:
+    require(isinstance(obj, dict), f"{field} must be an object")
+    keys = set(obj)
+    missing = required - keys
+    unknown = keys - allowed
+    require(not missing, f"{field} is missing required fields: {', '.join(sorted(missing))}")
+    require(not unknown, f"{field} contains undeclared fields: {', '.join(sorted(unknown))}")
+    return obj
+
+
+def require_ref(value: object, field: str) -> str:
+    require(isinstance(value, str), f"{field} must be a string")
+    require(value == value.strip() and bool(value), f"{field} must not be blank or padded with whitespace")
+    require(bool(REF.fullmatch(value)), f"{field} must use the canonical reference grammar")
+    return value
 
 
 def parse_time(value: object, field: str) -> datetime:
@@ -24,11 +63,6 @@ def parse_time(value: object, field: str) -> datetime:
     if parsed.tzinfo is None:
         fail(f"{field} must include a timezone")
     return parsed.astimezone(timezone.utc)
-
-
-def require(condition: bool, message: str) -> None:
-    if not condition:
-        fail(message)
 
 
 def main() -> None:
@@ -44,19 +78,25 @@ def main() -> None:
     except (json.JSONDecodeError, OSError) as exc:
         fail(f"cannot read envelope: {exc}")
 
-    require(envelope.get("schema_version") == "0.1", "schema_version must equal 0.1")
-    require(isinstance(envelope.get("actor_id"), str) and envelope["actor_id"], "actor_id is required")
-    require(envelope.get("actor_type") in {"human", "agent", "service"}, "actor_type is invalid")
-    require(isinstance(envelope.get("origin_surface"), str) and envelope["origin_surface"], "origin_surface is required")
+    envelope = require_exact_keys(envelope, TOP_REQUIRED, TOP_ALLOWED, "envelope")
+    require(envelope["schema_version"] == "0.1", "schema_version must equal 0.1")
+    require_ref(envelope["actor_id"], "actor_id")
+    require(envelope["actor_type"] in {"human", "agent", "service"}, "actor_type is invalid")
+    require(isinstance(envelope["origin_surface"], str) and bool(SURFACE.fullmatch(envelope["origin_surface"])), "origin_surface is invalid")
 
-    authority = envelope.get("authority")
-    require(isinstance(authority, dict), "authority object is required")
-    require(authority.get("effect") == "none", "authority.effect must be none; this envelope cannot grant consequence")
-    mode = authority.get("mode")
+    authority = require_exact_keys(envelope["authority"], {"effect", "mode", "scope"}, AUTHORITY_ALLOWED, "authority")
+    require(authority["effect"] == "none", "authority.effect must be none; this envelope cannot grant consequence")
+    mode = authority["mode"]
     require(mode in {"direct", "delegated"}, "authority.mode is invalid")
-    scope = authority.get("scope")
-    require(isinstance(scope, list) and scope and all(isinstance(item, str) and item for item in scope), "authority.scope must contain non-empty strings")
+
+    scope = authority["scope"]
+    require(isinstance(scope, list) and bool(scope), "authority.scope must be a non-empty array")
+    require(all(isinstance(item, str) and bool(TOKEN.fullmatch(item)) for item in scope), "authority.scope entries must use canonical lowercase tokens")
     require(len(scope) == len(set(scope)), "authority.scope must not contain duplicates")
+
+    for optional_ref in ("revocation_ref",):
+        if optional_ref in authority:
+            require_ref(authority[optional_ref], f"authority.{optional_ref}")
 
     now = parse_time(args.now, "--now") if args.now else datetime.now(timezone.utc)
     issued_at = parse_time(authority["issued_at"], "authority.issued_at") if "issued_at" in authority else None
@@ -68,19 +108,20 @@ def main() -> None:
         require(expires_at > now, "authority envelope is expired")
 
     if mode == "delegated":
-        delegator = authority.get("delegator_id")
-        evidence = authority.get("delegation_evidence_ref")
-        require(isinstance(delegator, str) and delegator, "delegated authority requires delegator_id")
+        require("delegator_id" in authority, "delegated authority requires delegator_id")
+        require("delegation_evidence_ref" in authority, "delegated authority requires delegation_evidence_ref")
+        require("issued_at" in authority, "delegated authority requires issued_at")
+        delegator = require_ref(authority["delegator_id"], "authority.delegator_id")
+        evidence = require_ref(authority["delegation_evidence_ref"], "authority.delegation_evidence_ref")
         require(delegator != envelope["actor_id"], "self-delegation is not permitted")
-        require(isinstance(evidence, str) and evidence, "delegated authority requires delegation_evidence_ref")
-        require(issued_at is not None, "delegated authority requires issued_at")
+        require(bool(evidence), "delegated authority requires delegation evidence")
     else:
         require("delegator_id" not in authority, "direct authority must not name a delegator")
         require("delegation_evidence_ref" not in authority, "direct authority must not include delegation evidence")
 
-    provenance = envelope.get("provenance")
-    require(isinstance(provenance, dict), "provenance object is required")
-    require(isinstance(provenance.get("event_ref"), str) and provenance["event_ref"], "provenance.event_ref is required")
+    provenance = require_exact_keys(envelope["provenance"], {"event_ref"}, PROVENANCE_ALLOWED, "provenance")
+    for key, value in provenance.items():
+        require_ref(value, f"provenance.{key}")
 
     print(f"VALID: {path}")
 
