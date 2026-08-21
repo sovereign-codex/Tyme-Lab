@@ -8,7 +8,7 @@ The Actor + Authority Envelope is the portable identity and delegation contract 
 
 It extends the Admission Gate architecture without replacing or weakening it.
 
-The envelope describes asserted actor identity, provenance, and delegated authority. It does **not** grant authority by itself. Admission remains responsible for deciding whether an event may produce consequence.
+The envelope describes asserted actor identity, provenance, and asserted/delegated authority context. It does **not** grant authority by itself. Admission remains responsible for deciding whether an event may produce consequence.
 
 ## Architectural sequence
 
@@ -34,13 +34,21 @@ An envelope MUST contain:
 - `authority`
 - `provenance`
 
-Delegated authority SHOULD identify:
+Every authority object MUST encode `effect: none`. This is a machine-readable invariant: authority represented by this envelope is an assertion/context claim, never an institutional grant.
+
+Delegated authority MUST identify:
 
 - `delegator_id`
+- `delegation_evidence_ref`
 - `scope`
 - `issued_at`
+
+It MAY identify:
+
 - `expires_at`, when bounded
 - `revocation_ref`, when applicable
+
+A delegation evidence reference makes the assertion traceable. The existence of that reference does not itself authenticate or authorize the delegation; later policy/admission layers remain responsible for evaluating the referenced evidence.
 
 ## Actor types v0.1
 
@@ -61,8 +69,29 @@ The Admission Gate MUST remain free to reject, quarantine, route for review, or 
 An authority object distinguishes:
 
 - direct authority asserted by the actor;
-- delegated authority traceable to a delegator;
+- delegated authority traceable to a distinct delegator and delegation evidence reference;
 - the declared scope in which that authority is intended to operate.
+
+Self-delegation is invalid. A delegated envelope whose `delegator_id` equals `actor_id` MUST fail semantic validation.
+
+## Deterministic semantic validation
+
+JSON Schema defines the structural contract, but v0.1 does not rely on JSON Schema `format` annotations or cross-field semantics alone.
+
+`scripts/validate_actor_authority_envelope_v0_1.py` is the companion semantic validator. Before an envelope may be connected to Admission Gate it MUST pass this validator.
+
+The validator enforces:
+
+- `authority.effect == none`;
+- explicit RFC3339 timestamps with timezone information;
+- `expires_at > issued_at` when both are present;
+- `expires_at` is later than the validation time;
+- delegated mode includes a distinct `delegator_id`;
+- delegated mode includes `delegation_evidence_ref` and `issued_at`;
+- direct mode does not masquerade as delegated mode;
+- provenance contains an event reference.
+
+The optional validator `--now` argument exists for deterministic fixtures and tests. Production callers should omit it so current UTC time is used.
 
 ## Provenance
 
@@ -80,10 +109,11 @@ The envelope answers:
 
 1. Who or what is participating?
 2. From what surface did the participation originate?
-3. What authority is being asserted?
+3. What authority context is being asserted?
 4. From whom was authority delegated, if anyone?
-5. What is the declared scope?
-6. What provenance allows the assertion to be examined?
+5. What evidence identifies that delegation assertion?
+6. What is the declared scope?
+7. What provenance allows the assertion to be examined?
 
 The Admission Gate answers a different question:
 
@@ -112,8 +142,8 @@ No capability should be added merely because the hosting platform permits it. Ne
 
 v0.1 is ready to connect to Admission Gate only after:
 
-1. the schema is deterministic;
+1. the schema and semantic validation path are deterministic;
 2. valid direct and delegated envelopes pass validation;
-3. malformed, expired, or structurally ambiguous envelopes fail deterministically;
+3. malformed, expired, self-delegated, or structurally ambiguous envelopes fail deterministically;
 4. fixtures demonstrate that an envelope cannot itself authorize canonical mutation;
 5. architectural review confirms that Admission remains the consequence boundary.
