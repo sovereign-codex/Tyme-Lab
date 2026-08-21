@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1",
+  "actor_id": "agent:cit-reviewer-01",
+  "actor_type": "agent",
+  "origin_surface": "github",
+  "authority": {
+    "effect": "none",
+    "mode": "delegated",
+    "delegator_id": "agent:cit-reviewer-01",
+    "delegation_evidence_ref": "delegation:example:self",
+    "scope": ["submit-for-review"],
+    "issued_at": "2026-08-20T00:00:00Z",
+    "expires_at": "2026-08-21T00:00:00Z"
+  },
+  "provenance": {
+    "event_ref": "example:event:self-delegation",
+    "repository": "sovereign-codex/Tyme-Lab"
+  }
+}
