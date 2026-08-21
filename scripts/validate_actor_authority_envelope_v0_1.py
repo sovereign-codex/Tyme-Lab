@@ -6,9 +6,8 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-RFC3339 = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$")
+RFC3339 = re.compile(r"^\d{4}-\d{2}-\d{2}[Tt]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[Zz]|[+-]\d{2}:\d{2})$")
 TOKEN = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
-REF = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@#-]{0,255}$")
 SURFACE = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
 
 TOP_REQUIRED = {"schema_version", "actor_id", "actor_type", "origin_surface", "authority", "provenance"}
@@ -49,15 +48,21 @@ def require_exact_keys(obj: object, required: set[str], allowed: set[str], field
 def require_ref(value: object, field: str) -> str:
     require(isinstance(value, str), f"{field} must be a string")
     require(value == value.strip() and bool(value), f"{field} must not be blank or padded with whitespace")
-    require(bool(REF.fullmatch(value)), f"{field} must use the canonical reference grammar")
+    require(len(value) <= 2048, f"{field} exceeds the portable reference limit")
+    require(all(ord(ch) >= 0x21 and ord(ch) != 0x7F for ch in value), f"{field} must not contain whitespace or control characters")
     return value
 
 
 def parse_time(value: object, field: str) -> datetime:
     if not isinstance(value, str) or not RFC3339.fullmatch(value):
         fail(f"{field} must be an RFC3339 date-time")
+    normalized = value
+    if "t" in normalized:
+        normalized = normalized.replace("t", "T", 1)
+    if normalized.endswith("z"):
+        normalized = normalized[:-1] + "Z"
     try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(normalized.replace("Z", "+00:00"))
     except ValueError:
         fail(f"{field} is not a valid date-time")
     if parsed.tzinfo is None:
@@ -94,9 +99,8 @@ def main() -> None:
     require(all(isinstance(item, str) and bool(TOKEN.fullmatch(item)) for item in scope), "authority.scope entries must use canonical lowercase tokens")
     require(len(scope) == len(set(scope)), "authority.scope must not contain duplicates")
 
-    for optional_ref in ("revocation_ref",):
-        if optional_ref in authority:
-            require_ref(authority[optional_ref], f"authority.{optional_ref}")
+    if "revocation_ref" in authority:
+        require_ref(authority["revocation_ref"], "authority.revocation_ref")
 
     now = parse_time(args.now, "--now") if args.now else datetime.now(timezone.utc)
     issued_at = parse_time(authority["issued_at"], "authority.issued_at") if "issued_at" in authority else None
@@ -112,9 +116,8 @@ def main() -> None:
         require("delegation_evidence_ref" in authority, "delegated authority requires delegation_evidence_ref")
         require("issued_at" in authority, "delegated authority requires issued_at")
         delegator = require_ref(authority["delegator_id"], "authority.delegator_id")
-        evidence = require_ref(authority["delegation_evidence_ref"], "authority.delegation_evidence_ref")
+        require_ref(authority["delegation_evidence_ref"], "authority.delegation_evidence_ref")
         require(delegator != envelope["actor_id"], "self-delegation is not permitted")
-        require(bool(evidence), "delegated authority requires delegation evidence")
     else:
         require("delegator_id" not in authority, "direct authority must not name a delegator")
         require("delegation_evidence_ref" not in authority, "direct authority must not include delegation evidence")
