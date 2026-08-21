@@ -1,0 +1,49 @@
+name: Review Disposition v0
+on:
+  workflow_dispatch:
+    inputs:
+      admission_id:
+        description: "Pending admission ID"
+        required: true
+        type: string
+      decision:
+        description: "APPROVE_FOR_WORK | NEEDS_CLARIFICATION | REJECT"
+        required: true
+        type: choice
+        options: [APPROVE_FOR_WORK, NEEDS_CLARIFICATION, REJECT]
+      rationale:
+        description: "Review rationale"
+        required: true
+        type: string
+      authority_envelope:
+        description: "Repository path to validated Actor + Authority Envelope v0.1"
+        required: true
+        type: string
+permissions:
+  contents: write
+jobs:
+  record-disposition:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build governed review disposition
+        env:
+          REVIEW_ADMISSION_ID: ${{ inputs.admission_id }}
+          REVIEW_DECISION: ${{ inputs.decision }}
+          REVIEW_RATIONALE: ${{ inputs.rationale }}
+          REVIEW_AUTHORITY_ENVELOPE: ${{ inputs.authority_envelope }}
+        run: python scripts/review_disposition_v0.py
+      - name: Assert no Work was created or modified
+        run: |
+          test -z "$(git status --porcelain -- institutional-work/)" || { git status --porcelain -- institutional-work/; exit 1; }
+      - name: Commit review disposition
+        run: |
+          git config user.name "tyme-review-disposition[bot]"
+          git config user.email "tyme-review-disposition[bot]@users.noreply.github.com"
+          git add institutional-reviews/decisions/
+          git diff --cached --quiet && exit 0
+          git commit -m "review: record governed admission disposition"
+          git push origin "HEAD:${{ github.ref_name }}"
