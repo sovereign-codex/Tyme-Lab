@@ -38,6 +38,15 @@ def require(condition: bool, message: str) -> None:
         fail(message)
 
 
+def reject_duplicate_members(pairs):
+    obj = {}
+    for key, value in pairs:
+        if key in obj:
+            raise ValueError(f"duplicate JSON member: {key}")
+        obj[key] = value
+    return obj
+
+
 def require_exact_keys(obj: object, required: set[str], allowed: set[str], field: str) -> dict:
     require(isinstance(obj, dict), f"{field} must be an object")
     keys = set(obj)
@@ -76,8 +85,8 @@ def main() -> None:
     path = Path(args.envelope)
     require(path.is_file(), f"envelope not found: {path}")
     try:
-        envelope = json.loads(path.read_text())
-    except (json.JSONDecodeError, OSError) as exc:
+        envelope = json.loads(path.read_text(), object_pairs_hook=reject_duplicate_members)
+    except (json.JSONDecodeError, OSError, ValueError) as exc:
         fail(f"cannot read envelope: {exc}")
 
     envelope = require_exact_keys(envelope, TOP_REQUIRED, TOP_ALLOWED, "envelope")
