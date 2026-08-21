@@ -3,12 +3,14 @@ import argparse
 import json
 import re
 import sys
-from datetime import datetime, timezone
+import unicodedata
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-RFC3339 = re.compile(r"^\d{4}-\d{2}-\d{2}[Tt]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[Zz]|[+-]\d{2}:\d{2})$")
+RFC3339 = re.compile(r"^(\d{4}-\d{2}-\d{2})[Tt](\d{2}:\d{2}):(\d{2})(\.\d+)?([Zz]|[+-]\d{2}:\d{2})$")
 TOKEN = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 SURFACE = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
+REFERENCE_MAX_LENGTH = 2048
 
 TOP_REQUIRED = {"schema_version", "actor_id", "actor_type", "origin_surface", "authority", "provenance"}
 TOP_ALLOWED = set(TOP_REQUIRED)
@@ -47,26 +49,37 @@ def require_exact_keys(obj: object, required: set[str], allowed: set[str], field
 
 def require_ref(value: object, field: str) -> str:
     require(isinstance(value, str), f"{field} must be a string")
-    require(value == value.strip() and bool(value), f"{field} must not be blank or padded with whitespace")
-    require(len(value) <= 2048, f"{field} exceeds the portable reference limit")
-    require(all(ord(ch) >= 0x21 and ord(ch) != 0x7F for ch in value), f"{field} must not contain whitespace or control characters")
+    require(bool(value), f"{field} must not be blank")
+    require(len(value) <= REFERENCE_MAX_LENGTH, f"{field} exceeds the portable reference limit")
+    for ch in value:
+        category = unicodedata.category(ch)
+        require(not ch.isspace() and not category.startswith("C"), f"{field} must not contain whitespace or control/format characters")
     return value
 
 
 def parse_time(value: object, field: str) -> datetime:
-    if not isinstance(value, str) or not RFC3339.fullmatch(value):
+    if not isinstance(value, str):
         fail(f"{field} must be an RFC3339 date-time")
-    normalized = value
-    if "t" in normalized:
-        normalized = normalized.replace("t", "T", 1)
-    if normalized.endswith("z"):
-        normalized = normalized[:-1] + "Z"
+    match = RFC3339.fullmatch(value)
+    if not match:
+        fail(f"{field} must be an RFC3339 date-time")
+
+    date_part, hm_part, second_text, fraction, zone = match.groups()
+    leap_second = second_text == "60"
+    require(int(second_text) <= 60, f"{field} has an invalid seconds value")
+
+    normalized_zone = "Z" if zone in {"Z", "z"} else zone
+    normalized_second = "59" if leap_second else second_text
+    normalized = f"{date_part}T{hm_part}:{normalized_second}{fraction or ''}{normalized_zone}"
+
     try:
         parsed = datetime.fromisoformat(normalized.replace("Z", "+00:00"))
     except ValueError:
         fail(f"{field} is not a valid date-time")
     if parsed.tzinfo is None:
         fail(f"{field} must include a timezone")
+    if leap_second:
+        parsed += timedelta(seconds=1)
     return parsed.astimezone(timezone.utc)
 
 
