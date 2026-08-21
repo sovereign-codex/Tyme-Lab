@@ -4,7 +4,9 @@
   "actor_type": "agent",
   "origin_surface": "github",
   "authority": {
+    "effect": "none",
     "mode": "delegated",
+    "delegation_evidence_ref": "delegation:example:missing-delegator",
     "scope": ["submit-for-review"],
     "issued_at": "2026-08-20T00:00:00Z"
   },
