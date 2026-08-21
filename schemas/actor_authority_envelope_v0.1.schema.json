@@ -5,21 +5,11 @@
   "description": "Portable participant identity, provenance, and asserted-authority envelope. A valid envelope never grants institutional consequence by itself.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "actor_id",
-    "actor_type",
-    "origin_surface",
-    "authority",
-    "provenance"
-  ],
+  "required": ["schema_version", "actor_id", "actor_type", "origin_surface", "authority", "provenance"],
   "properties": {
     "schema_version": { "const": "0.1" },
-    "actor_id": { "type": "string", "minLength": 1 },
-    "actor_type": {
-      "type": "string",
-      "enum": ["human", "agent", "service"]
-    },
+    "actor_id": { "type": "string", "minLength": 1, "maxLength": 2048 },
+    "actor_type": { "type": "string", "enum": ["human", "agent", "service"] },
     "origin_surface": { "type": "string", "minLength": 1 },
     "authority": {
       "type": "object",
@@ -28,34 +18,16 @@
       "properties": {
         "effect": { "const": "none" },
         "mode": { "type": "string", "enum": ["direct", "delegated"] },
-        "delegator_id": { "type": "string", "minLength": 1 },
-        "delegation_evidence_ref": { "type": "string", "minLength": 1 },
-        "scope": {
-          "type": "array",
-          "minItems": 1,
-          "uniqueItems": true,
-          "items": { "type": "string", "minLength": 1 }
-        },
+        "delegator_id": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "delegation_evidence_ref": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "scope": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
         "issued_at": { "type": "string", "format": "date-time" },
         "expires_at": { "type": "string", "format": "date-time" },
-        "revocation_ref": { "type": "string", "minLength": 1 }
+        "revocation_ref": { "type": "string", "minLength": 1, "maxLength": 2048 }
       },
       "allOf": [
-        {
-          "if": { "properties": { "mode": { "const": "delegated" } }, "required": ["mode"] },
-          "then": { "required": ["delegator_id", "delegation_evidence_ref", "issued_at"] }
-        },
-        {
-          "if": { "properties": { "mode": { "const": "direct" } }, "required": ["mode"] },
-          "then": {
-            "not": {
-              "anyOf": [
-                { "required": ["delegator_id"] },
-                { "required": ["delegation_evidence_ref"] }
-              ]
-            }
-          }
-        }
+        { "if": { "properties": { "mode": { "const": "delegated" } }, "required": ["mode"] }, "then": { "required": ["delegator_id", "delegation_evidence_ref", "issued_at"] } },
+        { "if": { "properties": { "mode": { "const": "direct" } }, "required": ["mode"] }, "then": { "not": { "anyOf": [{ "required": ["delegator_id"] }, { "required": ["delegation_evidence_ref"] }] } } }
       ]
     },
     "provenance": {
@@ -63,11 +35,11 @@
       "additionalProperties": false,
       "required": ["event_ref"],
       "properties": {
-        "event_ref": { "type": "string", "minLength": 1 },
-        "repository": { "type": "string", "minLength": 1 },
-        "thread_ref": { "type": "string", "minLength": 1 },
-        "workflow_ref": { "type": "string", "minLength": 1 },
-        "session_ref": { "type": "string", "minLength": 1 }
+        "event_ref": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "repository": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "thread_ref": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "workflow_ref": { "type": "string", "minLength": 1, "maxLength": 2048 },
+        "session_ref": { "type": "string", "minLength": 1, "maxLength": 2048 }
       }
     }
   }
