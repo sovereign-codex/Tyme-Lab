@@ -25,40 +25,17 @@ Supporting roles:
 
 ## Minimum contract
 
-An envelope MUST contain:
-
-- `schema_version`
-- `actor_id`
-- `actor_type`
-- `origin_surface`
-- `authority`
-- `provenance`
+An envelope MUST contain `schema_version`, `actor_id`, `actor_type`, `origin_surface`, `authority`, and `provenance`.
 
 Every authority object MUST encode `effect: none`. This is a machine-readable invariant: authority represented by this envelope is an assertion/context claim, never an institutional grant.
 
-Delegated authority MUST identify:
-
-- `delegator_id`
-- `delegation_evidence_ref`
-- `scope`
-- `issued_at`
-
-It MAY identify:
-
-- `expires_at`, when bounded
-- `revocation_ref`, when applicable
+Delegated authority MUST identify `delegator_id`, `delegation_evidence_ref`, `scope`, and `issued_at`. It MAY identify `expires_at` when bounded and `revocation_ref` when applicable.
 
 A delegation evidence reference makes the assertion traceable. The existence of that reference does not itself authenticate or authorize the delegation; later policy/admission layers remain responsible for evaluating the referenced evidence.
 
 ## Actor types v0.1
 
-The initial vocabulary is intentionally narrow:
-
-- `human`
-- `agent`
-- `service`
-
-Additional participant classes require a later schema revision rather than ad hoc extension.
+The initial vocabulary is intentionally narrow: `human`, `agent`, and `service`. Additional participant classes require a later schema revision rather than ad hoc extension.
 
 ## Authority semantics
 
@@ -66,11 +43,7 @@ Authority is descriptive evidence supplied to the admission layer. Possession of
 
 The Admission Gate MUST remain free to reject, quarantine, route for review, or otherwise constrain an event regardless of the authority asserted by its envelope.
 
-An authority object distinguishes:
-
-- direct authority asserted by the actor;
-- delegated authority traceable to a distinct delegator and delegation evidence reference;
-- the declared scope in which that authority is intended to operate.
+An authority object distinguishes direct authority asserted by the actor; delegated authority traceable to a distinct delegator and delegation evidence reference; and the declared scope in which that authority is intended to operate.
 
 Self-delegation is invalid. A delegated envelope whose `delegator_id` equals `actor_id` MUST fail semantic validation.
 
@@ -83,25 +56,30 @@ JSON Schema defines the structural contract, but v0.1 does not rely on JSON Sche
 The validator enforces:
 
 - `authority.effect == none`;
-- explicit RFC3339 timestamps with timezone information;
+- explicit RFC3339 timestamps with timezone information, including standard lowercase separators and leap-second spelling;
 - `expires_at > issued_at` when both are present;
 - `expires_at` is later than the validation time;
 - delegated mode includes a distinct `delegator_id`;
 - delegated mode includes `delegation_evidence_ref` and `issued_at`;
 - direct mode does not masquerade as delegated mode;
-- provenance contains an event reference.
+- provenance contains an event reference;
+- portable references contain no Unicode whitespace, control, surrogate, private-use, or format characters;
+- portable references do not exceed 2048 Unicode code points.
 
 The optional validator `--now` argument exists for deterministic fixtures and tests. Production callers should omit it so current UTC time is used.
 
 ## Provenance
 
-Provenance MUST make the event traceable to its originating context without making a particular interface the source of institutional identity.
-
-At minimum it records an `event_ref`. Implementations MAY additionally record source repository, thread, workflow, terminal session, or other stable references.
+Provenance MUST make the event traceable to its originating context without making a particular interface the source of institutional identity. At minimum it records an `event_ref`. Implementations MAY additionally record source repository, thread, workflow, terminal session, or other stable references.
 
 ## Portability constraint
 
 Actor identity and delegated authority MUST remain portable across participating surfaces. GitHub, Hall, QIL, AVOTs, and TYMEhall.org may consume or emit compatible envelopes, but none becomes the sole definition of actor identity merely by hosting an interaction.
+
+Scope identifiers and references deliberately use different grammars:
+
+- authority `scope` entries are canonical lowercase institutional capability tokens;
+- actor/delegator identifiers, evidence references, revocation references, and provenance references are portable non-whitespace reference strings up to 2048 Unicode code points, permitting URI query strings, percent encoding, fragments, and comparable stable addressing forms while excluding characters that create ambiguous transport or log boundaries.
 
 ## Separation of concerns
 
@@ -123,16 +101,7 @@ These responsibilities MUST remain separate.
 
 ## Non-goals v0.1
 
-This version does not define:
-
-- authentication protocols;
-- cryptographic identity;
-- trust scoring;
-- reputation systems;
-- autonomous authority escalation;
-- cross-repository mutation rights;
-- UI or terminal presentation;
-- replacement of GitHub permissions or repository protections.
+This version does not define authentication protocols, cryptographic identity, trust scoring, reputation systems, autonomous authority escalation, cross-repository mutation rights, UI/terminal presentation, or replacement of GitHub permissions and repository protections.
 
 ## Review invariant
 
