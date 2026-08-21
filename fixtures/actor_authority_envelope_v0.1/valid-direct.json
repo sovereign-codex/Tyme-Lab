@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1",
+  "actor_id": "human:sovereign-codex",
+  "actor_type": "human",
+  "origin_surface": "tymehall",
+  "authority": {
+    "effect": "none",
+    "mode": "direct",
+    "scope": ["submit-for-review"]
+  },
+  "provenance": {
+    "event_ref": "example:event:direct:001",
+    "session_ref": "cit:session:direct:001"
+  }
+}

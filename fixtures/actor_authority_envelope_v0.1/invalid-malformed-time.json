@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1",
+  "actor_id": "agent:cit-reviewer-01",
+  "actor_type": "agent",
+  "origin_surface": "github",
+  "authority": {
+    "effect": "none",
+    "mode": "delegated",
+    "delegator_id": "human:sovereign-codex",
+    "delegation_evidence_ref": "delegation:example:malformed-time",
+    "scope": ["submit-for-review"],
+    "issued_at": "not-a-date"
+  },
+  "provenance": {
+    "event_ref": "example:event:malformed-time",
+    "repository": "sovereign-codex/Tyme-Lab"
+  }
+}
