@@ -49,24 +49,37 @@ Self-delegation is invalid. A delegated envelope whose `delegator_id` equals `ac
 
 ## Deterministic semantic validation
 
-JSON Schema defines the structural contract, but v0.1 does not rely on JSON Schema `format` annotations or cross-field semantics alone.
+JSON Schema defines the structural contract, while `scripts/validate_actor_authority_envelope_v0_1.py` supplies cross-field and current-time semantics. Before an envelope may be connected to Admission Gate it MUST pass the companion validator.
 
-`scripts/validate_actor_authority_envelope_v0_1.py` is the companion semantic validator. Before an envelope may be connected to Admission Gate it MUST pass this validator.
+### CIT v0.1 canonical timestamp profile
+
+CIT v0.1 deliberately uses a narrower canonical timestamp representation than the full RFC3339 spelling space so independent runtimes can compare and validate time without implementation-specific edge cases.
+
+Canonical timestamps MUST:
+
+- use UTC only and end in uppercase `Z`;
+- use uppercase `T` between date and time;
+- use whole seconds from `00` through `59`;
+- optionally include 1 through 6 fractional digits;
+- otherwise use the form `YYYY-MM-DDTHH:MM:SS[.ffffff]Z`.
+
+Leap-second spellings, timezone offsets, lowercase separators, and precision beyond six fractional digits are intentionally outside the v0.1 canonical profile. A participating surface that receives a broader external timestamp MUST normalize it before constructing the institutional envelope. This is a portability boundary, not a claim that broader RFC3339 spellings are invalid outside CIT.
 
 The validator enforces:
 
 - `authority.effect == none`;
-- explicit RFC3339 timestamps with timezone information, including standard lowercase separators and leap-second spelling;
+- the CIT v0.1 canonical timestamp profile;
 - `expires_at > issued_at` when both are present;
 - `expires_at` is later than the validation time;
 - delegated mode includes a distinct `delegator_id`;
 - delegated mode includes `delegation_evidence_ref` and `issued_at`;
 - direct mode does not masquerade as delegated mode;
 - provenance contains an event reference;
-- portable references contain no Unicode whitespace, control, surrogate, private-use, or format characters;
+- portable references contain no Unicode whitespace or characters in the control (`Cc`), format (`Cf`), surrogate (`Cs`), or private-use (`Co`) categories;
+- unassigned Unicode code points (`Cn`) are not rejected merely because a runtime's Unicode database has not assigned them yet;
 - portable references do not exceed 2048 Unicode code points.
 
-The optional validator `--now` argument exists for deterministic fixtures and tests. Production callers should omit it so current UTC time is used.
+The optional validator `--now` argument exists for deterministic fixtures and tests and uses the same canonical timestamp profile. Production callers should omit it so current UTC time is used.
 
 ## Provenance
 
