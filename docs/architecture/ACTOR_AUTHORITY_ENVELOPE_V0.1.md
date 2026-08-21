@@ -37,6 +37,14 @@ A delegation evidence reference makes the assertion traceable. The existence of 
 
 The initial vocabulary is intentionally narrow: `human`, `agent`, and `service`. Additional participant classes require a later schema revision rather than ad hoc extension.
 
+## Origin surface identifiers
+
+`origin_surface` is a canonical institutional identifier for the participation surface that emitted the envelope. It is not a display name, hostname, URL, repository path, or source of actor identity.
+
+The v0.1 grammar is `^[a-z][a-z0-9_-]{0,63}$`: lowercase ASCII, beginning with a letter, with digits, underscores, and hyphens permitted after the first character. Examples include `github`, `chatgpt`, `notion-office`, `tymehall`, and `local-node`.
+
+Surface-specific addresses or human-readable source details belong in provenance references rather than `origin_surface`. A participating surface MUST normalize its local name to a canonical surface identifier before constructing the institutional envelope.
+
 ## Authority semantics
 
 Authority is descriptive evidence supplied to the admission layer. Possession of an envelope MUST NOT imply permission to mutate canonical state.
@@ -89,9 +97,10 @@ Provenance MUST make the event traceable to its originating context without maki
 
 Actor identity and delegated authority MUST remain portable across participating surfaces. GitHub, Hall, QIL, AVOTs, and TYMEhall.org may consume or emit compatible envelopes, but none becomes the sole definition of actor identity merely by hosting an interaction.
 
-Scope identifiers and references deliberately use different grammars:
+Scope identifiers, origin-surface identifiers, and references deliberately use different grammars:
 
 - authority `scope` entries are canonical lowercase institutional capability tokens;
+- `origin_surface` is a canonical lowercase institutional surface identifier, not an address;
 - actor/delegator identifiers, evidence references, revocation references, and provenance references are portable non-whitespace reference strings up to 2048 Unicode code points, permitting URI query strings, percent encoding, fragments, and comparable stable addressing forms while excluding characters that create ambiguous transport or log boundaries.
 
 ## Separation of concerns
