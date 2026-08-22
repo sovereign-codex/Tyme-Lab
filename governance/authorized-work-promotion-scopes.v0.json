@@ -1,0 +1,5 @@
+{
+  "policy_version": "work-promotion.v0",
+  "required_scope": "work-promotion",
+  "direct_grants": []
+}
