@@ -9,15 +9,16 @@ Review Disposition v0 is the governed decision boundary downstream of Admission 
 Review Disposition v0 stops before Work Promotion.
 
 ## Governing correction
-The original draft modeled this boundary as `human review` and authorized GitHub usernames through a human allowlist. Actor + Authority Envelope v0.1 supersedes that assumption.
+Actor + Authority Envelope v0.1 establishes portable participant identity and asserted authority context. Its `authority.effect = none` invariant is preserved here: an envelope does not authorize its bearer merely because it declares `review-disposition` scope.
 
-A reviewer is now a governed participant whose envelope:
-1. passes `validate_actor_authority_envelope_v0_1.py`;
-2. carries `authority.effect = none`;
-3. declares the institutional capability scope `review-disposition`;
-4. preserves actor identity, actor type, origin surface, provenance, and delegation evidence where applicable.
+Review Disposition therefore requires two independent facts:
+1. a structurally and semantically valid Actor + Authority Envelope that declares the requested scope; and
+2. a separate institutional grant in `governance/authorized-review-scopes.v0.json` matching actor identity, actor type, scope, and allowed origin surface.
 
-Actor type (`human`, `agent`, or `service`) does not itself grant legitimacy. The envelope still grants no consequence. Review Disposition is the bounded institutional boundary that may create only a disposition record.
+The envelope is the claim/context. The grant policy is the v0 authorization decision. Neither GitHub authentication, actor type, interface ownership, nor an asserted scope is sufficient by itself.
+
+## Delegation posture
+Delegated envelopes remain valid portable identity/context objects, but Review Disposition v0 rejects delegated review authority. A future version may admit delegation only after it can independently verify the delegation evidence and grant chain. An evidence-reference string alone is not authorization.
 
 ## Invariants
 1. Admission is not Work.
@@ -28,11 +29,17 @@ Actor type (`human`, `agent`, or `service`) does not itself grant legitimacy. Th
 6. Source Admission remains unchanged.
 7. Only `REQUIRES_REVIEW` admissions with `review_required = true` and `work_ref = null` are eligible.
 8. Reviewer identity and the authority-envelope reference are preserved.
-9. One v0 disposition record is allowed per Admission.
-10. `APPROVE_FOR_WORK` sets only `eligible_for_work_promotion = true`; `work_ref` and `promotion_ref` remain null.
+9. The exact validated envelope bytes are bound to the disposition by SHA-256 so later path mutation cannot silently rewrite review evidence.
+10. One v0 disposition record is allowed per Admission.
+11. `APPROVE_FOR_WORK` sets only `eligible_for_work_promotion = true`; `work_ref` and `promotion_ref` remain null.
 
 ## Authority boundary
-The Actor + Authority Envelope describes identity and authority context with `effect: none`. Review Disposition independently checks the required `review-disposition` scope before recording consequence. It does not infer authority from GitHub authentication, actor type, or interface ownership.
+The Actor + Authority Envelope describes identity and authority context with `effect: none`. Review Disposition validates that envelope, confirms it declares `review-disposition`, then separately evaluates the versioned institutional grant policy. Only a matching direct grant permits the boundary to emit a disposition record.
+
+This does not convert the envelope into executable authority. The consequence is produced by this bounded policy decision, and that consequence remains limited to a Review Disposition record.
+
+## Evidence binding
+Every disposition records both the repository path supplied for the authority envelope and the SHA-256 digest of the exact envelope bytes validated during the run. The path is a locator; the digest is the immutable evidence binding. Provenance, validity, and authority context can therefore be checked against the exact reviewed object rather than whatever later occupies the path.
 
 ## Mobile/CIT operation
 GitHub Actions is one transport surface, not the institutional identity source. A dispatch supplies admission ID, decision, rationale, and a repository path to an Actor + Authority Envelope v0.1. Future CIT surfaces may construct the same contract without changing Review Disposition semantics.
