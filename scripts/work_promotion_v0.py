@@ -55,17 +55,28 @@ def canonical_sha256(obj):
     return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
-def validate_envelope_snapshot(envelope_bytes):
-    validator = Path("scripts/validate_actor_authority_envelope_v0_1.py")
+def json_bytes(obj):
+    return (json.dumps(obj, indent=2) + "\n").encode("utf-8")
+
+
+def validate_snapshot(data, validator, label):
+    validator = Path(validator)
+    if not validator.is_file():
+        fail(f"{label} validator not found: {validator}")
     with tempfile.NamedTemporaryFile(mode="wb", suffix=".json", delete=False) as handle:
-        handle.write(envelope_bytes)
+        handle.write(data)
         snapshot_path = Path(handle.name)
     try:
-        result = subprocess.run([sys.executable, str(validator), str(snapshot_path)], capture_output=True, text=True)
+        result = subprocess.run(
+            [sys.executable, str(validator), str(snapshot_path)],
+            capture_output=True,
+            text=True,
+        )
     finally:
         snapshot_path.unlink(missing_ok=True)
     if result.returncode != 0:
-        fail(f"authority envelope failed validation: {result.stderr.strip()}")
+        detail = result.stderr.strip() or result.stdout.strip()
+        fail(f"{label} failed validation: {detail}")
 
 
 def authorize(envelope, policy, authenticated_actor):
@@ -95,7 +106,42 @@ def require_list(value, label, allow_empty=False):
         fail(f"{label} must not be empty")
     if any(not isinstance(item, str) or not item.strip() for item in value):
         fail(f"{label} entries must be non-empty strings")
+    if len(value) != len(set(value)):
+        fail(f"{label} must not contain duplicates")
     return value
+
+
+def stage_bytes(destination, data):
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    fd, temp_name = tempfile.mkstemp(prefix=f".{destination.name}.", suffix=".tmp", dir=destination.parent)
+    temp_path = Path(temp_name)
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(data)
+            handle.flush()
+            os.fsync(handle.fileno())
+    except Exception:
+        temp_path.unlink(missing_ok=True)
+        raise
+    return temp_path
+
+
+def emit_pair(promotion_dest, promotion_bytes, work_dest, work_bytes):
+    promotion_tmp = stage_bytes(promotion_dest, promotion_bytes)
+    work_tmp = stage_bytes(work_dest, work_bytes)
+    work_committed = False
+    try:
+        # Commit inert Work first. Without its Promotion record it is not a valid
+        # downstream authority object. Promotion is committed only after Work exists.
+        os.replace(work_tmp, work_dest)
+        work_committed = True
+        os.replace(promotion_tmp, promotion_dest)
+    except Exception as exc:
+        promotion_tmp.unlink(missing_ok=True)
+        work_tmp.unlink(missing_ok=True)
+        if work_committed:
+            work_dest.unlink(missing_ok=True)
+        fail(f"atomic Promotion/Work emission failed: {exc}")
 
 
 def main():
@@ -104,38 +150,62 @@ def main():
     proposal_path = Path(env("WORK_PROMOTION_PROPOSAL"))
     authenticated_actor = env("WORK_PROMOTION_AUTHENTICATED_GITHUB_ACTOR")
 
-    for path, label in ((review_path, "review disposition"), (envelope_path, "authority envelope"), (proposal_path, "work proposal"), (GRANT_POLICY, "grant policy")):
+    for path, label in (
+        (review_path, "review disposition"),
+        (envelope_path, "authority envelope"),
+        (proposal_path, "work proposal"),
+        (GRANT_POLICY, "grant policy"),
+    ):
         if not path.is_file():
             fail(f"{label} not found: {path}")
 
+    # Snapshot every mutable input once. Validation, authorization, hashing, and
+    # emitted lineage all operate on the exact captured bytes.
     review_bytes = review_path.read_bytes()
     envelope_bytes = envelope_path.read_bytes()
     proposal_bytes = proposal_path.read_bytes()
     policy_bytes = GRANT_POLICY.read_bytes()
 
+    validate_snapshot(review_bytes, "scripts/validate_review_disposition_v0.py", "Review Disposition snapshot")
+    validate_snapshot(envelope_bytes, "scripts/validate_actor_authority_envelope_v0_1.py", "authority envelope snapshot")
+
     review = parse_json_bytes(review_bytes, "review disposition snapshot")
-    proposal = parse_json_bytes(proposal_bytes, "work proposal snapshot")
-    validate_envelope_snapshot(envelope_bytes)
     envelope = parse_json_bytes(envelope_bytes, "authority envelope snapshot")
+    proposal = parse_json_bytes(proposal_bytes, "work proposal snapshot")
     policy = parse_json_bytes(policy_bytes, "grant policy snapshot")
     matched_grant = authorize(envelope, policy, authenticated_actor)
 
-    if review.get("decision") != "APPROVE_FOR_WORK":
+    if review["decision"] != "APPROVE_FOR_WORK":
         fail("source Review Disposition is not APPROVE_FOR_WORK")
-    promotion_state = review.get("promotion", {})
-    if promotion_state.get("eligible_for_work_promotion") is not True:
+    promotion_state = review["promotion"]
+    if promotion_state["eligible_for_work_promotion"] is not True:
         fail("source Review Disposition is not eligible for Work Promotion")
-    if promotion_state.get("work_ref") is not None or promotion_state.get("promotion_ref") is not None:
-        fail("source Review Disposition already carries a work or promotion reference")
 
-    review_id = review.get("review_id")
-    admission_ref = review.get("admission_ref")
-    source_event_ref = review.get("source_event_ref")
-    if not all(isinstance(value, str) and value for value in (review_id, admission_ref, source_event_ref)):
-        fail("source Review Disposition is missing required lineage identifiers")
+    review_id = review["review_id"]
+    admission_ref = review["admission_ref"]
+    source_event_ref = review["source_event_ref"]
 
-    if set(proposal) - {"objective", "scope", "prohibited_scope", "candidate_effect_classes", "required_constraints", "required_evidence", "verification_target", "return_receiver", "terminal_condition", "expires_at"}:
+    # Current Tyme-Lab v0 consumes only the repository's governed decision store.
+    expected_parent = Path("institutional-reviews/decisions")
+    normalized = review_path.as_posix()
+    if expected_parent.as_posix() not in normalized or review_path.name != f"{review_id}.json":
+        fail("Review Disposition must come from institutional-reviews/decisions and filename must match review_id")
+
+    allowed_proposal_fields = {
+        "objective",
+        "scope",
+        "prohibited_scope",
+        "candidate_effect_classes",
+        "required_constraints",
+        "required_evidence",
+        "verification_target",
+        "return_receiver",
+        "terminal_condition",
+        "expires_at",
+    }
+    if set(proposal) - allowed_proposal_fields:
         fail("work proposal contains unsupported fields; participant or execution binding is forbidden at this boundary")
+
     objective = proposal.get("objective")
     if not isinstance(objective, str) or not objective.strip():
         fail("objective must be a non-empty string")
@@ -144,14 +214,23 @@ def main():
     effects = require_list(proposal.get("candidate_effect_classes", []), "candidate_effect_classes", allow_empty=True)
     if any(effect not in ALLOWED_EFFECTS for effect in effects):
         fail("candidate_effect_classes contains an unsupported effect")
-    required_constraints = require_list(proposal.get("required_constraints", []), "required_constraints", allow_empty=True)
+    required_constraints = require_list(proposal.get("required_constraints"), "required_constraints")
     required_evidence = require_list(proposal.get("required_evidence"), "required_evidence")
+
     verification_target = proposal.get("verification_target")
     return_receiver = proposal.get("return_receiver")
     terminal_condition = proposal.get("terminal_condition")
-    for value, label in ((verification_target, "verification_target"), (return_receiver, "return_receiver"), (terminal_condition, "terminal_condition")):
+    for value, label in (
+        (verification_target, "verification_target"),
+        (return_receiver, "return_receiver"),
+        (terminal_condition, "terminal_condition"),
+    ):
         if not isinstance(value, str) or not value.strip():
             fail(f"{label} must be a non-empty string")
+
+    expires_at = proposal.get("expires_at")
+    if expires_at is not None and (not isinstance(expires_at, str) or not expires_at.strip()):
+        fail("expires_at must be null or a non-empty timestamp string")
 
     review_sha = hashlib.sha256(review_bytes).hexdigest()
     promotion_id = f"promotion-{review_id}"
@@ -173,7 +252,10 @@ def main():
             "actor_id": envelope["actor_id"],
             "actor_type": envelope["actor_type"],
             "origin_surface": envelope["origin_surface"],
-            "authenticated_transport": {"type": "github-actions", "github_actor": authenticated_actor},
+            "authenticated_transport": {
+                "type": "github-actions",
+                "github_actor": authenticated_actor,
+            },
             "authority_envelope_ref": str(envelope_path),
             "authority_envelope_sha256": hashlib.sha256(envelope_bytes).hexdigest(),
         },
@@ -187,9 +269,16 @@ def main():
             "participant_selected": False,
             "execution_authority_granted": False,
         },
-        "result": {"work_created": True, "work_ref": str(work_dest)},
+        "result": {
+            "work_created": True,
+            "work_ref": str(work_dest),
+        },
     }
-    promotion_sha = canonical_sha256(promotion)
+
+    # Hash the exact bytes that will be preserved, not a different canonical form.
+    promotion_bytes = json_bytes(promotion)
+    promotion_sha = hashlib.sha256(promotion_bytes).hexdigest()
+
     work = {
         "work_id": work_id,
         "created_at": now,
@@ -201,13 +290,20 @@ def main():
             "promotion_ref": str(promotion_dest),
             "promotion_sha256": promotion_sha,
         },
-        "intent": {"objective": objective, "scope": scope, "prohibited_scope": prohibited_scope},
+        "intent": {
+            "objective": objective,
+            "scope": scope,
+            "prohibited_scope": prohibited_scope,
+        },
         "consequence": {
             "candidate_effect_classes": effects,
             "execution_authority": "none_until_participant_activation",
             "participant_binding": None,
         },
-        "constraints": {"required_refs": required_constraints, "fail_closed_on_missing": True},
+        "constraints": {
+            "required_refs": required_constraints,
+            "fail_closed_on_missing": True,
+        },
         "evidence_contract": {
             "required_evidence": required_evidence,
             "verification_target": verification_target,
@@ -217,16 +313,17 @@ def main():
         "lifecycle": {
             "state": "PROMOTED_UNBOUND",
             "terminal_condition": terminal_condition,
-            "expires_at": proposal.get("expires_at"),
+            "expires_at": expires_at,
             "supersedes_work_ref": None,
         },
-        "activation": {"activation_required": True, "activation_ref": None},
+        "activation": {
+            "activation_required": True,
+            "activation_ref": None,
+        },
     }
+    work_bytes = json_bytes(work)
 
-    promotion_dest.parent.mkdir(parents=True, exist_ok=True)
-    work_dest.parent.mkdir(parents=True, exist_ok=True)
-    promotion_dest.write_text(json.dumps(promotion, indent=2) + "\n")
-    work_dest.write_text(json.dumps(work, indent=2) + "\n")
+    emit_pair(promotion_dest, promotion_bytes, work_dest, work_bytes)
     print(promotion_dest)
     print(work_dest)
 
