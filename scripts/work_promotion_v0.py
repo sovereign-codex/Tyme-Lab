@@ -126,22 +126,60 @@ def stage_bytes(destination, data):
     return temp_path
 
 
-def emit_pair(promotion_dest, promotion_bytes, work_dest, work_bytes):
+def recover_pending(marker, promotion_dest, work_dest):
+    if not marker.exists():
+        return
+    # A surviving marker means the previous transaction never finalized. Treat
+    # every visible member of that pair as uncommitted and remove it before retry.
+    promotion_dest.unlink(missing_ok=True)
+    work_dest.unlink(missing_ok=True)
+    marker.unlink(missing_ok=True)
+
+
+def emit_pair(marker, promotion_dest, promotion_bytes, work_dest, work_bytes):
+    marker.parent.mkdir(parents=True, exist_ok=True)
+    marker_payload = json_bytes(
+        {
+            "promotion_ref": str(promotion_dest),
+            "promotion_sha256": hashlib.sha256(promotion_bytes).hexdigest(),
+            "work_ref": str(work_dest),
+            "work_sha256": hashlib.sha256(work_bytes).hexdigest(),
+            "state": "PENDING",
+        }
+    )
+    marker_tmp = stage_bytes(marker, marker_payload)
     promotion_tmp = stage_bytes(promotion_dest, promotion_bytes)
     work_tmp = stage_bytes(work_dest, work_bytes)
     work_committed = False
+    promotion_committed = False
     try:
+        os.replace(marker_tmp, marker)
         # Commit inert Work first. Without its Promotion record it is not a valid
         # downstream authority object. Promotion is committed only after Work exists.
         os.replace(work_tmp, work_dest)
         work_committed = True
         os.replace(promotion_tmp, promotion_dest)
+        promotion_committed = True
+        marker.unlink()
     except Exception as exc:
+        marker_tmp.unlink(missing_ok=True)
         promotion_tmp.unlink(missing_ok=True)
         work_tmp.unlink(missing_ok=True)
+        if promotion_committed:
+            promotion_dest.unlink(missing_ok=True)
         if work_committed:
             work_dest.unlink(missing_ok=True)
-        fail(f"atomic Promotion/Work emission failed: {exc}")
+        marker.unlink(missing_ok=True)
+        fail(f"recoverable Promotion/Work emission failed: {exc}")
+
+
+def path_has_sequence(path, sequence):
+    parts = path.parts
+    seq = tuple(sequence)
+    for index in range(0, len(parts) - len(seq) + 1):
+        if tuple(parts[index : index + len(seq)]) == seq:
+            return True
+    return False
 
 
 def main():
@@ -159,8 +197,6 @@ def main():
         if not path.is_file():
             fail(f"{label} not found: {path}")
 
-    # Snapshot every mutable input once. Validation, authorization, hashing, and
-    # emitted lineage all operate on the exact captured bytes.
     review_bytes = review_path.read_bytes()
     envelope_bytes = envelope_path.read_bytes()
     proposal_bytes = proposal_path.read_bytes()
@@ -177,18 +213,14 @@ def main():
 
     if review["decision"] != "APPROVE_FOR_WORK":
         fail("source Review Disposition is not APPROVE_FOR_WORK")
-    promotion_state = review["promotion"]
-    if promotion_state["eligible_for_work_promotion"] is not True:
+    if review["promotion"]["eligible_for_work_promotion"] is not True:
         fail("source Review Disposition is not eligible for Work Promotion")
 
     review_id = review["review_id"]
     admission_ref = review["admission_ref"]
     source_event_ref = review["source_event_ref"]
 
-    # Current Tyme-Lab v0 consumes only the repository's governed decision store.
-    expected_parent = Path("institutional-reviews/decisions")
-    normalized = review_path.as_posix()
-    if expected_parent.as_posix() not in normalized or review_path.name != f"{review_id}.json":
+    if not path_has_sequence(review_path, ("institutional-reviews", "decisions")) or review_path.name != f"{review_id}.json":
         fail("Review Disposition must come from institutional-reviews/decisions and filename must match review_id")
 
     allowed_proposal_fields = {
@@ -237,6 +269,9 @@ def main():
     work_id = f"work-{review_id}"
     promotion_dest = Path("institutional-work/promotions") / f"{promotion_id}.json"
     work_dest = Path("institutional-work/records") / f"{work_id}.json"
+    marker = Path("institutional-work/transactions") / f"{promotion_id}.pending"
+
+    recover_pending(marker, promotion_dest, work_dest)
     if promotion_dest.exists() or work_dest.exists():
         fail("Work Promotion already exists for this Review Disposition")
 
@@ -275,7 +310,6 @@ def main():
         },
     }
 
-    # Hash the exact bytes that will be preserved, not a different canonical form.
     promotion_bytes = json_bytes(promotion)
     promotion_sha = hashlib.sha256(promotion_bytes).hexdigest()
 
@@ -323,7 +357,7 @@ def main():
     }
     work_bytes = json_bytes(work)
 
-    emit_pair(promotion_dest, promotion_bytes, work_dest, work_bytes)
+    emit_pair(marker, promotion_dest, promotion_bytes, work_dest, work_bytes)
     print(promotion_dest)
     print(work_dest)
 
