@@ -25,10 +25,7 @@ def base_review():
             "actor_id": "reviewer-001",
             "actor_type": "human",
             "origin_surface": "github",
-            "authenticated_transport": {
-                "type": "github-actions",
-                "github_actor": "sovereign-codex",
-            },
+            "authenticated_transport": {"type": "github-actions", "github_actor": "sovereign-codex"},
             "authority_envelope_ref": "governance/envelopes/reviewer-001.json",
             "authority_envelope_sha256": "1" * 64,
         },
@@ -44,11 +41,7 @@ def base_review():
             "work_created": False,
             "execution_authority_granted": False,
         },
-        "promotion": {
-            "eligible_for_work_promotion": True,
-            "work_ref": None,
-            "promotion_ref": None,
-        },
+        "promotion": {"eligible_for_work_promotion": True, "work_ref": None, "promotion_ref": None},
     }
 
 
@@ -58,14 +51,8 @@ def base_envelope():
         "actor_id": "promoter-001",
         "actor_type": "human",
         "origin_surface": "github",
-        "authority": {
-            "mode": "direct",
-            "scope": ["work-promotion"],
-            "effect": "none",
-        },
-        "provenance": {
-            "event_ref": "institutional-event:event-001",
-        },
+        "authority": {"mode": "direct", "scope": ["work-promotion"], "effect": "none"},
+        "provenance": {"event_ref": "institutional-event:event-001"},
     }
 
 
@@ -93,10 +80,7 @@ def authorized_policy():
                 "actor_type": "human",
                 "scope": "work-promotion",
                 "origin_surface": "github",
-                "authenticated_transport": {
-                    "type": "github-actions",
-                    "github_actor": "sovereign-codex",
-                },
+                "authenticated_transport": {"type": "github-actions", "github_actor": "sovereign-codex"},
             }
         ],
     }
@@ -145,7 +129,8 @@ def run_boundary(tmp_path, review_path, envelope_path, proposal_path):
 def output_paths(tmp_path):
     promotion = tmp_path / "institutional-work" / "promotions" / "promotion-review-admission-001.json"
     work = tmp_path / "institutional-work" / "records" / "work-review-admission-001.json"
-    return promotion, work
+    marker = tmp_path / "institutional-work" / "transactions" / "promotion-review-admission-001.pending"
+    return promotion, work, marker
 
 
 def test_schema_forbids_participant_binding():
@@ -173,15 +158,18 @@ def test_authorized_success_executes_boundary_and_binds_exact_promotion_bytes(tm
     result = run_boundary(tmp_path, review_path, envelope_path, proposal_path)
     assert result.returncode == 0, result.stderr
 
-    promotion_path, work_path = output_paths(tmp_path)
+    promotion_path, work_path, marker = output_paths(tmp_path)
     assert promotion_path.is_file()
     assert work_path.is_file()
+    assert not marker.exists()
     promotion_bytes = promotion_path.read_bytes()
+    review_bytes = review_path.read_bytes()
     work = json.loads(work_path.read_text())
     promotion = json.loads(promotion_bytes)
 
     assert promotion["governance"]["participant_selected"] is False
     assert promotion["governance"]["execution_authority_granted"] is False
+    assert promotion["review_disposition_sha256"] == hashlib.sha256(review_bytes).hexdigest()
     assert work["consequence"]["participant_binding"] is None
     assert work["consequence"]["execution_authority"] == "none_until_participant_activation"
     assert work["lineage"]["promotion_sha256"] == hashlib.sha256(promotion_bytes).hexdigest()
@@ -201,9 +189,8 @@ def test_handcrafted_incomplete_review_is_rejected(tmp_path):
     )
     result = run_boundary(tmp_path, review_path, envelope_path, proposal_path)
     assert result.returncode != 0
-    promotion_path, work_path = output_paths(tmp_path)
-    assert not promotion_path.exists()
-    assert not work_path.exists()
+    promotion_path, work_path, marker = output_paths(tmp_path)
+    assert not promotion_path.exists() and not work_path.exists() and not marker.exists()
 
 
 def test_unauthorized_promoter_is_rejected(tmp_path):
@@ -213,9 +200,8 @@ def test_unauthorized_promoter_is_rejected(tmp_path):
     )
     result = run_boundary(tmp_path, review_path, envelope_path, proposal_path)
     assert result.returncode != 0
-    promotion_path, work_path = output_paths(tmp_path)
-    assert not promotion_path.exists()
-    assert not work_path.exists()
+    promotion_path, work_path, marker = output_paths(tmp_path)
+    assert not promotion_path.exists() and not work_path.exists() and not marker.exists()
 
 
 def test_duplicate_promotion_is_rejected_without_second_pair(tmp_path):
@@ -224,8 +210,8 @@ def test_duplicate_promotion_is_rejected_without_second_pair(tmp_path):
     second = run_boundary(tmp_path, review_path, envelope_path, proposal_path)
     assert first.returncode == 0
     assert second.returncode != 0
-    promotion_path, work_path = output_paths(tmp_path)
-    assert promotion_path.is_file() and work_path.is_file()
+    promotion_path, work_path, marker = output_paths(tmp_path)
+    assert promotion_path.is_file() and work_path.is_file() and not marker.exists()
 
 
 def test_forbidden_participant_field_is_rejected(tmp_path):
@@ -235,8 +221,8 @@ def test_forbidden_participant_field_is_rejected(tmp_path):
     write_json(proposal_path, proposal)
     result = run_boundary(tmp_path, review_path, envelope_path, proposal_path)
     assert result.returncode != 0
-    promotion_path, work_path = output_paths(tmp_path)
-    assert not promotion_path.exists() and not work_path.exists()
+    promotion_path, work_path, marker = output_paths(tmp_path)
+    assert not promotion_path.exists() and not work_path.exists() and not marker.exists()
 
 
 def test_unsupported_effect_is_rejected(tmp_path):
@@ -246,8 +232,8 @@ def test_unsupported_effect_is_rejected(tmp_path):
     write_json(proposal_path, proposal)
     result = run_boundary(tmp_path, review_path, envelope_path, proposal_path)
     assert result.returncode != 0
-    promotion_path, work_path = output_paths(tmp_path)
-    assert not promotion_path.exists() and not work_path.exists()
+    promotion_path, work_path, marker = output_paths(tmp_path)
+    assert not promotion_path.exists() and not work_path.exists() and not marker.exists()
 
 
 def test_missing_constraint_reference_is_rejected(tmp_path):
@@ -259,25 +245,30 @@ def test_missing_constraint_reference_is_rejected(tmp_path):
     assert result.returncode != 0
 
 
-def test_emit_pair_rolls_back_work_if_promotion_commit_fails(tmp_path, monkeypatch):
+def load_module():
     spec = importlib.util.spec_from_file_location("work_promotion_v0", SCRIPT)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    return module
 
+
+def test_emit_pair_rolls_back_work_if_promotion_commit_fails(tmp_path, monkeypatch):
+    module = load_module()
     promotion_dest = tmp_path / "promotions" / "promotion.json"
     work_dest = tmp_path / "records" / "work.json"
+    marker = tmp_path / "transactions" / "promotion.pending"
     real_replace = module.os.replace
     calls = {"count": 0}
 
-    def fail_second_replace(src, dst):
+    def fail_third_replace(src, dst):
         calls["count"] += 1
-        if calls["count"] == 2:
+        if calls["count"] == 3:
             raise OSError("simulated promotion commit failure")
         return real_replace(src, dst)
 
-    monkeypatch.setattr(module.os, "replace", fail_second_replace)
+    monkeypatch.setattr(module.os, "replace", fail_third_replace)
     try:
-        module.emit_pair(promotion_dest, b"{}\n", work_dest, b"{}\n")
+        module.emit_pair(marker, promotion_dest, b"{}\n", work_dest, b"{}\n")
     except SystemExit:
         pass
     else:
@@ -285,3 +276,20 @@ def test_emit_pair_rolls_back_work_if_promotion_commit_fails(tmp_path, monkeypat
 
     assert not promotion_dest.exists()
     assert not work_dest.exists()
+    assert not marker.exists()
+
+
+def test_pending_transaction_recovery_removes_uncommitted_pair(tmp_path):
+    module = load_module()
+    promotion_dest = tmp_path / "promotions" / "promotion.json"
+    work_dest = tmp_path / "records" / "work.json"
+    marker = tmp_path / "transactions" / "promotion.pending"
+    write_json(promotion_dest, {"partial": True})
+    write_json(work_dest, {"partial": True})
+    write_json(marker, {"state": "PENDING"})
+
+    module.recover_pending(marker, promotion_dest, work_dest)
+
+    assert not promotion_dest.exists()
+    assert not work_dest.exists()
+    assert not marker.exists()
