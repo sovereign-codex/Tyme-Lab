@@ -13,11 +13,19 @@
     "reviewed_at": {"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,6})?Z$"},
     "reviewer": {
       "type":"object","additionalProperties":false,
-      "required":["actor_id","actor_type","origin_surface","authority_envelope_ref","authority_envelope_sha256"],
+      "required":["actor_id","actor_type","origin_surface","authenticated_transport","authority_envelope_ref","authority_envelope_sha256"],
       "properties": {
         "actor_id":{"type":"string","minLength":1,"maxLength":2048},
         "actor_type":{"enum":["human","agent","service"]},
         "origin_surface":{"type":"string","pattern":"^[a-z][a-z0-9_-]{0,63}$"},
+        "authenticated_transport": {
+          "type":"object","additionalProperties":false,
+          "required":["type","github_actor"],
+          "properties": {
+            "type":{"const":"github-actions"},
+            "github_actor":{"type":"string","minLength":1}
+          }
+        },
         "authority_envelope_ref":{"type":"string","minLength":1,"maxLength":2048},
         "authority_envelope_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
       }
@@ -26,11 +34,13 @@
     "rationale":{"type":"string","minLength":1},
     "governance": {
       "type":"object","additionalProperties":false,
-      "required":["authority_effect","required_scope","grant_policy_ref","mutation_allowed","work_created","execution_authority_granted"],
+      "required":["authority_effect","required_scope","grant_policy_ref","grant_policy_sha256","matched_grant_sha256","mutation_allowed","work_created","execution_authority_granted"],
       "properties": {
         "authority_effect":{"const":"review_disposition_only"},
         "required_scope":{"const":"review-disposition"},
         "grant_policy_ref":{"const":"governance/authorized-review-scopes.v0.json"},
+        "grant_policy_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+        "matched_grant_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
         "mutation_allowed":{"const":false},
         "work_created":{"const":false},
         "execution_authority_granted":{"const":false}
