@@ -1,0 +1,30 @@
+name: Work Promotion v0 Tests
+
+on:
+  pull_request:
+    paths:
+      - "scripts/work_promotion_v0.py"
+      - "scripts/validate_review_disposition_v0.py"
+      - "scripts/validate_actor_authority_envelope_v0_1.py"
+      - "schemas/work.v0.schema.json"
+      - "schemas/work-promotion.v0.schema.json"
+      - "governance/authorized-work-promotion-scopes.v0.json"
+      - "tests/test_work_promotion_v0.py"
+      - ".github/workflows/work-promotion-v0-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  adversarial-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test runner
+        run: python -m pip install pytest
+      - name: Run Work Promotion v0 tests
+        run: python -m pytest -q tests/test_work_promotion_v0.py
