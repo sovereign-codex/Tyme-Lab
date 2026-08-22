@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       authority_envelope:
-        description: "Repository path to validated Actor + Authority Envelope v0.1"
+        description: "Repository path to Actor + Authority Envelope v0.1"
         required: true
         type: string
 permissions:
@@ -35,6 +35,7 @@ jobs:
           REVIEW_DECISION: ${{ inputs.decision }}
           REVIEW_RATIONALE: ${{ inputs.rationale }}
           REVIEW_AUTHORITY_ENVELOPE: ${{ inputs.authority_envelope }}
+          REVIEW_AUTHENTICATED_GITHUB_ACTOR: ${{ github.actor }}
         run: python scripts/review_disposition_v0.py
       - name: Assert no Work was created or modified
         run: |
