@@ -1,6 +1,6 @@
 {
   "schema_version": "v0",
-  "purpose": "Independent institutional grants for Review Disposition v0. Envelope scope is descriptive and is not itself authorization.",
+  "purpose": "Independent institutional grants for Review Disposition v0. Envelope scope and identity are descriptive assertions; grants bind consequence to independently authenticated transport identity.",
   "required_scope": "review-disposition",
   "delegated_authority_supported": false,
   "direct_grants": [
@@ -8,7 +8,11 @@
       "actor_id": "human:sovereign-codex",
       "actor_type": "human",
       "scope": "review-disposition",
-      "origin_surfaces": ["github", "chatgpt", "tymehall"]
+      "origin_surface": "github",
+      "authenticated_transport": {
+        "type": "github-actions",
+        "github_actor": "sovereign-codex"
+      }
     }
   ]
 }
