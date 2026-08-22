@@ -1,7 +1,14 @@
 {
   "schema_version": "v0",
-  "purpose": "Scopes accepted by Review Disposition v0 after Actor + Authority Envelope validation.",
+  "purpose": "Independent institutional grants for Review Disposition v0. Envelope scope is descriptive and is not itself authorization.",
   "required_scope": "review-disposition",
-  "accepted_actor_types": ["human", "agent", "service"],
-  "required_authority_effect": "none"
+  "delegated_authority_supported": false,
+  "direct_grants": [
+    {
+      "actor_id": "human:sovereign-codex",
+      "actor_type": "human",
+      "scope": "review-disposition",
+      "origin_surfaces": ["github", "chatgpt", "tymehall"]
+    }
+  ]
 }
