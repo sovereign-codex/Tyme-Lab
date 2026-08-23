@@ -1,0 +1,54 @@
+{
+  "monitor_id": "frontier-containment-monitor-v0",
+  "participant_id": "runtime:avot-engine/monitor-runtime-v0",
+  "participant_class": "avot_monitor",
+  "domain": "frontier_ai_containment",
+  "status": "tested",
+  "host_runtime": "avot-engine",
+  "activation": {
+    "event_types": [
+      "frontier_containment_signal"
+    ],
+    "schedule_fallback": null
+  },
+  "sensing_scope": {
+    "sources": [
+      "pre_resolved_public_evidence"
+    ],
+    "queries": [],
+    "exclusions": [
+      "network_fetch",
+      "credentialed_source"
+    ]
+  },
+  "interpretive_scope": {
+    "objectives": [
+      "track_frontier_containment_developments"
+    ],
+    "repositories": [
+      "sovereign-codex/Tyme-Lab"
+    ],
+    "notion_surfaces": [
+      "FIRST_HEARTBEAT_PILOT"
+    ]
+  },
+  "authority_posture": "analysis_only",
+  "permitted_actions": [
+    "observe",
+    "normalize",
+    "compare",
+    "interpret",
+    "recommend",
+    "return_evidence"
+  ],
+  "prohibited_actions": [
+    "create_work",
+    "authorize_execution",
+    "merge",
+    "promote_canon",
+    "mutate_institutional_memory"
+  ],
+  "signal_contract": "SIGNAL_PACKET_v0.1",
+  "return_contract": "EVIDENCE_RETURN_v0.1",
+  "dormancy_condition": "enter_dormant_after_single_return"
+}
