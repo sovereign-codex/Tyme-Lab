@@ -19,8 +19,8 @@
   ],
   "properties": {
     "routing_id": {"type": "string", "minLength": 1},
-    "signal_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
-    "decision": {"enum": ["archive_only", "relate", "request_review", "eligible_for_admission"]},
+    "signal_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "decision": {"enum": ["archive_only", "relate", "request_review", "submit_for_admission"]},
     "receiver": {"type": "string"},
     "rationale": {"type": "string", "minLength": 1},
     "related_objective": {"type": ["string", "null"]},
@@ -28,11 +28,11 @@
     "requires_human_review": {"const": true},
     "authority_posture": {"const": "none"},
     "institutional_effect": {"const": "none"},
-    "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+    "evidence_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
   },
   "allOf": [
     {
-      "if": {"properties": {"decision": {"const": "eligible_for_admission"}}},
+      "if": {"properties": {"decision": {"const": "submit_for_admission"}}},
       "then": {
         "properties": {
           "receiver": {"minLength": 1},
