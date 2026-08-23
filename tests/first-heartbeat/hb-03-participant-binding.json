@@ -6,10 +6,19 @@
   "work_id": "work:first-heartbeat:frontier-containment",
   "expected_promotion_merge_sha": "e3d174c1669d7d3eddf75e1f517c201b5f8d01e5",
   "binding_contract_ref": "docs/architecture/PARTICIPANT_BINDING_V0.md",
+  "binding_authority": {
+    "actor_id": "human:sovereign-codex",
+    "actor_type": "human",
+    "scope": "participant-binding",
+    "origin_surface": "github",
+    "authenticated_github_actor": "sovereign-codex",
+    "policy_ref": "governance/authorized-participant-binding-scopes.v0.json"
+  },
   "participant_binding": {
-    "participant_id": "runtime:avot-engine/monitor-runner-v0",
+    "participant_id": "runtime:avot-engine/monitor-runtime-v0",
     "participant_class": "runtime_capability",
     "host_runtime": "avot-engine",
+    "carrier_ref": "governance/runtime-carriers/avot-engine-monitor-runtime-v0.json",
     "capability_profile": "frontier-containment",
     "identity_created": false
   },
