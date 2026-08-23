@@ -1,0 +1,60 @@
+{
+  "pilot_id": "hb-03-frontier-containment",
+  "source_work_maturity": "COMMISSIONED",
+  "target_work_maturity": "BOUND",
+  "work_ref": "first-heartbeat:frontier-containment",
+  "binding_contract_ref": "docs/architecture/PARTICIPANT_BINDING_V0.md",
+  "participant_binding": {
+    "participant_id": "runtime:avot-engine/monitor-runner-v0",
+    "participant_class": "runtime_capability",
+    "host_runtime": "avot-engine",
+    "capability_profile": "frontier-containment",
+    "identity_created": false
+  },
+  "runtime_compatibility": {
+    "source_contract_ref": "docs/architecture/MONITOR_PARTICIPATION_RUNTIME_V0.md",
+    "required_actions": [
+      "observe",
+      "normalize",
+      "compare",
+      "interpret",
+      "recommend",
+      "return_evidence"
+    ],
+    "required_prohibitions": [
+      "create_work",
+      "authorize_execution",
+      "merge",
+      "promote_canon",
+      "mutate_institutional_memory"
+    ]
+  },
+  "capability_profile": {
+    "permitted_actions": [
+      "read_approved_public_sources",
+      "compare_against_prior_verified_state",
+      "normalize_evidence",
+      "interpret_materiality",
+      "emit_candidate_signal_packet",
+      "return_evidence"
+    ],
+    "prohibited_actions": [
+      "repository_mutation",
+      "canon_mutation",
+      "external_communication",
+      "cyber_execution",
+      "participant_selection",
+      "participant_spawn",
+      "self_authority_change",
+      "self_activation"
+    ]
+  },
+  "execution_authority": {
+    "state": "NONE",
+    "grant_ref": null,
+    "activation_ref": null
+  },
+  "evidence_state": "EXPECTED",
+  "binding_result": "BOUND_UNACTIVATED",
+  "next_valid_gate": "hb-03-runtime-activation-authority-review"
+}
