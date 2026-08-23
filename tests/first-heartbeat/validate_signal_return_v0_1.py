@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""HB-01 dependency-free validator for Signal Return Contract v0.1."""
+"""HB-01 validator for Signal Return Contract v0.1.
+
+Validates the declared Draft 2020-12 JSON Schema, validates the canonical
+Frontier Containment fixture against that schema, and enforces pilot-specific
+institutional invariants that must remain true before HB-01 can graduate.
+"""
 
 from __future__ import annotations
 
@@ -8,9 +13,17 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError, ValidationError
+
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA = ROOT / "schemas" / "signal_return.v0.1.schema.json"
 FIXTURE = Path(__file__).with_name("frontier-containment.signal-return.v0.1.json")
+
+EXPECTED_SOURCE_REFS = {
+    "https://openai.com/index/pacing-model-development-cyber-capabilities/",
+    "https://openai.com/index/responding-next-frontier-critical-cyber-capabilities/",
+}
 
 
 def load(path: Path) -> dict[str, Any]:
@@ -21,6 +34,20 @@ def load(path: Path) -> dict[str, Any]:
 def require(condition: bool, message: str, failures: list[str]) -> None:
     if not condition:
         failures.append(message)
+
+
+def validate_declared_schema(schema: dict[str, Any], fixture: dict[str, Any], failures: list[str]) -> None:
+    try:
+        Draft202012Validator.check_schema(schema)
+    except SchemaError as exc:
+        failures.append(f"declared JSON Schema is invalid: {exc.message}")
+        return
+
+    try:
+        Draft202012Validator(schema).validate(fixture)
+    except ValidationError as exc:
+        location = ".".join(str(part) for part in exc.absolute_path) or "<root>"
+        failures.append(f"fixture violates declared schema at {location}: {exc.message}")
 
 
 def main() -> int:
@@ -36,6 +63,9 @@ def main() -> int:
 
     schema = load(SCHEMA)
     fixture = load(FIXTURE)
+
+    # P1 gate: validate both the schema itself and the complete fixture against it.
+    validate_declared_schema(schema, fixture, failures)
 
     require(schema.get("$id") == "https://tymehall.org/schemas/signal_return.v0.1.schema.json", "$id drifted", failures)
     require(fixture.get("contract") == "signal_return_v0_1", "fixture contract mismatch", failures)
@@ -62,8 +92,13 @@ def main() -> int:
     require(runtime_constraint.get("outcome") == "blocked", "runtime constraint must preserve blocked outcome", failures)
     require(runtime_constraint.get("reason") == "active_task_capacity_exhausted", "runtime constraint reason drifted", failures)
 
-    source_refs = provenance.get("source_refs", [])
-    require(len(source_refs) >= 2, "pilot must preserve first-party source references", failures)
+    # P2 gate: preserve this pilot's canonical first-party evidence, not merely a count.
+    source_refs = set(provenance.get("source_refs", []))
+    require(
+        EXPECTED_SOURCE_REFS.issubset(source_refs),
+        "pilot must preserve both canonical OpenAI first-party source references",
+        failures,
+    )
 
     require(returned.get("archivist_status") == "pending", "Archivist should still be pending at HB-01", failures)
     require(returned.get("trace_status") == "pending", "TRACE should still be pending at HB-01", failures)
@@ -89,6 +124,9 @@ def main() -> int:
         return 1
 
     print("HB-01 Signal Return v0.1 validation: PASS")
+    print("json_schema_draft_2020_12_valid=true")
+    print("fixture_conforms_to_declared_schema=true")
+    print("canonical_first_party_provenance_preserved=true")
     print("pilot_signal=sig-frontier-containment-20260822-001")
     print("authority_posture=analysis_only")
     print("work_commission_state=uncommissioned")
