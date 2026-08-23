@@ -105,15 +105,28 @@ Evidence state must not be conflated with Work maturity. For example, Work can b
 
 ## HB-02 consequence
 
-HB-02 governs only the transition:
+HB-02 governs this boundary sequence:
 
 ```text
-CANDIDATE -> ELIGIBLE -> [ELIGIBLE -> COMMISSIONED gate]
+CANDIDATE -> ELIGIBLE -> COMMISSIONED
 ```
 
-The current Frontier Containment pilot reaches `ELIGIBLE`. The existing `work-promotion` policy has no direct grants, so `ELIGIBLE -> COMMISSIONED` must fail closed.
+The Frontier Containment pilot reaches `ELIGIBLE` through governed review and reaches `COMMISSIONED` only through a separate narrow `work-promotion` grant bound to the authenticated human GitHub actor `sovereign-codex`.
 
-This is a valid institutional outcome and demonstrates that maturity progression does not manufacture authority.
+That promotion grant authorizes only the institutional consequence of constructing bounded Work. It does not select a participant, grant execution authority, run a workflow, or create runtime evidence.
+
+Therefore the valid HB-02 post-promotion state is:
+
+```text
+work_maturity: COMMISSIONED
+participant_binding: UNBOUND
+execution_authority: NONE
+evidence_state: EXPECTED
+```
+
+This demonstrates the core invariant: **maturity may advance while participant binding, execution authority, and evidence state remain unchanged.**
+
+The next valid boundary is HB-03 Participant Activation: `COMMISSIONED -> BOUND`.
 
 ## Core laws
 
