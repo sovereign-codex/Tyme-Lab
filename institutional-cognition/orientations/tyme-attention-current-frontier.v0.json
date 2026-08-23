@@ -1,0 +1,41 @@
+{
+  "orientation_id": "tao-2026-08-23-current-frontier-001",
+  "current_frontier": "TYME Cognition Pilot 01 — Living Branch Orientation / PR #21",
+  "why_now": "The institution has multiple valid branches and workflows, but the immediate need is to prove TYME can compress that complexity into one steward-facing action before any additional execution occurs.",
+  "current_state": "NOW",
+  "current_stewardship": [
+    "TYME: continuity-and-attention orientation",
+    "human:sovereign-codex: one-shot authority steward when the activation gate is reached"
+  ],
+  "blocked_by": [
+    "attention orientation must be established as a reliable cognition output before HB-04B execution is resumed"
+  ],
+  "next_gate": "confirm this attention packet is coherent and then surface HB-04B as the single eligible one-shot human activation gate",
+  "waiting_dependents": [
+    "PR #20 — HB-05 Return Preservation + TRACE Verification"
+  ],
+  "human_action_required": false,
+  "human_action_reason": "No workflow or authority-consuming action is required to establish the present attention orientation. Human action becomes required only when TYME surfaces the prepared HB-04B one-shot activation as the single valid next gate.",
+  "do_not_touch": [
+    "do not run HB-04B yet",
+    "do not run HB-05 before HB-04B produces qualifying return evidence",
+    "do not promote or merge PR #12 solely to reduce branch count",
+    "do not open a new branch, workflow, or agent role to solve the current attention problem"
+  ],
+  "revisit_when": [
+    "the attention orientation contract is reviewed and accepted",
+    "new evidence materially changes the open PR or branch dependency state",
+    "HB-04B becomes the only unresolved eligible steward gate"
+  ],
+  "evidence_refs": [
+    "docs/architecture/TYME_ATTENTION_STEWARDSHIP_PROTOCOL_V0.md",
+    "institutional-cognition/returns/hb-04b-office-branch-health.v0.json",
+    "PR #21 — TYME Cognition Pilot 01 — Living Branch Orientation",
+    "PR #20 — HB-05 Return Preservation + TRACE Verification",
+    "PR #12 — Architecture: Participant Activation v0",
+    "branch:pilot/hb-04b-invocation-start-consume",
+    "branch:repair/hb-04b-activation-gate-diagnostics"
+  ],
+  "confidence": "known",
+  "one_current_steward_action": "Hold all workflow execution and review TYME Attention Orientation v0 as the current frontier; no other steward action is required yet."
+}
