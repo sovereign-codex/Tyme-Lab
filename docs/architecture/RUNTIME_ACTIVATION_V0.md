@@ -2,136 +2,169 @@
 
 ## Purpose
 
-Runtime Activation v0 governs only the Work Maturity transition:
+Runtime Activation v0 separates two boundaries that MUST NOT be collapsed:
 
 ```text
-BOUND -> ACTIVE
+BOUND -> PREPARED_ACTIVATION -> ACTIVE
 ```
 
-It authorizes an already-bound participant to perform one explicitly bounded runtime activation. It does not broaden Work scope, participant capability, or institutional authority.
+Preparation proves that one exact invocation is eligible to start. It does not start the runtime, does not grant execution authority, and does not change Work maturity.
 
-## First Heartbeat posture
+`ACTIVE` begins only when a unique prepared activation record is atomically consumed and invocation-start evidence exists.
 
-HB-04 is a one-shot, read-only activation over a pre-resolved evidence event.
+## HB-04A — preparation boundary
 
-The current AVOT-engine monitor primitive accepts a supplied event and returns a Signal Packet / Evidence Return. It does not require network access or credentials for this pilot. Therefore HB-04 grants neither.
+PR #17 implements HB-04A only.
 
-```yaml
-runtime:
-  carrier: runtime:avot-engine/monitor-runtime-v0
-  mode: one_shot
-  max_runs: 1
-  network_access: none
-  credentials: none
-  repository_write: false
-  external_communication: false
-```
-
-## Required activation inputs
-
-A valid activation requires:
-
-- durable Work lineage resolves to commissioned Work;
-- Work maturity is `BOUND`;
-- participant binding resolves to `runtime:avot-engine/monitor-runtime-v0`;
-- binding authority and carrier evidence remain valid;
-- a separate `runtime-activation` grant authorizes the activating actor;
-- the authenticated execution actor matches trusted runtime provenance;
-- the event packet is supplied before activation and is within Work scope;
-- tool, network, credential, temporal, and run-count limits are explicit;
-- evidence return requirements are explicit;
-- activation expires automatically after the one permitted run or any failure.
-
-## One-shot activation envelope
-
-HB-04 authorizes only:
+The preparation record is:
 
 ```text
-runSyntheticMonitorActivation(manifest, supplied_event)
+institutional-activations/prepared/activation-hb04-frontier-containment-001.json
 ```
 
-The supplied event may reference approved public-source evidence already captured outside the runtime. The activation may normalize, interpret, compare represented state, recommend a receiver, emit a candidate signal packet, and return evidence.
+It is unique, immutable as evidence, explicitly `PREPARED_UNCONSUMED`, and bound to:
 
-It may not:
+- exact commissioned Work ref;
+- exact HB-03 participant-binding ref;
+- exact participant carrier;
+- exact runtime implementation;
+- exact supplied source-signal artifact;
+- narrow preparation authority;
+- one-shot runtime limits;
+- no-network / no-credential posture;
+- explicit later consume boundary.
 
-- fetch arbitrary network resources;
-- use secrets, tokens, API keys, or stored credentials;
-- mutate repositories or branches;
-- dispatch workflows;
-- create or promote Work;
-- alter Canon or institutional memory;
-- communicate externally;
-- perform cyber execution;
-- bind or spawn participants;
-- extend, renew, or replace its own activation grant.
+## Preparation is not activation
 
-## Authority envelope
-
-Activation authority is independent from binding authority.
-
-```text
-binding authority != runtime activation authority
-runtime compatibility != runtime activation authority
-participant capability != runtime activation authority
-```
-
-The HB-04 activation actor must possess the narrow `runtime-activation` grant and must match the actual trusted GitHub Actions actor.
-
-## Temporal and terminal semantics
-
-The pilot uses a one-shot lease rather than a wall-clock lease.
+After HB-04A succeeds:
 
 ```yaml
-lease:
-  max_runs: 1
-  starts_on: validated_activation_invocation
-  expires_on:
-    - evidence_return
-    - failure
-    - cancellation
-```
-
-No replay is authorized. A second activation requires a new activation record and authority evaluation.
-
-## Evidence obligation
-
-Before the Work may progress beyond `ACTIVE`, the activation must return:
-
-- activation identity;
-- exact Work and participant refs;
-- supplied event ref and source refs;
-- runtime implementation ref;
-- start/completion evidence;
-- result classification;
-- emitted signal ref, if any;
-- execution trace;
-- explicit dormancy/lease-expiry evidence.
-
-Evidence return is not verification. Archivist preservation and TRACE verification remain later boundaries.
-
-## Resulting state
-
-After activation authority is validated, and only while the one-shot invocation is in progress:
-
-```yaml
-work_maturity: ACTIVE
-participant_binding: runtime:avot-engine/monitor-runtime-v0
-execution_authority: BOUNDED_ONE_SHOT
+work_maturity: BOUND
+prepared_activation: activation-hb04-frontier-containment-001
+prepared_state: PREPARED_UNCONSUMED
+execution_authority: NONE_UNTIL_CONSUME
 network_access: NONE
 credentials: NONE
 max_runs: 1
 evidence_state: EXPECTED
 ```
 
-After the permitted invocation returns, the execution grant expires immediately. Work then becomes eligible for the separate `ACTIVE -> RETURNED` boundary.
+The prepared record may not be interpreted as permission to execute.
+
+## Authority separation
+
+HB-04A uses only:
+
+```text
+scope: runtime-activation-prepare
+```
+
+Preparation authority may attest that the bounded invocation candidate satisfies policy. It may not execute, consume, renew, replay, or broaden the invocation.
+
+The validating GitHub Actions run must authenticate both:
+
+- `github.actor` — the workflow actor;
+- `github.triggering_actor` — the actor who actually initiated or re-ran the workflow.
+
+Both must match the authorized GitHub identity for this pilot. This prevents a later rerun requester from inheriting the original actor's preparation authority.
+
+## Exact Work and binding lineage
+
+A prepared activation MUST bind to the same Work and participant established by HB-03.
+
+The validator must require:
+
+```text
+prepared.work_ref == hb03.work_ref == durable Work path
+prepared.binding_ref == HB-03 binding artifact path
+prepared.participant_ref == hb03.participant_binding.participant_id
+```
+
+No activation authority may escape to another Work object merely because the runtime carrier is compatible.
+
+## Supplied-event provenance
+
+The supplied event is not accepted by pathname existence alone.
+
+For the First Heartbeat pilot the only eligible source event is the repository-bounded signal artifact:
+
+```text
+tests/first-heartbeat/frontier-containment.signal-return.v0.1.json
+```
+
+Validation must:
+
+- reject absolute paths and traversal outside the repository;
+- require the exact expected repository-relative path;
+- parse the JSON artifact;
+- match the prepared `signal_id` and subject to the artifact;
+- require the Work lineage source event to resolve to that same signal identity;
+- require the signal authority posture to remain `analysis_only`;
+- require the signal's prohibited actions to preserve repository mutation, Canon mutation, external communication, cyber execution, and self-expansion prohibitions.
+
+## Runtime posture
+
+The current AVOT-engine monitor primitive consumes a supplied event. It does not require web access or credentials for this pilot.
+
+Therefore the prepared invocation is fixed to:
+
+```yaml
+runtime:
+  carrier: runtime:avot-engine/monitor-runtime-v0
+  entrypoint: runSyntheticMonitorActivation
+  mode: one_shot
+  max_runs: 1
+  network_access: NONE
+  credentials: NONE
+  repository_write: false
+  external_communication: false
+```
+
+No secret, token, API key, network permission, repository mutation, workflow dispatch, external publish, cyber execution, self-binding, self-activation, or self-renewal is authorized.
+
+## Consumption boundary
+
+HB-04A does not consume the prepared activation.
+
+The next gate must atomically perform:
+
+```text
+PREPARED_UNCONSUMED -> CONSUMED_STARTING
+BOUND -> ACTIVE
+```
+
+That later gate must:
+
+1. authenticate the actual invocation requester;
+2. verify the prepared record is still unconsumed;
+3. create a unique consumed/start record;
+4. make replay impossible by failing closed if a consumed record already exists;
+5. start the exact pinned runtime invocation;
+6. capture invocation-start evidence.
+
+Only after those steps may Work be represented as `ACTIVE`.
+
+## Return boundary
+
+When the one permitted invocation returns, its execution authority expires immediately. Runtime output then becomes eligible for the separate:
+
+```text
+ACTIVE -> RETURNED
+```
+
+boundary.
+
+Returned evidence is not verified evidence. Archivist preservation and TRACE verification remain subsequent independent boundaries.
 
 ## Core laws
 
-1. Binding is not activation.
-2. Activation is not standing authority.
-3. Activation may not expand commissioned scope.
-4. Tools, network, credentials, duration, and run count are explicit dimensions of authority.
-5. No credentials are granted when the runtime does not require them.
-6. A one-shot lease expires on return or failure.
-7. Runtime output is not verified evidence until Archivist and TRACE complete their boundaries.
-8. No participant may activate or renew itself.
+1. Prepared is not Active.
+2. Validation is not consumption.
+3. Consumption is not replayable.
+4. Binding authority is not preparation authority.
+5. Preparation authority is not execution authority.
+6. `ACTIVE` requires real invocation-start evidence.
+7. Work, participant, runtime, and supplied-event lineage must all resolve to the same bounded commission.
+8. The actual rerun requester must be authenticated independently from the original workflow actor.
+9. No credentials or network access are granted when the runtime does not require them.
+10. Runtime return is not verification.
