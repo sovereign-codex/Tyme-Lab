@@ -13,6 +13,7 @@ on:
         required: true
         type: choice
         options:
+          - DO_NOT_RUN
           - VERIFY_RETURN
 
 permissions:
