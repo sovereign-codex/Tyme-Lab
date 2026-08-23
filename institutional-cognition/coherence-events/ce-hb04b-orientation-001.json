@@ -1,0 +1,30 @@
+{
+  "event_id": "ce-hb04b-orientation-001",
+  "lineage_id": "hb-04b-frontier-containment",
+  "parent_event_refs": [
+    "signal:sig-frontier-containment-20260822-001"
+  ],
+  "event_type": "observation",
+  "participant_refs": [
+    "runtime:avot-engine/monitor-runtime-v0"
+  ],
+  "contributor_refs": [],
+  "steward_refs": [
+    "human:sovereign-codex"
+  ],
+  "state_before": "distributed durable evidence without living-branch orientation",
+  "state_after": "bud",
+  "authority_posture": "orientation_only; none_by_event_alone",
+  "evidence_refs": [
+    "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json",
+    "institutional-reviews/decisions/review-hb-02-frontier-containment.json",
+    "institutional-work/promotions/promotion-review-hb-02-frontier-containment.json",
+    "institutional-work/records/work-review-hb-02-frontier-containment.json",
+    "tests/first-heartbeat/hb-03-participant-binding.json",
+    "institutional-activations/prepared/activation-hb04-frontier-containment-001.json",
+    ".github/workflows/hb-04b-invocation-start-consume.yml"
+  ],
+  "next_valid_transition": "obtain durable workflow consumption and process-start evidence before classifying field_validation",
+  "supersedes": [],
+  "institutional_effect": "none_by_event_alone"
+}
