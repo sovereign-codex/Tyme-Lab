@@ -1,4 +1,4 @@
-name: HB-04 Runtime Activation Validation
+name: HB-04 Activation Preparation Validation
 
 on:
   workflow_dispatch:
@@ -8,8 +8,8 @@ on:
       - "governance/authorized-runtime-activation-scopes.v0.json"
       - "governance/runtime-carriers/avot-engine-monitor-runtime-v0.json"
       - "institutional-work/records/work-review-hb-02-frontier-containment.json"
+      - "institutional-activations/prepared/activation-hb04-frontier-containment-001.json"
       - "tests/first-heartbeat/hb-03-participant-binding.json"
-      - "tests/first-heartbeat/hb-04-runtime-activation-envelope.json"
       - "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json"
       - "tests/first-heartbeat/validate_hb_04_runtime_activation.py"
       - ".github/workflows/hb-04-runtime-activation-validation.yml"
@@ -18,7 +18,7 @@ permissions:
   contents: read
 
 jobs:
-  validate-hb-04-runtime-activation:
+  validate-hb-04-activation-preparation:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,7 +29,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Validate HB-04 runtime activation
+      - name: Validate HB-04 activation preparation
         env:
           GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TRIGGERING_ACTOR: ${{ github.triggering_actor }}
         run: python tests/first-heartbeat/validate_hb_04_runtime_activation.py
