@@ -1,0 +1,35 @@
+name: HB-04 Runtime Activation Validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "docs/architecture/RUNTIME_ACTIVATION_V0.md"
+      - "governance/authorized-runtime-activation-scopes.v0.json"
+      - "governance/runtime-carriers/avot-engine-monitor-runtime-v0.json"
+      - "institutional-work/records/work-review-hb-02-frontier-containment.json"
+      - "tests/first-heartbeat/hb-03-participant-binding.json"
+      - "tests/first-heartbeat/hb-04-runtime-activation-envelope.json"
+      - "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json"
+      - "tests/first-heartbeat/validate_hb_04_runtime_activation.py"
+      - ".github/workflows/hb-04-runtime-activation-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-hb-04-runtime-activation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate HB-04 runtime activation
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+        run: python tests/first-heartbeat/validate_hb_04_runtime_activation.py
