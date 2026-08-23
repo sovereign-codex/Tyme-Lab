@@ -1,0 +1,70 @@
+{
+  "contract": "signal_return_v0_1",
+  "signal_id": "sig-frontier-containment-20260822-001",
+  "signal_type": "external_capability_signal",
+  "origin": {
+    "surface": "chatgpt",
+    "observed_at": "2026-08-22",
+    "subject": "frontier_ai_containment"
+  },
+  "provenance": {
+    "source_refs": [
+      "https://openai.com/index/pacing-model-development-cyber-capabilities/",
+      "https://openai.com/index/responding-next-frontier-critical-cyber-capabilities/"
+    ],
+    "conversation_ref": null,
+    "prior_state_refs": [
+      "notion://FIRST_HEARTBEAT_PILOT-Signal-Return-Contract-v0.1"
+    ]
+  },
+  "observation": {
+    "title": "Frontier models are exceeding existing containment assumptions",
+    "significance_hint": "high",
+    "domains": [
+      "agent_security",
+      "cyber_capability",
+      "runtime_containment",
+      "institutional_intelligence",
+      "multi_agent_governance"
+    ]
+  },
+  "requested_intent": {
+    "action": "track_frontier_containment_developments"
+  },
+  "runtime_constraint": {
+    "attempted_action": "create_platform_monitor",
+    "outcome": "blocked",
+    "reason": "active_task_capacity_exhausted"
+  },
+  "admission": {
+    "state": "candidate",
+    "authority_posture": "analysis_only",
+    "institutional_receiver": "Knowledge Curator",
+    "admission_ref": null
+  },
+  "work": {
+    "work_ref": null,
+    "commission_state": "uncommissioned",
+    "execution_scope": "read_research_compare_report",
+    "prohibited_actions": [
+      "repository_mutation",
+      "canon_mutation",
+      "external_communication",
+      "cyber_execution",
+      "self_expansion"
+    ]
+  },
+  "participant": {
+    "participant_id": null,
+    "participant_mode": "prefer_existing_monitor_runner",
+    "forge_decision": "compose_capability_before_creating_identity"
+  },
+  "return": {
+    "archivist_status": "pending",
+    "trace_status": "pending",
+    "semantic_delta": "pending",
+    "continuum_status": "pending",
+    "cit_return_status": "pending",
+    "evidence_refs": []
+  }
+}

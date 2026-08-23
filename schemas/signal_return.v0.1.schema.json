@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/signal_return.v0.1.schema.json",
+  "title": "TymeLab Signal Return Contract v0.1",
+  "description": "Experimental first-heartbeat contract preserving provenance, admission posture, bounded work, participant binding, evidence return, verification, semantic significance, continuity, and participant return. This schema does not itself grant execution authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "signal_id",
+    "signal_type",
+    "origin",
+    "provenance",
+    "observation",
+    "requested_intent",
+    "runtime_constraint",
+    "admission",
+    "work",
+    "participant",
+    "return"
+  ],
+  "properties": {
+    "contract": {"const": "signal_return_v0_1"},
+    "signal_id": {"type": "string", "minLength": 1},
+    "signal_type": {"type": "string", "minLength": 1},
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surface", "observed_at", "subject"],
+      "properties": {
+        "surface": {"type": "string", "minLength": 1},
+        "observed_at": {"type": "string", "format": "date"},
+        "subject": {"type": "string", "minLength": 1}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_refs", "conversation_ref", "prior_state_refs"],
+      "properties": {
+        "source_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "conversation_ref": {"type": ["string", "null"]},
+        "prior_state_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "significance_hint", "domains"],
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "significance_hint": {"type": "string", "enum": ["low", "moderate", "high", "critical", "unknown"]},
+        "domains": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      }
+    },
+    "requested_intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action"],
+      "properties": {
+        "action": {"type": "string", "minLength": 1}
+      }
+    },
+    "runtime_constraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempted_action", "outcome", "reason"],
+      "properties": {
+        "attempted_action": {"type": "string", "minLength": 1},
+        "outcome": {"type": "string", "enum": ["succeeded", "blocked", "failed", "deferred", "not_attempted"]},
+        "reason": {"type": ["string", "null"]}
+      }
+    },
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "authority_posture", "institutional_receiver", "admission_ref"],
+      "properties": {
+        "state": {"type": "string", "enum": ["candidate", "observed_only", "admitted", "review_required", "rejected", "quarantined"]},
+        "authority_posture": {"type": "string", "enum": ["none", "analysis_only", "bounded", "revoked", "unknown"]},
+        "institutional_receiver": {"type": "string", "minLength": 1},
+        "admission_ref": {"type": ["string", "null"]}
+      }
+    },
+    "work": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["work_ref", "commission_state", "execution_scope", "prohibited_actions"],
+      "properties": {
+        "work_ref": {"type": ["string", "null"]},
+        "commission_state": {"type": "string", "enum": ["uncommissioned", "preparing", "commissioned", "executing", "returned", "closed"]},
+        "execution_scope": {"type": "string", "minLength": 1},
+        "prohibited_actions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      }
+    },
+    "participant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["participant_id", "participant_mode", "forge_decision"],
+      "properties": {
+        "participant_id": {"type": ["string", "null"]},
+        "participant_mode": {"type": "string", "enum": ["prefer_existing_monitor_runner", "existing_participant", "new_participant_candidate", "none"]},
+        "forge_decision": {"type": "string", "minLength": 1}
+      }
+    },
+    "return": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["archivist_status", "trace_status", "semantic_delta", "continuum_status", "cit_return_status", "evidence_refs"],
+      "properties": {
+        "archivist_status": {"type": "string", "enum": ["pending", "preserved", "failed", "not_required"]},
+        "trace_status": {"type": "string", "enum": ["pending", "verified", "unresolved", "failed", "not_required"]},
+        "semantic_delta": {"type": "string", "enum": ["pending", "none", "meaningful", "rejected"]},
+        "continuum_status": {"type": "string", "enum": ["pending", "recorded", "failed", "not_required"]},
+        "cit_return_status": {"type": "string", "enum": ["pending", "rendered", "failed", "not_required"]},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    }
+  }
+}
