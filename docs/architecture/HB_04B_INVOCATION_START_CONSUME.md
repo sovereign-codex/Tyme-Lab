@@ -2,52 +2,53 @@
 
 ## Purpose
 
-HB-04B governs the only transition implemented here:
+HB-04B separates permanent one-shot consumption from actual process start:
 
 ```text
-PREPARED_UNCONSUMED -> CONSUMED_STARTING
-BOUND -> ACTIVE
+PREPARED_UNCONSUMED -> CONSUMED_PENDING_START -> CONSUMED_STARTING
+BOUND                -> BOUND                  -> ACTIVE
 ```
 
-The transition is valid only when one exact prepared activation is consumed once, invocation-start evidence is created, and the pinned runtime invocation starts under the same bounded scope.
+Consumption permanently spends the prepared activation but does not make Work ACTIVE. `ACTIVE` begins only after the pinned participant process has actually started and emits process-start evidence.
 
 ## Separation of authority
 
-HB-04B distinguishes two actors:
+HB-04B distinguishes two authorities and two evidence moments:
 
-1. **Governance workflow** — may validate preparation, serialize consumption, record invocation-start evidence, and launch the pinned runtime process.
-2. **Bound participant** — may only execute the already-approved `analysis_only` monitor function over the supplied event.
+1. **Preparation authority** — `runtime-activation-prepare`; may prepare but never consume or execute.
+2. **Consumption authority** — `runtime-activation-consume`; may spend the unique prepared activation and launch the bounded process.
+3. **Consumption evidence** — records `CONSUMED_PENDING_START` while Work remains `BOUND`.
+4. **Process-start evidence** — emitted from inside the started Node process and is the first evidence allowed to represent Work as `ACTIVE`.
 
-The participant receives no repository-write, network, credential, workflow-dispatch, Canon, Work-promotion, participant-selection, or self-renewal authority.
+The bound participant remains `analysis_only` and receives no repository-write, network, credential, workflow-dispatch, Canon, Work-promotion, participant-selection, or self-renewal authority.
 
 ## Durable consumption ledger
 
-HB-04B does not give the participant repository write access merely to prove consumption.
+The dedicated GitHub Actions workflow is the consumption ledger for this pilot:
 
-Instead, the dedicated GitHub Actions workflow is itself the durable consumption ledger:
-
-- workflow: `HB-04B Invocation Start Consume`
-- activation: `activation-hb04-frontier-containment-001`
-- concurrency group is fixed to that activation;
-- before consumption, the workflow queries prior runs of the same workflow;
-- if any prior run contains a successful `consume-prepared-activation` job, execution fails closed;
-- the consume job uploads an immutable invocation-start evidence artifact;
-- a failed later runtime job does not make the activation reusable.
+- workflow: `HB-04B Invocation Start Consume`;
+- activation: `activation-hb04-frontier-containment-001`;
+- concurrency group fixed to that activation;
+- workflow reruns are rejected (`github.run_attempt` must equal `1`);
+- prior workflow-dispatch history is fully paginated;
+- prior job history is fully paginated;
+- if any prior run contains a successful `consume-prepared-activation` job, consumption fails closed;
+- a successful consume remains spent even if runtime checkout, setup, process launch, or execution later fails.
 
 A second invocation therefore requires a new prepared activation ID.
 
 ## Trusted requester
 
-The workflow must authenticate both:
+At consume time the workflow authenticates both:
 
-- `github.actor`
-- `github.triggering_actor`
+- `github.actor`;
+- `github.triggering_actor`.
 
-Both must equal the authorized identity for this pilot. A rerun by another actor is invalid even if the original run was authorized.
+Both must match the dedicated `runtime-activation-consume` grant. Preparation authority alone is insufficient.
 
 ## Exact lineage
 
-The consume/start gate must resolve and match:
+The consume/start gate resolves and matches:
 
 - prepared activation ID;
 - prepared Work ref;
@@ -55,7 +56,7 @@ The consume/start gate must resolve and match:
 - bound participant;
 - AVOT-engine repository, commit, path, and entrypoint;
 - canonical Frontier Containment source signal;
-- synthetic monitor manifest and event used by the runtime.
+- synthetic monitor manifest and event.
 
 No field may widen scope from HB-04A.
 
@@ -78,20 +79,31 @@ authority_posture: analysis_only
 institutional_effect: none
 ```
 
+Participant execution runs inside a Linux network namespace with networking disabled.
+
 ## ACTIVE semantics
 
-Work may be represented as `ACTIVE` only after the consume job has:
+The consume job may emit only:
 
-1. proved no prior successful consume job exists;
-2. validated the prepared record and exact lineage;
-3. authenticated the actual requester;
-4. emitted invocation-start evidence for the unique GitHub Actions run.
+```yaml
+state: CONSUMED_PENDING_START
+work_maturity: BOUND
+execution_authority: CONSUMED_ONE_SHOT_PENDING_START
+```
 
-The runtime job then begins immediately from that consumed state.
+The runtime process, after it has actually started and loaded the exact pinned entrypoint, emits:
+
+```yaml
+state: CONSUMED_STARTING
+work_maturity: ACTIVE
+execution_authority: BOUNDED_ONE_SHOT
+```
+
+If checkout, Node setup, artifact recovery, runtime import, or entrypoint resolution fails before that point, no ACTIVE evidence exists. The activation is still permanently consumed.
 
 ## Return semantics
 
-The AVOT-engine runtime already returns:
+The AVOT-engine runtime may return:
 
 - a candidate Signal Packet when material change is true;
 - an Evidence Return;
@@ -100,15 +112,17 @@ The AVOT-engine runtime already returns:
 - `analysis_only` authority posture;
 - `institutional_effect: none`.
 
-HB-04B may capture those outputs, but it does not verify them. Runtime completion only makes the Work eligible for the later `ACTIVE -> RETURNED` gate. Archivist and TRACE remain separate subsequent boundaries.
+HB-04B captures those outputs as unverified runtime evidence. Runtime completion does not itself verify or integrate the result. Archivist and TRACE remain separate subsequent boundaries.
 
 ## Core laws
 
-1. Prepared is not Active.
-2. Consumption must be unique and durable.
-3. A successful consume is never reusable, even if later execution fails.
-4. Governance evidence recording is not participant repository authority.
-5. The original actor and rerun requester must both be authorized.
-6. Consumption may not widen Work, participant, runtime, source, network, credential, or effect scope.
-7. ACTIVE begins at consumed invocation start, not at preparation or review.
-8. Runtime completion is not verification.
+1. Prepared is not consumed.
+2. Consumed is not Active.
+3. ACTIVE requires actual process-start evidence.
+4. A successful consume is permanently spent even if later execution fails.
+5. Reruns may not consume.
+6. The consumption ledger must not truncate history.
+7. Preparation authority is not consumption authority.
+8. Governance evidence recording is not participant repository authority.
+9. Consumption may not widen Work, participant, runtime, source, network, credential, or effect scope.
+10. Runtime completion is not verification.
