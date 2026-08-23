@@ -1,0 +1,67 @@
+{
+  "pilot_id": "hb-02-frontier-containment",
+  "source_signal_ref": "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json",
+  "source_signal_id": "sig-frontier-containment-20260822-001",
+  "admission_projection": {
+    "epistemic_class": "REQUEST",
+    "requested_action_class": "REVIEW",
+    "disposition": "REQUIRES_REVIEW",
+    "review_required": true,
+    "work_ref": null,
+    "authority_effect": "none"
+  },
+  "review_projection": {
+    "decision": "APPROVE_FOR_WORK",
+    "eligible_for_work_promotion": true,
+    "work_ref": null,
+    "promotion_ref": null,
+    "authority_effect": "review_disposition_only",
+    "execution_authority_granted": false
+  },
+  "promotion_request": {
+    "objective": "Observe and compare meaningful public developments in frontier AI containment and return evidence-bearing signals for institutional review.",
+    "scope": [
+      "read_approved_public_sources",
+      "compare_against_prior_verified_state",
+      "emit_candidate_signal_packet"
+    ],
+    "prohibited_scope": [
+      "repository_mutation",
+      "canon_mutation",
+      "external_communication",
+      "cyber_execution",
+      "participant_self_expansion"
+    ],
+    "candidate_effect_classes": [
+      "analysis_only"
+    ],
+    "required_constraints": [
+      "schemas/signal_return.v0.1.schema.json",
+      "schemas/admission.v0.schema.json",
+      "schemas/review-disposition.v0.schema.json",
+      "schemas/work-promotion.v0.schema.json",
+      "schemas/work.v0.schema.json"
+    ],
+    "required_evidence": [
+      "source_signal_packet",
+      "public_source_references",
+      "comparison_result",
+      "archivist_return",
+      "trace_verification"
+    ],
+    "verification_target": "AVOT-TRACE",
+    "return_receiver": "FIRST_HEARTBEAT_PILOT",
+    "terminal_condition": "Return one verified Frontier Containment signal cycle to the Continuum/CIT or close as no-semantic-change.",
+    "expires_at": null
+  },
+  "promotion_gate": {
+    "required_scope": "work-promotion",
+    "policy_ref": "governance/authorized-work-promotion-scopes.v0.json",
+    "expected_direct_grant_count": 0,
+    "expected_result": "FAIL_CLOSED_NO_PROMOTION",
+    "work_created": false,
+    "participant_selected": false,
+    "execution_authority_granted": false
+  },
+  "next_valid_gate": "explicit_work_promotion_grant_review"
+}
