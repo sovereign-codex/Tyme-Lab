@@ -1,0 +1,60 @@
+{
+  "lineage_id": "hb-04b-frontier-containment",
+  "parent_lineage_refs": [
+    "signal:sig-frontier-containment-20260822-001",
+    "work:work-review-hb-02-frontier-containment"
+  ],
+  "state": "bud",
+  "origin_refs": [
+    "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json",
+    "institutional-reviews/decisions/review-hb-02-frontier-containment.json",
+    "institutional-work/promotions/promotion-review-hb-02-frontier-containment.json",
+    "institutional-work/records/work-review-hb-02-frontier-containment.json",
+    "tests/first-heartbeat/hb-03-participant-binding.json",
+    "institutional-activations/prepared/activation-hb04-frontier-containment-001.json"
+  ],
+  "current_stewards": [
+    "human:sovereign-codex"
+  ],
+  "participants": [
+    "runtime:avot-engine/monitor-runtime-v0"
+  ],
+  "contributors": [],
+  "evidence_refs": [
+    "tests/first-heartbeat/hb-04b-event.json",
+    "tests/first-heartbeat/hb-04b-monitor-manifest.json",
+    "governance/runtime-carriers/avot-engine-monitor-runtime-v0.json",
+    "governance/authorized-runtime-activation-scopes.v0.json",
+    "governance/authorized-runtime-activation-consume-scopes.v0.json",
+    ".github/workflows/hb-04b-invocation-start-consume.yml"
+  ],
+  "authority_boundary": "analysis_only; runtime activation is one-shot, non-self-renewing, non-replayable, with no repository mutation, canon mutation, external communication, cyber execution, participant spawn, or institutional-memory mutation authority",
+  "next_valid_transition": "verify an authorized first-attempt workflow_dispatch consumption and process-start evidence; if successful, move to field_validation and await evidence return",
+  "return_destination": "FIRST_HEARTBEAT_PILOT -> Knowledge Curator -> CIT/Continuum after TRACE verification",
+  "coherence_event_refs": [
+    "institutional-cognition/coherence-events/ce-hb04b-orientation-001.json"
+  ],
+  "known": [
+    "The source signal originated from ChatGPT observation of frontier AI containment developments.",
+    "The signal was reviewed and approved for bounded analysis-only Work.",
+    "Work was promoted without selecting a participant or granting execution authority.",
+    "AVOT-engine monitor runtime v0 was later bound as the participant capability.",
+    "A prepared activation exists for one-shot runtime invocation with network access, credentials, repository writes, and external communication disabled.",
+    "The runtime carrier can observe, normalize, compare, interpret, recommend, and return evidence but cannot create Work, authorize execution, merge, promote canon, or mutate institutional memory."
+  ],
+  "inferred": [
+    "The living-tree state is bud because the lineage has been cultivated through signal, review, promotion, binding, and prepared activation, but verified process-start and evidence-return artifacts are not established in durable repository state."
+  ],
+  "unresolved": [
+    "Whether activation-hb04-frontier-containment-001 has already been consumed by a successful workflow_dispatch run.",
+    "Whether the pinned participant process has emitted ACTIVE process-start evidence.",
+    "Whether a runtime return, Archivist return, and TRACE verification exist for this activation."
+  ],
+  "prohibited_transitions": [
+    "bud -> fruit without field evidence",
+    "bud -> active_branch by interpretation alone",
+    "participant -> contributor without accepted return evidence",
+    "coherence event -> authority grant",
+    "runtime capability -> self-expanded authority"
+  ]
+}
