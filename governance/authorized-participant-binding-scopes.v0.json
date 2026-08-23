@@ -1,0 +1,16 @@
+{
+  "policy_version": "participant-binding.v0",
+  "required_scope": "participant-binding",
+  "direct_grants": [
+    {
+      "actor_id": "human:sovereign-codex",
+      "actor_type": "human",
+      "scope": "participant-binding",
+      "origin_surface": "github",
+      "authenticated_transport": {
+        "type": "github-actions",
+        "github_actor": "sovereign-codex"
+      }
+    }
+  ]
+}
