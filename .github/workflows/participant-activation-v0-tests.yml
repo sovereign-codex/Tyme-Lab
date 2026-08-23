@@ -6,7 +6,11 @@ on:
       - 'docs/architecture/PARTICIPANT_ACTIVATION_V0.md'
       - 'governance/authorized-participant-activation-scopes.v0.json'
       - 'schemas/participant-activation.v0.schema.json'
+      - 'schemas/participant-evidence.v0.schema.json'
+      - 'schemas/runtime-evidence.v0.schema.json'
       - 'scripts/participant_activation_v0.py'
+      - 'scripts/validate_participant_activation_inputs_v0.py'
+      - 'scripts/validate_participant_activation_record_v0.py'
       - 'tests/test_participant_activation_v0.py'
       - '.github/workflows/participant-activation-v0-tests.yml'
   workflow_dispatch:
