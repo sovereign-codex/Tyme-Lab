@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = Path(__file__).with_name("hb-02-governance-boundary.json")
 SIGNAL = Path(__file__).with_name("frontier-containment.signal-return.v0.1.json")
 PROMOTION_POLICY = ROOT / "governance" / "authorized-work-promotion-scopes.v0.json"
+MATURITY_MODEL = ROOT / "docs" / "architecture" / "WORK_MATURITY_V0.md"
 
 
 def load(path):
@@ -22,7 +23,7 @@ def require(condition, message, failures):
 
 def main():
     failures = []
-    for path in (FIXTURE, SIGNAL, PROMOTION_POLICY):
+    for path in (FIXTURE, SIGNAL, PROMOTION_POLICY, MATURITY_MODEL):
         require(path.is_file(), f"missing required file: {path}", failures)
     if failures:
         for failure in failures:
@@ -34,6 +35,24 @@ def main():
     policy = load(PROMOTION_POLICY)
 
     require(fixture.get("source_signal_id") == signal.get("signal_id"), "source signal lineage mismatch", failures)
+
+    maturity = fixture.get("work_maturity", {})
+    require(maturity.get("model_ref") == "docs/architecture/WORK_MATURITY_V0.md", "Work Maturity model reference drifted", failures)
+    require(maturity.get("source_state") == "CANDIDATE", "HB-02 source maturity must be CANDIDATE", failures)
+    require(maturity.get("review_result_state") == "ELIGIBLE", "review must mature Candidate Work to ELIGIBLE only", failures)
+    require(maturity.get("promotion_target_state") == "COMMISSIONED", "Work Promotion target must be COMMISSIONED", failures)
+    require(maturity.get("current_state") == "ELIGIBLE", "current maturity must remain ELIGIBLE while promotion is unauthorized", failures)
+    require(maturity.get("transition_owner") == "Work Promotion v0", "ELIGIBLE -> COMMISSIONED must belong to Work Promotion v0", failures)
+    require(maturity.get("promotion_authorized") is False, "HB-02 must not claim promotion authority", failures)
+
+    binding = fixture.get("participant_binding", {})
+    authority = fixture.get("execution_authority", {})
+    evidence = fixture.get("evidence_state", {})
+    require(binding.get("state") == "UNBOUND" and binding.get("participant_id") is None, "participant binding must remain independent and UNBOUND", failures)
+    require(authority.get("state") == "NONE" and authority.get("grant_ref") is None, "execution authority must remain independent and NONE", failures)
+    require(evidence.get("state") == "EXPECTED", "evidence state must remain EXPECTED before runtime", failures)
+    require(evidence.get("archivist_status") == "pending", "Archivist must remain pending at HB-02", failures)
+    require(evidence.get("trace_status") == "pending", "TRACE must remain pending at HB-02", failures)
 
     admission = fixture.get("admission_projection", {})
     require(admission.get("disposition") == "REQUIRES_REVIEW", "signal must enter governed review", failures)
@@ -52,6 +71,7 @@ def main():
     require(bool(request.get("objective")), "promotion objective must be bounded and non-empty", failures)
     require(bool(request.get("scope")), "promotion scope must be non-empty", failures)
     require(bool(request.get("required_constraints")), "promotion constraints must be explicit", failures)
+    require("docs/architecture/WORK_MATURITY_V0.md" in request.get("required_constraints", []), "Work Maturity model must be an explicit promotion constraint", failures)
     require(bool(request.get("required_evidence")), "promotion evidence contract must be explicit", failures)
     require(bool(request.get("terminal_condition")), "promotion terminal condition must be explicit", failures)
     require(request.get("candidate_effect_classes") == ["analysis_only"], "HB-02 may request analysis_only only", failures)
@@ -66,6 +86,12 @@ def main():
     require(gate.get("participant_selected") is False, "participant must remain unselected", failures)
     require(gate.get("execution_authority_granted") is False, "execution authority must remain absent", failures)
 
+    # Cross-axis invariant: maturity progression may not silently progress other axes.
+    if maturity.get("current_state") == "ELIGIBLE":
+        require(binding.get("state") == "UNBOUND", "ELIGIBLE maturity must not imply participant binding", failures)
+        require(authority.get("state") == "NONE", "ELIGIBLE maturity must not imply execution authority", failures)
+        require(evidence.get("state") == "EXPECTED", "ELIGIBLE maturity must not imply returned or verified evidence", failures)
+
     if failures:
         print("HB-02 governance boundary validation: FAIL")
         for failure in failures:
@@ -73,13 +99,14 @@ def main():
         return 1
 
     print("HB-02 governance boundary validation: PASS")
-    print("admission=REQUIRES_REVIEW")
-    print("review=APPROVE_FOR_WORK_ELIGIBLE")
+    print("work_maturity=CANDIDATE->ELIGIBLE")
+    print("commission_target=COMMISSIONED")
+    print("commission_authorized=false")
+    print("participant_binding=UNBOUND")
+    print("execution_authority=NONE")
+    print("evidence_state=EXPECTED")
     print("work_promotion_grants=0")
     print("promotion=FAIL_CLOSED_NO_PROMOTION")
-    print("work_created=false")
-    print("participant_selected=false")
-    print("execution_authority_granted=false")
     return 0
 
 
