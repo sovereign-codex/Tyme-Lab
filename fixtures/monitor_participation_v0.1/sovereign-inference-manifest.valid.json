@@ -1,0 +1,27 @@
+{
+  "monitor_id": "monitor-sovereign-inference-001",
+  "participant_id": "avot-sovereign-inference",
+  "participant_class": "avot_monitor",
+  "domain": "sovereign-inference",
+  "status": "candidate",
+  "host_runtime": "avot-engine",
+  "activation": {
+    "event_types": ["external_capability_observation"],
+    "schedule_fallback": null
+  },
+  "sensing_scope": {
+    "sources": ["research_publications", "open_source_repositories", "hardware_reports"],
+    "queries": ["distributed local inference", "open weight edge inference", "sovereign AI hardware"],
+    "exclusions": ["unverified_benchmark_claims"]
+  },
+  "interpretive_scope": {
+    "objectives": ["sovereign-inference-infrastructure"],
+    "repositories": ["Tyme-Lab", "AVOT-engine"],
+    "notion_surfaces": ["CIT PILOT 01 — AVOT Monitor Council / Participation Runtime v0"]
+  },
+  "authority_posture": "analysis_only",
+  "permitted_actions": ["observe", "normalize", "compare", "interpret", "recommend", "return_evidence"],
+  "prohibited_actions": ["create_work", "authorize_execution", "merge", "promote_canon", "mutate_institutional_memory"],
+  "return_contract": "SIGNAL_PACKET_v0.1",
+  "dormancy_condition": "signal returned or no material change"
+}
