@@ -7,7 +7,7 @@
     "review_disposition_ref": "hb-02:frontier-containment:review:APPROVE_FOR_WORK",
     "review_disposition_sha256": "b92b0e55502149c6ebde8fe79fa69db75c698018b92b0e55502149c6ebde8fe7",
     "promotion_ref": "github:sovereign-codex/Tyme-Lab#15@e3d174c1669d7d3eddf75e1f517c201b5f8d01e5",
-    "promotion_sha256": "e3d174c1669d7d3eddf75e1f517c201b5f8d01e5e3d174c1669d7d3eddf75e"
+    "promotion_sha256": "9ad8cd88c6ef2c026169c798eb64ecf0c4a157f512f5259e387fa251a3aad563"
   },
   "intent": {
     "objective": "Observe and compare meaningful public developments in frontier AI containment and return evidence-bearing signals for institutional review.",
