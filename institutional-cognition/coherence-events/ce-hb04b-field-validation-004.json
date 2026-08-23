@@ -1,0 +1,21 @@
+{
+  "event_id": "ce-hb04b-field-validation-004",
+  "lineage_id": "hb-04b-frontier-containment",
+  "event_type": "transition",
+  "participant_refs": ["runtime:avot-engine/monitor-runtime-v0"],
+  "contributor_refs": [],
+  "steward_refs": ["human:sovereign-codex"],
+  "state_before": "bud",
+  "state_after": "field_validation",
+  "authority_posture": "one-shot activation consumed; runtime executed under analysis_only; no renewed or expanded authority",
+  "evidence_refs": [
+    "workflow:HB-04B Invocation Start Consume #11",
+    "artifact:hb-04b-consumption-<run_id>",
+    "artifact:hb-04b-process-start-<run_id>",
+    "artifact:hb-04b-runtime-return-<run_id>",
+    "workflow:HB-04B Invocation Start Consume #12 replay-guard failure"
+  ],
+  "next_valid_transition": "HB-05 preservation and TRACE verification; remain field_validation until those evidence checks complete",
+  "supersedes": ["ce-hb04b-activation-evidence-gap-002"],
+  "institutional_effect": "none_by_event_alone"
+}
