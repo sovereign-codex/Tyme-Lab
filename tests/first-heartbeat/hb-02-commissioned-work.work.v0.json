@@ -1,0 +1,65 @@
+{
+  "work_id": "work:first-heartbeat:frontier-containment",
+  "created_at": "2026-08-23T08:25:58Z",
+  "lineage": {
+    "source_event_ref": "signal:sig-frontier-containment-20260822-001",
+    "admission_ref": "hb-02:frontier-containment:admission",
+    "review_disposition_ref": "hb-02:frontier-containment:review:APPROVE_FOR_WORK",
+    "review_disposition_sha256": "b92b0e55502149c6ebde8fe79fa69db75c698018b92b0e55502149c6ebde8fe7",
+    "promotion_ref": "github:sovereign-codex/Tyme-Lab#15@e3d174c1669d7d3eddf75e1f517c201b5f8d01e5",
+    "promotion_sha256": "e3d174c1669d7d3eddf75e1f517c201b5f8d01e5e3d174c1669d7d3eddf75e"
+  },
+  "intent": {
+    "objective": "Observe and compare meaningful public developments in frontier AI containment and return evidence-bearing signals for institutional review.",
+    "scope": [
+      "read_approved_public_sources",
+      "compare_against_prior_verified_state",
+      "emit_candidate_signal_packet"
+    ],
+    "prohibited_scope": [
+      "repository_mutation",
+      "canon_mutation",
+      "external_communication",
+      "cyber_execution",
+      "participant_self_expansion"
+    ]
+  },
+  "consequence": {
+    "candidate_effect_classes": ["analysis_only"],
+    "execution_authority": "none_until_participant_activation",
+    "participant_binding": null
+  },
+  "constraints": {
+    "required_refs": [
+      "docs/architecture/WORK_MATURITY_V0.md",
+      "schemas/signal_return.v0.1.schema.json",
+      "schemas/admission.v0.schema.json",
+      "schemas/review-disposition.v0.schema.json",
+      "schemas/work-promotion.v0.schema.json",
+      "schemas/work.v0.schema.json"
+    ],
+    "fail_closed_on_missing": true
+  },
+  "evidence_contract": {
+    "required_evidence": [
+      "source_signal_packet",
+      "public_source_references",
+      "comparison_result",
+      "archivist_return",
+      "trace_verification"
+    ],
+    "verification_target": "AVOT-TRACE",
+    "trace_required": true,
+    "return_receiver": "FIRST_HEARTBEAT_PILOT"
+  },
+  "lifecycle": {
+    "state": "PROMOTED_UNBOUND",
+    "terminal_condition": "Return one verified Frontier Containment signal cycle to the Continuum/CIT or close as no-semantic-change.",
+    "expires_at": null,
+    "supersedes_work_ref": null
+  },
+  "activation": {
+    "activation_required": true,
+    "activation_ref": null
+  }
+}
