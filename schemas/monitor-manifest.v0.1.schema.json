@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/monitor-manifest.v0.1.schema.json",
+  "title": "Monitor Manifest v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "monitor_id",
+    "participant_id",
+    "participant_class",
+    "domain",
+    "status",
+    "host_runtime",
+    "activation",
+    "sensing_scope",
+    "interpretive_scope",
+    "authority_posture",
+    "permitted_actions",
+    "prohibited_actions",
+    "return_contract",
+    "dormancy_condition"
+  ],
+  "properties": {
+    "monitor_id": {"type": "string", "minLength": 1},
+    "participant_id": {"type": "string", "minLength": 1},
+    "participant_class": {"const": "avot_monitor"},
+    "domain": {"type": "string", "minLength": 1},
+    "status": {"enum": ["candidate", "tested", "graduated", "deprecated"]},
+    "host_runtime": {"type": "string", "minLength": 1},
+    "activation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_types", "schedule_fallback"],
+      "properties": {
+        "event_types": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "schedule_fallback": {"type": ["string", "null"]}
+      }
+    },
+    "sensing_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sources", "queries", "exclusions"],
+      "properties": {
+        "sources": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "queries": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "exclusions": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "interpretive_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objectives", "repositories", "notion_surfaces"],
+      "properties": {
+        "objectives": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "repositories": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "notion_surfaces": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "authority_posture": {"const": "analysis_only"},
+    "permitted_actions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["observe", "normalize", "compare", "interpret", "recommend", "return_evidence"]}
+    },
+    "prohibited_actions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["create_work", "authorize_execution", "merge", "promote_canon", "mutate_institutional_memory"]},
+      "allOf": [
+        {"contains": {"const": "create_work"}},
+        {"contains": {"const": "authorize_execution"}},
+        {"contains": {"const": "merge"}},
+        {"contains": {"const": "promote_canon"}},
+        {"contains": {"const": "mutate_institutional_memory"}}
+      ]
+    },
+    "return_contract": {"const": "SIGNAL_PACKET_v0.1"},
+    "dormancy_condition": {"type": "string", "minLength": 1}
+  }
+}
