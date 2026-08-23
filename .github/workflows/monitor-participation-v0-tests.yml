@@ -1,0 +1,30 @@
+name: Monitor Participation v0 Tests
+
+on:
+  pull_request:
+    paths:
+      - "schemas/monitor-manifest.v0.1.schema.json"
+      - "schemas/signal-packet.v0.1.schema.json"
+      - "schemas/routing-decision.v0.1.schema.json"
+      - "schemas/evidence-return.v0.1.schema.json"
+      - "fixtures/monitor_participation_v0.1/**"
+      - "tests/test_monitor_participation_v0_1.py"
+      - "docs/architecture/MONITOR_PARTICIPATION_RUNTIME_V0.md"
+      - ".github/workflows/monitor-participation-v0-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: python -m pip install pytest jsonschema
+      - name: Run monitor participation contract tests
+        run: python -m pytest -q tests/test_monitor_participation_v0_1.py
