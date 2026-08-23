@@ -1,0 +1,58 @@
+{
+  "pilot_id": "hb-04-frontier-containment",
+  "source_work_maturity": "BOUND",
+  "target_work_maturity": "ACTIVE",
+  "work_ref": "institutional-work/records/work-review-hb-02-frontier-containment.json",
+  "participant_ref": "runtime:avot-engine/monitor-runtime-v0",
+  "activation_contract_ref": "docs/architecture/RUNTIME_ACTIVATION_V0.md",
+  "activation_authority": {
+    "actor_id": "human:sovereign-codex",
+    "actor_type": "human",
+    "scope": "runtime-activation",
+    "origin_surface": "github",
+    "authenticated_github_actor": "sovereign-codex",
+    "policy_ref": "governance/authorized-runtime-activation-scopes.v0.json"
+  },
+  "runtime": {
+    "repository": "sovereign-codex/AVOT-engine",
+    "commit": "2b7e72e0dd91713c0c7b0a9cdc477edc1bae96f9",
+    "path": "src/runtime/monitor.ts",
+    "entrypoint": "runSyntheticMonitorActivation",
+    "mode": "one_shot",
+    "max_runs": 1,
+    "network_access": "NONE",
+    "credentials": "NONE",
+    "repository_write": false,
+    "external_communication": false
+  },
+  "supplied_event": {
+    "event_id": "frontier-containment-hb04-001",
+    "event_type": "frontier_containment_signal",
+    "source_ref": "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json",
+    "material_change": true
+  },
+  "execution_authority": {
+    "state": "BOUNDED_ONE_SHOT",
+    "grant_scope": "runtime-activation",
+    "self_activation_allowed": false,
+    "self_renewal_allowed": false
+  },
+  "lease": {
+    "starts_on": "validated_activation_invocation",
+    "expires_on": ["evidence_return", "failure", "cancellation"],
+    "replay_allowed": false
+  },
+  "required_return": [
+    "activation_identity",
+    "work_ref",
+    "participant_ref",
+    "supplied_event_ref",
+    "runtime_implementation_ref",
+    "result_classification",
+    "signal_ref_if_any",
+    "execution_trace",
+    "dormancy_evidence"
+  ],
+  "evidence_state": "EXPECTED",
+  "next_valid_gate": "hb-04-active-to-returned"
+}
