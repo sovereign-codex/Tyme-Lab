@@ -58,28 +58,37 @@ jobs:
         id: source
         env:
           GH_TOKEN: ${{ github.token }}
+          EXPECTED_HEAD_SHA: "7c188e2e72eef8a2b22bbaf68573efaf97271658"
         run: |
           set -euo pipefail
           : > /tmp/hb04b_candidates
           for run_id in $(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/workflows/hb-04b-invocation-start-consume.yml/runs?event=workflow_dispatch&status=success&per_page=100" --jq '.workflow_runs[] | select(.head_branch == "main") | .id'); do
+            run=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}")
+            head_sha=$(printf '%s' "$run" | jq -r '.head_sha')
+            run_attempt=$(printf '%s' "$run" | jq -r '.run_attempt')
+            if [ "$head_sha" != "$EXPECTED_HEAD_SHA" ] || [ "$run_attempt" != "1" ]; then
+              continue
+            fi
             jobs=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs?per_page=100")
             consume=$(printf '%s' "$jobs" | jq '[.jobs[] | select(.name == "consume-prepared-activation" and .conclusion == "success")] | length')
             runtime=$(printf '%s' "$jobs" | jq '[.jobs[] | select(.name == "invoke-pinned-runtime" and .conclusion == "success")] | length')
             if [ "$consume" = "1" ] && [ "$runtime" = "1" ]; then
-              echo "$run_id" >> /tmp/hb04b_candidates
+              printf '%s|%s|%s\n' "$run_id" "$head_sha" "$run_attempt" >> /tmp/hb04b_candidates
             fi
           done
 
           count=$(grep -c . /tmp/hb04b_candidates || true)
           if [ "$count" != "1" ]; then
-            echo "::error title=HB-05 source-run ambiguity::expected exactly one successful HB-04B consume+runtime run on main; found ${count}."
+            echo "::error title=HB-05 source-run ambiguity::expected exactly one approved HB-04B consume+runtime run on main; found ${count}."
             cat /tmp/hb04b_candidates || true
             exit 1
           fi
 
-          run_id=$(cat /tmp/hb04b_candidates)
+          IFS='|' read -r run_id head_sha run_attempt < /tmp/hb04b_candidates
           echo "run_id=${run_id}" >> "$GITHUB_OUTPUT"
-          echo "HB-05 source run selected: ${run_id}"
+          echo "head_sha=${head_sha}" >> "$GITHUB_OUTPUT"
+          echo "run_attempt=${run_attempt}" >> "$GITHUB_OUTPUT"
+          echo "HB-05 source run selected: ${run_id} @ ${head_sha} attempt ${run_attempt}"
 
       - name: Download HB-04B evidence artifacts
         env:
@@ -94,17 +103,21 @@ jobs:
       - name: Verify lifecycle chain and build Archivist + TRACE packets
         env:
           SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          SOURCE_HEAD_SHA: ${{ steps.source.outputs.head_sha }}
+          SOURCE_RUN_ATTEMPT: ${{ steps.source.outputs.run_attempt }}
         run: |
           python tests/first-heartbeat/verify_hb_05_return.py verify \
             --input-root evidence \
             --source-run-id "$SOURCE_RUN_ID" \
+            --source-head-sha "$SOURCE_HEAD_SHA" \
+            --source-run-attempt "$SOURCE_RUN_ATTEMPT" \
             --output-dir out
 
-      - name: Preserve Archivist-ready packet
+      - name: Preserve Archivist-ready bundle with exact source payloads
         uses: actions/upload-artifact@v4
         with:
           name: hb-05-archivist-preservation-${{ steps.source.outputs.run_id }}
-          path: out/hb-05-archivist-preservation.json
+          path: out/archive
           if-no-files-found: error
           retention-days: 90
 
@@ -118,7 +131,8 @@ jobs:
 
       - name: State the next boundary without integrating
         run: |
-          echo "HB-05 completed: RETURNED -> PRESERVED -> VERIFIED"
+          echo "HB-05 completed: RETURNED -> workflow-artifact PRESERVED_PENDING_TRACE -> TRACE_VERIFIED_PENDING_INTEGRATION"
+          echo "Runtime consequence fields remain validated self-reports, not independently observed facts."
           echo "No Codex-net-index mutation performed."
           echo "No Continuum write performed."
           echo "Next gate: HB-06 semantic significance + integration."
