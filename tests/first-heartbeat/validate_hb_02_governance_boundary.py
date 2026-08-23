@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate HB-02 governance boundary without granting new authority."""
+"""Validate HB-02 governance boundary with narrow Work Promotion authority."""
 
 import json
 import sys
@@ -41,15 +41,15 @@ def main():
     require(maturity.get("source_state") == "CANDIDATE", "HB-02 source maturity must be CANDIDATE", failures)
     require(maturity.get("review_result_state") == "ELIGIBLE", "review must mature Candidate Work to ELIGIBLE only", failures)
     require(maturity.get("promotion_target_state") == "COMMISSIONED", "Work Promotion target must be COMMISSIONED", failures)
-    require(maturity.get("current_state") == "ELIGIBLE", "current maturity must remain ELIGIBLE while promotion is unauthorized", failures)
+    require(maturity.get("current_state") == "COMMISSIONED", "authorized HB-02 maturity must be COMMISSIONED", failures)
     require(maturity.get("transition_owner") == "Work Promotion v0", "ELIGIBLE -> COMMISSIONED must belong to Work Promotion v0", failures)
-    require(maturity.get("promotion_authorized") is False, "HB-02 must not claim promotion authority", failures)
+    require(maturity.get("promotion_authorized") is True, "HB-02 must record explicit promotion authorization", failures)
 
     binding = fixture.get("participant_binding", {})
     authority = fixture.get("execution_authority", {})
     evidence = fixture.get("evidence_state", {})
-    require(binding.get("state") == "UNBOUND" and binding.get("participant_id") is None, "participant binding must remain independent and UNBOUND", failures)
-    require(authority.get("state") == "NONE" and authority.get("grant_ref") is None, "execution authority must remain independent and NONE", failures)
+    require(binding.get("state") == "UNBOUND" and binding.get("participant_id") is None, "commissioned Work must remain UNBOUND", failures)
+    require(authority.get("state") == "NONE" and authority.get("grant_ref") is None, "commissioned Work must not gain execution authority", failures)
     require(evidence.get("state") == "EXPECTED", "evidence state must remain EXPECTED before runtime", failures)
     require(evidence.get("archivist_status") == "pending", "Archivist must remain pending at HB-02", failures)
     require(evidence.get("trace_status") == "pending", "TRACE must remain pending at HB-02", failures)
@@ -79,18 +79,29 @@ def main():
     gate = fixture.get("promotion_gate", {})
     grants = policy.get("direct_grants", [])
     require(policy.get("required_scope") == "work-promotion", "promotion policy scope drifted", failures)
-    require(len(grants) == gate.get("expected_direct_grant_count"), "promotion grant count changed; re-review required", failures)
-    require(len(grants) == 0, "HB-02 expects no current promoter grant", failures)
-    require(gate.get("expected_result") == "FAIL_CLOSED_NO_PROMOTION", "HB-02 expected result drifted", failures)
-    require(gate.get("work_created") is False, "Work must remain uncreated without promoter grant", failures)
-    require(gate.get("participant_selected") is False, "participant must remain unselected", failures)
-    require(gate.get("execution_authority_granted") is False, "execution authority must remain absent", failures)
+    require(len(grants) == gate.get("expected_direct_grant_count") == 1, "HB-02 requires exactly one narrow promoter grant", failures)
+    if len(grants) == 1:
+        grant = grants[0]
+        require(grant.get("actor_id") == gate.get("expected_actor_id") == "human:sovereign-codex", "promotion grant actor must remain human:sovereign-codex", failures)
+        require(grant.get("actor_type") == gate.get("expected_actor_type") == "human", "promotion grant must remain human-only", failures)
+        require(grant.get("scope") == "work-promotion", "promotion grant scope must remain work-promotion only", failures)
+        require(grant.get("origin_surface") == gate.get("expected_origin_surface") == "github", "promotion grant origin surface drifted", failures)
+        transport = grant.get("authenticated_transport", {})
+        require(transport.get("type") == "github-actions", "promotion grant transport must be github-actions", failures)
+        require(transport.get("github_actor") == gate.get("expected_authenticated_github_actor") == "sovereign-codex", "promotion grant authenticated actor drifted", failures)
 
-    # Cross-axis invariant: maturity progression may not silently progress other axes.
-    if maturity.get("current_state") == "ELIGIBLE":
-        require(binding.get("state") == "UNBOUND", "ELIGIBLE maturity must not imply participant binding", failures)
-        require(authority.get("state") == "NONE", "ELIGIBLE maturity must not imply execution authority", failures)
-        require(evidence.get("state") == "EXPECTED", "ELIGIBLE maturity must not imply returned or verified evidence", failures)
+    require(gate.get("expected_result") == "COMMISSIONED_UNBOUND", "HB-02 expected result must be COMMISSIONED_UNBOUND", failures)
+    require(gate.get("work_created") is True, "authorized promotion must create bounded Work", failures)
+    require(gate.get("participant_selected") is False, "promotion must not select participant", failures)
+    require(gate.get("execution_authority_granted") is False, "promotion must not grant execution authority", failures)
+
+    # Cross-axis invariant: commission may advance Work maturity and nothing else.
+    if maturity.get("current_state") == "COMMISSIONED":
+        require(binding.get("state") == "UNBOUND", "COMMISSIONED maturity must not imply participant binding", failures)
+        require(authority.get("state") == "NONE", "COMMISSIONED maturity must not imply execution authority", failures)
+        require(evidence.get("state") == "EXPECTED", "COMMISSIONED maturity must not imply returned or verified evidence", failures)
+
+    require(fixture.get("next_valid_gate") == "hb-03-participant-activation", "next gate must be HB-03 participant activation", failures)
 
     if failures:
         print("HB-02 governance boundary validation: FAIL")
@@ -99,14 +110,13 @@ def main():
         return 1
 
     print("HB-02 governance boundary validation: PASS")
-    print("work_maturity=CANDIDATE->ELIGIBLE")
-    print("commission_target=COMMISSIONED")
-    print("commission_authorized=false")
+    print("work_maturity=CANDIDATE->ELIGIBLE->COMMISSIONED")
+    print("commission_authorized=true")
+    print("promotion_grant=human_only_work_promotion")
     print("participant_binding=UNBOUND")
     print("execution_authority=NONE")
     print("evidence_state=EXPECTED")
-    print("work_promotion_grants=0")
-    print("promotion=FAIL_CLOSED_NO_PROMOTION")
+    print("next_gate=HB-03_PARTICIPANT_ACTIVATION")
     return 0
 
 
