@@ -1,0 +1,28 @@
+name: HB-02 Governance Boundary Validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "tests/first-heartbeat/hb-02-governance-boundary.json"
+      - "tests/first-heartbeat/validate_hb_02_governance_boundary.py"
+      - "governance/authorized-work-promotion-scopes.v0.json"
+      - ".github/workflows/hb-02-governance-boundary-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-hb-02-governance-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate HB-02 governance boundary
+        run: python tests/first-heartbeat/validate_hb_02_governance_boundary.py

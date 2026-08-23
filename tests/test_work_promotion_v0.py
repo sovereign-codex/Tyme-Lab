@@ -147,10 +147,18 @@ def test_review_contract_stops_before_work():
     assert promotion["promotion_ref"]["const"] is None
 
 
-def test_promotion_policy_starts_fail_closed():
+def test_promotion_policy_has_one_narrow_human_grant():
     policy = json.loads(Path("governance/authorized-work-promotion-scopes.v0.json").read_text())
     assert policy["required_scope"] == "work-promotion"
-    assert policy["direct_grants"] == []
+    assert len(policy["direct_grants"]) == 1
+    grant = policy["direct_grants"][0]
+    assert grant == {
+        "actor_id": "human:sovereign-codex",
+        "actor_type": "human",
+        "scope": "work-promotion",
+        "origin_surface": "github",
+        "authenticated_transport": {"type": "github-actions", "github_actor": "sovereign-codex"},
+    }
 
 
 def test_authorized_success_executes_boundary_and_binds_exact_promotion_bytes(tmp_path):
