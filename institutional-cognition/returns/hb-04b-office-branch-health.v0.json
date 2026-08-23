@@ -1,0 +1,23 @@
+{
+  "lineage_id": "hb-04b-frontier-containment",
+  "branch_health": "awaiting_field_evidence",
+  "living_tree_state": "bud",
+  "steward_refs": [
+    "human:sovereign-codex"
+  ],
+  "participant_refs": [
+    "runtime:avot-engine/monitor-runtime-v0"
+  ],
+  "contributor_refs": [],
+  "evidence_posture": "durable_pre_activation_lineage_established; runtime-start-and-return-evidence unresolved",
+  "authority_posture": "analysis_only; bounded; no self-expansion; no event-granted authority",
+  "unresolved_contradiction": "repository state proves prepared one-shot activation, but the currently accessible durable repository surface does not prove whether that activation was successfully consumed and started",
+  "next_valid_gate": "verify workflow_dispatch consumption and process-start evidence",
+  "office_receiver": "Knowledge Curator",
+  "cit_return_ref": "institutional-cognition/returns/hb-04b-cit-orientation-return.v0.md",
+  "orientation_ref": "institutional-cognition/orientations/hb-04b-frontier-containment.living-branch-orientation.v0.json",
+  "coherence_event_ref": "institutional-cognition/coherence-events/ce-hb04b-orientation-001.json",
+  "implementation_detail_duplicated": false,
+  "human_attention_required_now": false,
+  "human_attention_condition": "only if activation evidence reveals a policy mismatch, failed gate requiring judgment, or a transition requesting authority beyond current analysis-only scope"
+}
