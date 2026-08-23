@@ -6,6 +6,7 @@ spends the one-shot activation. ACTIVE begins only inside the participant proces
 which emits a separate start record after the process has actually started.
 """
 
+import hashlib
 import json
 import os
 import sys
@@ -29,10 +30,18 @@ EXPECTED_RUNTIME_COMMIT = "2b7e72e0dd91713c0c7b0a9cdc477edc1bae96f9"
 EXPECTED_RUNTIME_PATH = "src/runtime/monitor.ts"
 EXPECTED_ENTRYPOINT = "runSyntheticMonitorActivation"
 EXPECTED_GITHUB_ACTOR = "sovereign-codex"
+EXPECTED_MANIFEST_GIT_BLOB_SHA = "fa110456cdb0134a03cd085c269e56707a802973"
+EXPECTED_EVENT_GIT_BLOB_SHA = "fbda7b0965b61fde74f0c3b3d267192b6f60ea3c"
 
 
 def load(ref):
     return json.loads((ROOT / ref).read_text(encoding="utf-8"))
+
+
+def git_blob_sha(ref):
+    data = (ROOT / ref).read_bytes()
+    header = f"blob {len(data)}\0".encode("utf-8")
+    return hashlib.sha1(header + data).hexdigest()
 
 
 def require(condition, message, failures):
@@ -108,6 +117,8 @@ def main():
     require(runtime.get("repository_write") is False, "prepared runtime grants repository write", failures)
     require(runtime.get("external_communication") is False, "prepared runtime grants external communication", failures)
 
+    require(git_blob_sha(MANIFEST_REF) == EXPECTED_MANIFEST_GIT_BLOB_SHA, "monitor manifest bytes drifted from approved input", failures)
+    require(git_blob_sha(EVENT_REF) == EXPECTED_EVENT_GIT_BLOB_SHA, "runtime event bytes drifted from approved input", failures)
     require(manifest.get("participant_id") == EXPECTED_PARTICIPANT, "manifest participant mismatch", failures)
     require(manifest.get("authority_posture") == "analysis_only", "manifest authority widened", failures)
     require(manifest.get("activation", {}).get("event_types") == [event.get("event_type")], "manifest/event activation mismatch", failures)
@@ -145,6 +156,12 @@ def main():
             "work_ref": WORK_REF,
             "binding_ref": BINDING_REF,
             "participant_ref": EXPECTED_PARTICIPANT,
+            "runtime_inputs": {
+                "manifest_ref": MANIFEST_REF,
+                "manifest_git_blob_sha": EXPECTED_MANIFEST_GIT_BLOB_SHA,
+                "event_ref": EVENT_REF,
+                "event_git_blob_sha": EXPECTED_EVENT_GIT_BLOB_SHA,
+            },
             "consume_request": {
                 "github_actor": actor,
                 "github_triggering_actor": triggering_actor,
@@ -167,6 +184,8 @@ def main():
     print("prepared_state=PREPARED_UNCONSUMED")
     print("work_maturity=BOUND")
     print("execution_authority=NONE_UNTIL_CONSUME")
+    print(f"manifest_git_blob_sha={EXPECTED_MANIFEST_GIT_BLOB_SHA}")
+    print(f"event_git_blob_sha={EXPECTED_EVENT_GIT_BLOB_SHA}")
     print("runtime_network=NONE")
     print("runtime_credentials=NONE")
     return 0
