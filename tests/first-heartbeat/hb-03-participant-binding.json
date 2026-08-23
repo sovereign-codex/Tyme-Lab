@@ -2,7 +2,9 @@
   "pilot_id": "hb-03-frontier-containment",
   "source_work_maturity": "COMMISSIONED",
   "target_work_maturity": "BOUND",
-  "work_ref": "first-heartbeat:frontier-containment",
+  "work_ref": "tests/first-heartbeat/hb-02-commissioned-work.work.v0.json",
+  "work_id": "work:first-heartbeat:frontier-containment",
+  "expected_promotion_merge_sha": "e3d174c1669d7d3eddf75e1f517c201b5f8d01e5",
   "binding_contract_ref": "docs/architecture/PARTICIPANT_BINDING_V0.md",
   "participant_binding": {
     "participant_id": "runtime:avot-engine/monitor-runner-v0",
