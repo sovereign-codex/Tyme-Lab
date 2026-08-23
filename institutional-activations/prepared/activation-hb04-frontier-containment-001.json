@@ -1,0 +1,61 @@
+{
+  "activation_id": "activation-hb04-frontier-containment-001",
+  "state": "PREPARED_UNCONSUMED",
+  "work_maturity": "BOUND",
+  "active_on_consume": true,
+  "work_ref": "institutional-work/records/work-review-hb-02-frontier-containment.json",
+  "binding_ref": "tests/first-heartbeat/hb-03-participant-binding.json",
+  "participant_ref": "runtime:avot-engine/monitor-runtime-v0",
+  "activation_contract_ref": "docs/architecture/RUNTIME_ACTIVATION_V0.md",
+  "preparation_authority": {
+    "actor_id": "human:sovereign-codex",
+    "actor_type": "human",
+    "scope": "runtime-activation-prepare",
+    "origin_surface": "github",
+    "authenticated_github_actor": "sovereign-codex",
+    "policy_ref": "governance/authorized-runtime-activation-scopes.v0.json"
+  },
+  "runtime": {
+    "repository": "sovereign-codex/AVOT-engine",
+    "commit": "2b7e72e0dd91713c0c7b0a9cdc477edc1bae96f9",
+    "path": "src/runtime/monitor.ts",
+    "entrypoint": "runSyntheticMonitorActivation",
+    "mode": "one_shot",
+    "max_runs": 1,
+    "network_access": "NONE",
+    "credentials": "NONE",
+    "repository_write": false,
+    "external_communication": false
+  },
+  "supplied_event": {
+    "event_ref": "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json",
+    "signal_id": "sig-frontier-containment-20260822-001",
+    "subject": "frontier_ai_containment",
+    "material_change": true
+  },
+  "execution_authority": {
+    "state": "NONE_UNTIL_CONSUME",
+    "grant_ref": null,
+    "self_activation_allowed": false,
+    "self_renewal_allowed": false
+  },
+  "consumption": {
+    "consumed": false,
+    "consumed_ref": null,
+    "replay_allowed": false,
+    "next_boundary": "invocation-start-consume"
+  },
+  "required_return": [
+    "activation_identity",
+    "work_ref",
+    "participant_ref",
+    "supplied_event_ref",
+    "runtime_implementation_ref",
+    "result_classification",
+    "signal_ref_if_any",
+    "execution_trace",
+    "dormancy_evidence"
+  ],
+  "evidence_state": "EXPECTED",
+  "next_valid_gate": "hb-04-invocation-start-consume"
+}
