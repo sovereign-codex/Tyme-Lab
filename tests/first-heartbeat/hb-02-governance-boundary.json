@@ -2,6 +2,28 @@
   "pilot_id": "hb-02-frontier-containment",
   "source_signal_ref": "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json",
   "source_signal_id": "sig-frontier-containment-20260822-001",
+  "work_maturity": {
+    "model_ref": "docs/architecture/WORK_MATURITY_V0.md",
+    "source_state": "CANDIDATE",
+    "review_result_state": "ELIGIBLE",
+    "promotion_target_state": "COMMISSIONED",
+    "current_state": "ELIGIBLE",
+    "transition_owner": "Work Promotion v0",
+    "promotion_authorized": false
+  },
+  "participant_binding": {
+    "state": "UNBOUND",
+    "participant_id": null
+  },
+  "execution_authority": {
+    "state": "NONE",
+    "grant_ref": null
+  },
+  "evidence_state": {
+    "state": "EXPECTED",
+    "archivist_status": "pending",
+    "trace_status": "pending"
+  },
   "admission_projection": {
     "epistemic_class": "REQUEST",
     "requested_action_class": "REVIEW",
@@ -36,6 +58,7 @@
       "analysis_only"
     ],
     "required_constraints": [
+      "docs/architecture/WORK_MATURITY_V0.md",
       "schemas/signal_return.v0.1.schema.json",
       "schemas/admission.v0.schema.json",
       "schemas/review-disposition.v0.schema.json",
