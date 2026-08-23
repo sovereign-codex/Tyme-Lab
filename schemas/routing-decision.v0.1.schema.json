@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/routing-decision.v0.1.schema.json",
+  "title": "Routing Decision v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "routing_id",
+    "signal_refs",
+    "decision",
+    "receiver",
+    "rationale",
+    "related_objective",
+    "related_repository",
+    "requires_human_review",
+    "authority_posture",
+    "institutional_effect",
+    "evidence_refs"
+  ],
+  "properties": {
+    "routing_id": {"type": "string", "minLength": 1},
+    "signal_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "decision": {"enum": ["archive_only", "relate", "request_review", "eligible_for_admission"]},
+    "receiver": {"type": "string"},
+    "rationale": {"type": "string", "minLength": 1},
+    "related_objective": {"type": ["string", "null"]},
+    "related_repository": {"type": ["string", "null"]},
+    "requires_human_review": {"const": true},
+    "authority_posture": {"const": "none"},
+    "institutional_effect": {"const": "none"},
+    "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision": {"const": "eligible_for_admission"}}},
+      "then": {
+        "properties": {
+          "receiver": {"minLength": 1},
+          "requires_human_review": {"const": true},
+          "institutional_effect": {"const": "none"}
+        }
+      }
+    }
+  ]
+}
