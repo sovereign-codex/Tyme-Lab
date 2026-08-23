@@ -6,7 +6,8 @@
   "implementation": {
     "repository": "sovereign-codex/AVOT-engine",
     "commit": "2b7e72e0dd91713c0c7b0a9cdc477edc1bae96f9",
-    "path": "src/runtime/monitor.ts"
+    "path": "src/runtime/monitor.ts",
+    "github_blob_sha": "e50f080ae972bd76ab96839e647822ef522cab3a"
   },
   "contract_ref": "docs/architecture/MONITOR_PARTICIPATION_RUNTIME_V0.md",
   "supported_actions": [
@@ -28,6 +29,6 @@
   "execution_authority": "none",
   "registration_evidence": {
     "source_ref": "https://github.com/sovereign-codex/AVOT-engine/blob/2b7e72e0dd91713c0c7b0a9cdc477edc1bae96f9/src/runtime/monitor.ts",
-    "verified_for_hb03": true
+    "verification_mode": "resolve_github_contents_api_at_validation"
   }
 }
