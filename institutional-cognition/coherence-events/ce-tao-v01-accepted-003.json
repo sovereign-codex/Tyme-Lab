@@ -1,0 +1,19 @@
+{
+  "event_id": "ce-tao-v01-accepted-003",
+  "lineage_id": "tyme-attention-orientation-pilot-01",
+  "event_type": "transition",
+  "participant_refs": ["human:sovereign-codex"],
+  "contributor_refs": [],
+  "steward_refs": ["human:sovereign-codex"],
+  "state_before": "attention_orientation_v0.1_pending_acceptance",
+  "state_after": "attention_orientation_v0.1_accepted_for_pilot",
+  "authority_posture": "pilot_acceptance_only; no workflow execution authority consumed; no activation authority changed",
+  "evidence_refs": [
+    "institutional-cognition/orientations/tyme-attention-current-frontier.v0.json",
+    "schemas/tyme-attention-orientation.v0.schema.json",
+    "human steward acceptance in Pilot 01 review"
+  ],
+  "next_valid_transition": "re-evaluate the active frontier and determine whether HB-04B is now the sole eligible human execution gate",
+  "supersedes": [],
+  "institutional_effect": "none_by_event_alone"
+}
