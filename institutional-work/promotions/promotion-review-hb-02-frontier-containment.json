@@ -1,0 +1,33 @@
+{
+  "promotion_id": "promotion-review-hb-02-frontier-containment",
+  "review_disposition_ref": "institutional-reviews/decisions/review-hb-02-frontier-containment.json",
+  "review_disposition_sha256": "e03169b5ea403e0ee3b95554bc8971254a24a4a6a5f4ebef0894043c2dab8cb2",
+  "admission_ref": "institutional-admissions/pending/adm-sig-frontier-containment-20260822-001.json",
+  "source_event_ref": "signal:sig-frontier-containment-20260822-001",
+  "promoted_at": "2026-08-23T10:34:00.000000Z",
+  "promoter": {
+    "actor_id": "human:sovereign-codex",
+    "actor_type": "human",
+    "origin_surface": "github",
+    "authenticated_transport": {
+      "type": "github-actions",
+      "github_actor": "sovereign-codex"
+    },
+    "authority_envelope_ref": "governance/envelopes/hb-02-work-promoter.json",
+    "authority_envelope_sha256": "e7f6157fa5f0a07a3ac8f80369a4080f7e409d201db8e20f5411d0c1d94e0518"
+  },
+  "governance": {
+    "authority_effect": "work_promotion_only",
+    "required_scope": "work-promotion",
+    "grant_policy_ref": "governance/authorized-work-promotion-scopes.v0.json",
+    "grant_policy_sha256": "82f9801c6b5a32e763a4e378f3a44b7cedaaddc7cec31e90e4b5d9357387910a",
+    "matched_grant_sha256": "cab77ce25255f2d1cafe6e11eaa5bdbf16d20692873dbf60feecd79674a0a1b4",
+    "source_mutation_allowed": false,
+    "participant_selected": false,
+    "execution_authority_granted": false
+  },
+  "result": {
+    "work_created": true,
+    "work_ref": "institutional-work/records/work-review-hb-02-frontier-containment.json"
+  }
+}
