@@ -1,0 +1,33 @@
+{
+  "carrier_id": "runtime:avot-engine/monitor-runtime-v0",
+  "carrier_class": "runtime_capability",
+  "host_runtime": "avot-engine",
+  "identity_created": false,
+  "implementation": {
+    "repository": "sovereign-codex/AVOT-engine",
+    "commit": "2b7e72e0dd91713c0c7b0a9cdc477edc1bae96f9",
+    "path": "src/runtime/monitor.ts"
+  },
+  "contract_ref": "docs/architecture/MONITOR_PARTICIPATION_RUNTIME_V0.md",
+  "supported_actions": [
+    "observe",
+    "normalize",
+    "compare",
+    "interpret",
+    "recommend",
+    "return_evidence"
+  ],
+  "required_prohibitions": [
+    "create_work",
+    "authorize_execution",
+    "merge",
+    "promote_canon",
+    "mutate_institutional_memory"
+  ],
+  "authority_posture": "analysis_only",
+  "execution_authority": "none",
+  "registration_evidence": {
+    "source_ref": "https://github.com/sovereign-codex/AVOT-engine/blob/2b7e72e0dd91713c0c7b0a9cdc477edc1bae96f9/src/runtime/monitor.ts",
+    "verified_for_hb03": true
+  }
+}
