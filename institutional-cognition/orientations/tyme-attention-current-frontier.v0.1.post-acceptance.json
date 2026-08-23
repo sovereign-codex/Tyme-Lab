@@ -1,0 +1,64 @@
+{
+  "orientation_id": "tao-2026-08-23-current-frontier-003",
+  "observed_at": "2026-08-23T11:33:00-07:00",
+  "repository_ref": "sovereign-codex/Tyme-Lab:pilot/tyme-cognition-01-living-branch-orientation",
+  "repository_head_sha": "20f9a84fcd00c4815051aa305262323d5a259763",
+  "supersedes_orientation_id": "tao-2026-08-23-current-frontier-002",
+  "current_frontier": "HB-04B one-shot activation gate",
+  "why_now": "TYME Attention Orientation v0.1 has been accepted for Pilot 01. The remaining live dependency chain shows HB-04B must produce qualifying activation, process-start, and runtime-return evidence before HB-05 can preserve and TRACE-verify the return. No other open PR or branch is required to execute before that gate.",
+  "current_state": "NOW",
+  "current_stewardship": [
+    "human:sovereign-codex: authorized one-shot activation steward",
+    "TYME: observe and re-orient from returned evidence after execution"
+  ],
+  "blocked_by": [],
+  "next_gate": "authorized human steward initiates HB-04B workflow_dispatch with activation_id=activation-hb04-frontier-containment-001 and confirmation=ACTIVATE",
+  "waiting_dependents": [
+    "PR #20 — HB-05 Return Preservation + TRACE Verification"
+  ],
+  "human_review_required_now": false,
+  "human_execution_required_now": true,
+  "next_human_gate": "run HB-04B one-shot activation; after return evidence, TYME re-evaluates before any HB-05 verification or later integration gate",
+  "do_not_touch": [
+    "do not run HB-05 before successful HB-04B return evidence exists",
+    "do not promote or merge PR #12 solely to reduce branch count",
+    "do not open a new branch, workflow, or agent role to accelerate the heartbeat sequence",
+    "do not infer field_validation, contribution, or integration from workflow intent alone"
+  ],
+  "revisit_when": [
+    "HB-04B workflow_dispatch completes or fails",
+    "new repository evidence materially changes the dependency state",
+    "the activation gate reveals an authority or policy mismatch"
+  ],
+  "evidence_refs": [
+    "institutional-cognition/coherence-events/ce-tao-v01-accepted-003.json",
+    "institutional-cognition/returns/hb-04b-office-branch-health.v0.json",
+    "institutional-activations/prepared/activation-hb04-frontier-containment-001.json",
+    ".github/workflows/hb-04b-invocation-start-consume.yml",
+    "PR #20 — HB-05 Return Preservation + TRACE Verification",
+    "PR #12 — Architecture: Participant Activation v0"
+  ],
+  "claims": [
+    {
+      "claim": "TYME Attention Orientation v0.1 has been accepted for Pilot 01 without consuming workflow or activation authority.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["institutional-cognition/coherence-events/ce-tao-v01-accepted-003.json"]
+    },
+    {
+      "claim": "HB-04B is the sole eligible human execution gate in the current observed dependency chain.",
+      "epistemic_posture": "inferred",
+      "evidence_refs": ["HB-04B branch-health packet", "PR #20 dependency on successful HB-04B return", "PR #12 does not dispatch runtime"]
+    },
+    {
+      "claim": "HB-05 must remain waiting until HB-04B produces qualifying return evidence.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["PR #20 — HB-05 Return Preservation + TRACE Verification"]
+    },
+    {
+      "claim": "PR #12 is not a prerequisite for the next execution step and should remain held unless an explicit dependency emerges.",
+      "epistemic_posture": "inferred",
+      "evidence_refs": ["PR #12 — Architecture: Participant Activation v0", "current HB-04B prepared activation lineage"]
+    }
+  ],
+  "one_current_steward_action": "Run the HB-04B one-shot activation workflow with the exact prepared activation ID and ACTIVATE confirmation; do nothing else until TYME re-orients from the returned evidence."
+}
