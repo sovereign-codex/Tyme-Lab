@@ -1,0 +1,28 @@
+name: HB-01 Signal Return v0.1 Validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "schemas/signal_return.v0.1.schema.json"
+      - "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json"
+      - "tests/first-heartbeat/validate_signal_return_v0_1.py"
+      - ".github/workflows/hb-01-signal-return-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-first-heartbeat-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate HB-01 signal return contract
+        run: python tests/first-heartbeat/validate_signal_return_v0_1.py
