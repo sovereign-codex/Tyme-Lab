@@ -1,0 +1,69 @@
+{
+  "orientation_id": "tao-2026-08-23-post-hb04b-003",
+  "observed_at": "2026-08-23T11:45:00-07:00",
+  "repository_ref": "sovereign-codex/Tyme-Lab:pilot/tyme-cognition-01-living-branch-orientation",
+  "repository_head_sha": "dd782922570e8f85121c590d8c6079587d0e4215",
+  "supersedes_orientation_id": "tao-2026-08-23-current-frontier-002",
+  "current_frontier": "HB-05 — Return Preservation + TRACE Verification / PR #20",
+  "why_now": "HB-04B workflow run #11 successfully consumed the prepared one-shot activation, invoked the pinned runtime, preserved process-start evidence, preserved runtime return, and produced three artifacts. The next valid institutional need is to preserve and verify those returned artifacts without rerunning the participant or implying integration.",
+  "current_state": "NOW",
+  "current_stewardship": [
+    "TYME: re-orient from returned execution evidence",
+    "human:sovereign-codex: dispatch the bounded HB-05 verification workflow when ready"
+  ],
+  "blocked_by": [],
+  "next_gate": "run HB-05 Return Preservation + TRACE Verification against the unique successful HB-04B live run",
+  "waiting_dependents": [
+    "semantic integration / Codex-net-index / Continuum decisions remain downstream and unauthorized"
+  ],
+  "human_review_required_now": false,
+  "human_execution_required_now": true,
+  "next_human_gate": "HB-05 workflow_dispatch only; no participant rerun and no integration action",
+  "do_not_touch": [
+    "do not rerun HB-04B",
+    "do not treat run #12 replay-guard failure as an activation failure",
+    "do not classify HB-04B as fruit or VERIFIED before HB-05 completes",
+    "do not mutate Codex-net-index or Continuum from green execution alone",
+    "do not promote unrelated PRs solely to reduce branch count"
+  ],
+  "revisit_when": [
+    "HB-05 completes successfully",
+    "HB-05 fails closed on source-run discovery or artifact verification",
+    "new evidence contradicts the observed HB-04B execution chain"
+  ],
+  "evidence_refs": [
+    "workflow:HB-04B Invocation Start Consume #11",
+    "workflow:HB-04B Invocation Start Consume #12",
+    "institutional-cognition/returns/hb-04b-office-branch-health.v0.json",
+    "institutional-cognition/coherence-events/ce-hb04b-field-validation-004.json",
+    "PR #20 — HB-05 Return Preservation + TRACE Verification"
+  ],
+  "claims": [
+    {
+      "claim": "HB-04B run #11 completed successfully with successful activation consumption and successful pinned-runtime invocation.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["workflow:HB-04B Invocation Start Consume #11"]
+    },
+    {
+      "claim": "Run #11 preserved process-start and runtime-return evidence and exposed three artifacts.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["workflow:HB-04B Invocation Start Consume #11"]
+    },
+    {
+      "claim": "Run #12 demonstrates replay protection by failing closed after detecting the prior consumption.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["workflow:HB-04B Invocation Start Consume #12"]
+    },
+    {
+      "claim": "HB-04B has earned the living-tree transition from bud to field_validation but not to fruit or verified integration.",
+      "epistemic_posture": "inferred",
+      "evidence_refs": ["HB-05 contract", "institutional-cognition/coherence-events/ce-hb04b-field-validation-004.json"]
+    },
+    {
+      "claim": "HB-05 is the sole eligible next execution surface because its contract consumes the successful HB-04B return without rerunning the participant and explicitly separates preservation, verification, and integration.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["docs/architecture/HB_05_RETURN_PRESERVE_TRACE.md"]
+    }
+  ],
+  "one_current_steward_action": "Run HB-05 Return Preservation + TRACE Verification; do nothing else until TYME re-orients from its preservation and verification evidence."
+}
