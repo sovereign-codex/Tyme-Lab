@@ -1,5 +1,16 @@
 {
   "policy_version": "work-promotion.v0",
   "required_scope": "work-promotion",
-  "direct_grants": []
+  "direct_grants": [
+    {
+      "actor_id": "human:sovereign-codex",
+      "actor_type": "human",
+      "scope": "work-promotion",
+      "origin_surface": "github",
+      "authenticated_transport": {
+        "type": "github-actions",
+        "github_actor": "sovereign-codex"
+      }
+    }
+  ]
 }
