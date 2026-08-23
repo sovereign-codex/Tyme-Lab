@@ -1,0 +1,16 @@
+{
+  "policy_version": "runtime-activation.v0",
+  "required_scope": "runtime-activation",
+  "direct_grants": [
+    {
+      "actor_id": "human:sovereign-codex",
+      "actor_type": "human",
+      "scope": "runtime-activation",
+      "origin_surface": "github",
+      "authenticated_transport": {
+        "type": "github-actions",
+        "github_actor": "sovereign-codex"
+      }
+    }
+  ]
+}
