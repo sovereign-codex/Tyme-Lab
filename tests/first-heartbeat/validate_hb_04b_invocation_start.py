@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Validate HB-04B consume/start inputs and emit invocation-start evidence.
+"""Validate HB-04B consume/start inputs and emit durable consumption evidence.
 
-This script never invokes the participant. The GitHub Actions workflow serializes
-consumption and uses workflow history as the durable anti-replay ledger.
+This script never invokes the participant and never claims Work ACTIVE. Consumption
+spends the one-shot activation. ACTIVE begins only inside the participant process,
+which emits a separate start record after the process has actually started.
 """
 
 import json
@@ -19,7 +20,8 @@ SIGNAL_REF = "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json
 MANIFEST_REF = "tests/first-heartbeat/hb-04b-monitor-manifest.json"
 EVENT_REF = "tests/first-heartbeat/hb-04b-event.json"
 CARRIER_REF = "governance/runtime-carriers/avot-engine-monitor-runtime-v0.json"
-POLICY_REF = "governance/authorized-runtime-activation-scopes.v0.json"
+PREP_POLICY_REF = "governance/authorized-runtime-activation-scopes.v0.json"
+CONSUME_POLICY_REF = "governance/authorized-runtime-activation-consume-scopes.v0.json"
 EXPECTED_ACTIVATION = "activation-hb04-frontier-containment-001"
 EXPECTED_PARTICIPANT = "runtime:avot-engine/monitor-runtime-v0"
 EXPECTED_RUNTIME_REPO = "sovereign-codex/AVOT-engine"
@@ -45,7 +47,7 @@ def main():
         return 2
 
     failures = []
-    refs = [PREPARED_REF, BINDING_REF, WORK_REF, SIGNAL_REF, MANIFEST_REF, EVENT_REF, CARRIER_REF, POLICY_REF]
+    refs = [PREPARED_REF, BINDING_REF, WORK_REF, SIGNAL_REF, MANIFEST_REF, EVENT_REF, CARRIER_REF, PREP_POLICY_REF, CONSUME_POLICY_REF]
     for ref in refs:
         require((ROOT / ref).is_file(), f"missing required artifact: {ref}", failures)
     if failures:
@@ -60,7 +62,8 @@ def main():
     manifest = load(MANIFEST_REF)
     event = load(EVENT_REF)
     carrier = load(CARRIER_REF)
-    policy = load(POLICY_REF)
+    prep_policy = load(PREP_POLICY_REF)
+    consume_policy = load(CONSUME_POLICY_REF)
 
     actor = os.environ.get("GITHUB_ACTOR", "").strip()
     triggering_actor = os.environ.get("GITHUB_TRIGGERING_ACTOR", "").strip()
@@ -113,18 +116,19 @@ def main():
     require(event.get("subject") == signal.get("origin", {}).get("subject"), "runtime event subject mismatch", failures)
     require(event.get("material_change") is True, "first heartbeat event must exercise material signal path", failures)
 
-    require(policy.get("required_scope") == "runtime-activation-prepare", "preparation policy scope drifted", failures)
-    grants = policy.get("direct_grants", [])
-    matching = [g for g in grants if g.get("actor_id") == "human:sovereign-codex" and g.get("scope") == "runtime-activation-prepare" and g.get("authenticated_transport", {}).get("github_actor") == EXPECTED_GITHUB_ACTOR]
-    require(len(matching) == 1, "expected preparation grant missing or duplicated", failures)
+    require(prep_policy.get("required_scope") == "runtime-activation-prepare", "preparation policy scope drifted", failures)
+    require(consume_policy.get("required_scope") == "runtime-activation-consume", "consume policy scope drifted", failures)
 
     if mode == "consume-evidence":
         require(actor == EXPECTED_GITHUB_ACTOR, "workflow actor is not authorized consume requester", failures)
         require(triggering_actor == EXPECTED_GITHUB_ACTOR, "triggering actor is not authorized consume requester", failures)
+        require(run_attempt == "1", "workflow reruns may not consume activation", failures)
         require(bool(run_id), "GITHUB_RUN_ID required for durable consumption identity", failures)
-        require(bool(run_attempt), "GITHUB_RUN_ATTEMPT required for durable consumption identity", failures)
         require(repository == "sovereign-codex/Tyme-Lab", "unexpected execution repository", failures)
         require(bool(workflow_ref), "GITHUB_WORKFLOW_REF required", failures)
+        grants = consume_policy.get("direct_grants", [])
+        matching = [g for g in grants if g.get("actor_id") == "human:sovereign-codex" and g.get("scope") == "runtime-activation-consume" and g.get("authenticated_transport", {}).get("github_actor") == actor == triggering_actor]
+        require(len(matching) == 1, "expected consume grant missing or duplicated", failures)
 
     if failures:
         print("HB-04B invocation-start validation: FAIL")
@@ -134,24 +138,13 @@ def main():
 
     if mode == "consume-evidence":
         evidence = {
-            "schema": "hb-04b-invocation-start.v0",
+            "schema": "hb-04b-consumption.v0",
             "activation_id": EXPECTED_ACTIVATION,
-            "state": "CONSUMED_STARTING",
-            "work_maturity": "ACTIVE",
+            "state": "CONSUMED_PENDING_START",
+            "work_maturity": "BOUND",
             "work_ref": WORK_REF,
             "binding_ref": BINDING_REF,
             "participant_ref": EXPECTED_PARTICIPANT,
-            "runtime": {
-                "repository": EXPECTED_RUNTIME_REPO,
-                "commit": EXPECTED_RUNTIME_COMMIT,
-                "path": EXPECTED_RUNTIME_PATH,
-                "entrypoint": EXPECTED_ENTRYPOINT,
-                "network_access": "NONE",
-                "credentials": "NONE",
-                "repository_write": False,
-                "external_communication": False,
-                "max_runs": 1,
-            },
             "consume_request": {
                 "github_actor": actor,
                 "github_triggering_actor": triggering_actor,
@@ -159,12 +152,13 @@ def main():
                 "workflow_ref": workflow_ref,
                 "run_id": run_id,
                 "run_attempt": run_attempt,
+                "authority_scope": "runtime-activation-consume",
             },
-            "execution_authority": "BOUNDED_ONE_SHOT",
+            "execution_authority": "CONSUMED_ONE_SHOT_PENDING_START",
             "consumed": True,
             "replay_allowed": False,
-            "started_at": datetime.now(timezone.utc).isoformat(),
-            "next_valid_gate": "hb-04b-runtime-return",
+            "consumed_at": datetime.now(timezone.utc).isoformat(),
+            "next_valid_gate": "process-start-active-evidence",
         }
         print(json.dumps(evidence, indent=2, sort_keys=True))
         return 0
