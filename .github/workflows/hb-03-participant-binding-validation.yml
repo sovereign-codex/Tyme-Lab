@@ -5,8 +5,10 @@ on:
   pull_request:
     paths:
       - "docs/architecture/PARTICIPANT_BINDING_V0.md"
+      - "tests/first-heartbeat/hb-02-commissioned-work.work.v0.json"
       - "tests/first-heartbeat/hb-03-participant-binding.json"
       - "tests/first-heartbeat/validate_hb_03_participant_binding.py"
+      - "schemas/work.v0.schema.json"
       - ".github/workflows/hb-03-participant-binding-validation.yml"
 
 permissions:
