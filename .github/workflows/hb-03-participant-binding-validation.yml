@@ -1,0 +1,28 @@
+name: HB-03 Participant Binding Validation
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "docs/architecture/PARTICIPANT_BINDING_V0.md"
+      - "tests/first-heartbeat/hb-03-participant-binding.json"
+      - "tests/first-heartbeat/validate_hb_03_participant_binding.py"
+      - ".github/workflows/hb-03-participant-binding-validation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-hb-03-participant-binding:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate HB-03 participant binding
+        run: python tests/first-heartbeat/validate_hb_03_participant_binding.py
