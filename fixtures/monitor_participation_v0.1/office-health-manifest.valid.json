@@ -22,6 +22,7 @@
   "authority_posture": "analysis_only",
   "permitted_actions": ["observe", "normalize", "compare", "interpret", "recommend", "return_evidence"],
   "prohibited_actions": ["create_work", "authorize_execution", "merge", "promote_canon", "mutate_institutional_memory"],
-  "return_contract": "SIGNAL_PACKET_v0.1",
+  "signal_contract": "SIGNAL_PACKET_v0.1",
+  "return_contract": "EVIDENCE_RETURN_v0.1",
   "dormancy_condition": "signal returned or no material change"
 }
