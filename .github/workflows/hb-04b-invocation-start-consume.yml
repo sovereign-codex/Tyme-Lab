@@ -6,6 +6,7 @@ on:
       - "docs/architecture/HB_04B_INVOCATION_START_CONSUME.md"
       - "institutional-activations/prepared/activation-hb04-frontier-containment-001.json"
       - "governance/authorized-runtime-activation-scopes.v0.json"
+      - "governance/authorized-runtime-activation-consume-scopes.v0.json"
       - "governance/runtime-carriers/avot-engine-monitor-runtime-v0.json"
       - "institutional-work/records/work-review-hb-02-frontier-containment.json"
       - "tests/first-heartbeat/hb-03-participant-binding.json"
@@ -63,11 +64,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Require exact activation and explicit confirmation
+      - name: Require first attempt, exact activation, and explicit confirmation
         env:
           REQUESTED_ACTIVATION: ${{ inputs.activation_id }}
           CONFIRMATION: ${{ inputs.confirmation }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
         run: |
+          test "$RUN_ATTEMPT" = "1"
           test "$REQUESTED_ACTIVATION" = "activation-hb04-frontier-containment-001"
           test "$CONFIRMATION" = "ACTIVATE"
 
@@ -76,19 +79,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          prior_runs=$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/hb-04b-invocation-start-consume.yml/runs?event=workflow_dispatch&per_page=100" --jq '.workflow_runs[].id')
+          prior_runs=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/workflows/hb-04b-invocation-start-consume.yml/runs?event=workflow_dispatch&per_page=100" --jq '.workflow_runs[].id')
           for run_id in $prior_runs; do
             if [ "$run_id" = "$GITHUB_RUN_ID" ]; then
               continue
             fi
-            consumed=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs?per_page=100" --jq '.jobs[] | select(.name == "consume-prepared-activation" and .conclusion == "success") | .id')
+            consumed=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs?per_page=100" --jq '.jobs[] | select(.name == "consume-prepared-activation" and .conclusion == "success") | .id')
             if [ -n "$consumed" ]; then
               echo "Activation already consumed by workflow run ${run_id}."
               exit 1
             fi
           done
 
-      - name: Emit invocation-start evidence and consume one-shot authority
+      - name: Emit permanent consumption evidence
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TRIGGERING_ACTOR: ${{ github.triggering_actor }}
@@ -98,23 +101,24 @@ jobs:
           GITHUB_WORKFLOW_REF: ${{ github.workflow_ref }}
         run: |
           mkdir -p out
-          python tests/first-heartbeat/validate_hb_04b_invocation_start.py consume-evidence > out/hb-04b-invocation-start.json
+          python tests/first-heartbeat/validate_hb_04b_invocation_start.py consume-evidence > out/hb-04b-consumption.json
           python - <<'PY'
           import json
           from pathlib import Path
-          p = Path('out/hb-04b-invocation-start.json')
+          p = Path('out/hb-04b-consumption.json')
           data = json.loads(p.read_text())
-          assert data['state'] == 'CONSUMED_STARTING'
-          assert data['work_maturity'] == 'ACTIVE'
+          assert data['state'] == 'CONSUMED_PENDING_START'
+          assert data['work_maturity'] == 'BOUND'
           assert data['consumed'] is True
           assert data['replay_allowed'] is False
+          assert data['execution_authority'] == 'CONSUMED_ONE_SHOT_PENDING_START'
           PY
 
-      - name: Preserve invocation-start evidence
+      - name: Preserve consumption evidence
         uses: actions/upload-artifact@v4
         with:
-          name: hb-04b-invocation-start-${{ github.run_id }}
-          path: out/hb-04b-invocation-start.json
+          name: hb-04b-consumption-${{ github.run_id }}
+          path: out/hb-04b-consumption.json
           if-no-files-found: error
           retention-days: 90
 
@@ -139,33 +143,42 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Recover consumed invocation-start evidence
+      - name: Recover permanent consumption evidence
         uses: actions/download-artifact@v4
         with:
-          name: hb-04b-invocation-start-${{ github.run_id }}
-          path: out/start
+          name: hb-04b-consumption-${{ github.run_id }}
+          path: out/consume
 
-      - name: Verify consumed-start evidence before participant invocation
+      - name: Verify consumption evidence before participant process
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          p = Path('out/start/hb-04b-invocation-start.json')
+          p = Path('out/consume/hb-04b-consumption.json')
           data = json.loads(p.read_text())
           assert data['activation_id'] == 'activation-hb04-frontier-containment-001'
-          assert data['state'] == 'CONSUMED_STARTING'
-          assert data['work_maturity'] == 'ACTIVE'
-          assert data['execution_authority'] == 'BOUNDED_ONE_SHOT'
-          assert data['runtime']['network_access'] == 'NONE'
-          assert data['runtime']['credentials'] == 'NONE'
-          assert data['runtime']['max_runs'] == 1
+          assert data['state'] == 'CONSUMED_PENDING_START'
+          assert data['work_maturity'] == 'BOUND'
+          assert data['execution_authority'] == 'CONSUMED_ONE_SHOT_PENDING_START'
+          assert data['consumed'] is True
+          assert data['replay_allowed'] is False
           PY
 
       - name: Invoke pinned AVOT runtime with network namespace disabled
         run: |
           sudo unshare --net -- node --experimental-strip-types tests/first-heartbeat/run_hb_04b_monitor.mjs
 
+      - name: Preserve process-start ACTIVE evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hb-04b-process-start-${{ github.run_id }}
+          path: out/hb-04b-process-start.json
+          if-no-files-found: warn
+          retention-days: 90
+
       - name: Preserve runtime return as unverified evidence
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: hb-04b-runtime-return-${{ github.run_id }}
