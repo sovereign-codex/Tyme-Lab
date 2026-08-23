@@ -7,9 +7,9 @@
     "source_state": "CANDIDATE",
     "review_result_state": "ELIGIBLE",
     "promotion_target_state": "COMMISSIONED",
-    "current_state": "ELIGIBLE",
+    "current_state": "COMMISSIONED",
     "transition_owner": "Work Promotion v0",
-    "promotion_authorized": false
+    "promotion_authorized": true
   },
   "participant_binding": {
     "state": "UNBOUND",
@@ -80,11 +80,15 @@
   "promotion_gate": {
     "required_scope": "work-promotion",
     "policy_ref": "governance/authorized-work-promotion-scopes.v0.json",
-    "expected_direct_grant_count": 0,
-    "expected_result": "FAIL_CLOSED_NO_PROMOTION",
-    "work_created": false,
+    "expected_direct_grant_count": 1,
+    "expected_actor_id": "human:sovereign-codex",
+    "expected_actor_type": "human",
+    "expected_origin_surface": "github",
+    "expected_authenticated_github_actor": "sovereign-codex",
+    "expected_result": "COMMISSIONED_UNBOUND",
+    "work_created": true,
     "participant_selected": false,
     "execution_authority_granted": false
   },
-  "next_valid_gate": "explicit_work_promotion_grant_review"
+  "next_valid_gate": "hb-03-participant-activation"
 }
