@@ -9,9 +9,11 @@ on:
   workflow_dispatch:
     inputs:
       confirmation:
-        description: "Type VERIFY_RETURN to verify the unique successful HB-04B return"
+        description: "Select VERIFY_RETURN to verify the unique successful HB-04B return"
         required: true
-        type: string
+        type: choice
+        options:
+          - VERIFY_RETURN
 
 permissions:
   actions: read
@@ -33,18 +35,12 @@ jobs:
         run: python tests/first-heartbeat/verify_hb_05_return.py self-test
 
   preserve-and-verify-return:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && inputs.confirmation == 'VERIFY_RETURN'
     needs: validate-verifier
     runs-on: ubuntu-latest
     steps:
-      - name: Require exact verification confirmation
-        env:
-          CONFIRMATION: ${{ inputs.confirmation }}
-        run: |
-          if [ "$CONFIRMATION" != "VERIFY_RETURN" ]; then
-            echo "::error title=HB-05 confirmation mismatch::confirmation must exactly equal VERIFY_RETURN."
-            exit 1
-          fi
+      - name: Confirm verification choice gate
+        run: echo "HB-05 verification choice accepted."
 
       - name: Checkout Tyme-Lab
         uses: actions/checkout@v4
