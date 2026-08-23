@@ -5,12 +5,18 @@ on:
   pull_request:
     paths:
       - "docs/architecture/PARTICIPANT_BINDING_V0.md"
-      - "tests/first-heartbeat/hb-02-commissioned-work.work.v0.json"
       - "tests/first-heartbeat/hb-03-participant-binding.json"
       - "tests/first-heartbeat/validate_hb_03_participant_binding.py"
       - "schemas/work.v0.schema.json"
+      - "governance/envelopes/hb-02-reviewer.json"
+      - "governance/envelopes/hb-02-work-promoter.json"
+      - "governance/authorized-review-scopes.v0.json"
+      - "governance/authorized-work-promotion-scopes.v0.json"
       - "governance/runtime-carriers/avot-engine-monitor-runtime-v0.json"
       - "governance/authorized-participant-binding-scopes.v0.json"
+      - "institutional-reviews/decisions/review-hb-02-frontier-containment.json"
+      - "institutional-work/promotions/promotion-review-hb-02-frontier-containment.json"
+      - "institutional-work/records/work-review-hb-02-frontier-containment.json"
       - ".github/workflows/hb-03-participant-binding-validation.yml"
 
 permissions:
