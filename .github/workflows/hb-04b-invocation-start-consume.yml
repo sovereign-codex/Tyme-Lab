@@ -70,9 +70,27 @@ jobs:
           CONFIRMATION: ${{ inputs.confirmation }}
           RUN_ATTEMPT: ${{ github.run_attempt }}
         run: |
-          test "$RUN_ATTEMPT" = "1"
-          test "$REQUESTED_ACTIVATION" = "activation-hb04-frontier-containment-001"
-          test "$CONFIRMATION" = "ACTIVATE"
+          set -u
+
+          if [ "$RUN_ATTEMPT" != "1" ]; then
+            echo "::error title=HB-04B rerun rejected::run_attempt must equal 1; received '${RUN_ATTEMPT}'. Start a new Run workflow invocation instead of using Re-run."
+            exit 1
+          fi
+
+          if [ "$REQUESTED_ACTIVATION" != "activation-hb04-frontier-containment-001" ]; then
+            echo "::error title=HB-04B activation ID mismatch::activation_id must exactly equal 'activation-hb04-frontier-containment-001'; received '${REQUESTED_ACTIVATION}'."
+            exit 1
+          fi
+
+          if [ "$CONFIRMATION" != "ACTIVATE" ]; then
+            echo "::error title=HB-04B confirmation mismatch::confirmation must exactly equal 'ACTIVATE' (case-sensitive, with no leading or trailing spaces)."
+            exit 1
+          fi
+
+          echo "HB-04B activation gate: PASS"
+          echo "run_attempt=1"
+          echo "activation_id=activation-hb04-frontier-containment-001"
+          echo "confirmation=accepted"
 
       - name: Fail closed if this activation was consumed by any prior run
         env:
