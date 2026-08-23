@@ -1,7 +1,7 @@
 {
   "lineage_id": "hb-04b-frontier-containment",
-  "branch_health": "blocked_at_activation_evidence",
-  "living_tree_state": "bud",
+  "branch_health": "field_evidence_returned_pending_verification",
+  "living_tree_state": "field_validation",
   "steward_refs": [
     "human:sovereign-codex"
   ],
@@ -9,15 +9,15 @@
     "runtime:avot-engine/monitor-runtime-v0"
   ],
   "contributor_refs": [],
-  "evidence_posture": "durable_pre_activation_lineage_established; no durable consumption, process-start, runtime-return, Archivist-return, or TRACE-verification evidence is currently established through the accessible repository and workflow surfaces",
-  "authority_posture": "analysis_only; bounded; one-shot activation requires explicit authorized workflow_dispatch confirmation; no self-activation or self-renewal",
-  "unresolved_contradiction": "none: the absence of field evidence is consistent with the branch remaining a bud",
-  "next_valid_gate": "authorized human steward initiates the HB-04B workflow_dispatch using activation_id=activation-hb04-frontier-containment-001 and confirmation=ACTIVATE; TYME then re-reads consumption, process-start, and runtime-return evidence before any state advance",
+  "evidence_posture": "workflow run #11 on main completed successfully with prepared-boundary validation, activation consumption, pinned-runtime invocation, preserved process-start evidence, preserved runtime-return evidence, and three returned artifacts; Archivist preservation and TRACE verification remain pending",
+  "authority_posture": "one-shot activation consumed; runtime completed under analysis_only posture; replay protection confirmed by subsequent failed run #12; no renewed or expanded authority",
+  "unresolved_contradiction": "the static prepared activation record on main still reads PREPARED_UNCONSUMED even though workflow history proves prior consumption; runtime history is the authoritative evidence for replay prevention until durable preservation reconciles the surfaces",
+  "next_valid_gate": "HB-05 Return Preservation + TRACE Verification consumes the unique successful HB-04B run and verifies the three returned artifacts without rerunning the participant or authorizing integration",
   "office_receiver": "Knowledge Curator",
   "cit_return_ref": "institutional-cognition/returns/hb-04b-cit-orientation-return.v0.md",
   "orientation_ref": "institutional-cognition/orientations/hb-04b-frontier-containment.living-branch-orientation.v0.json",
-  "coherence_event_ref": "institutional-cognition/coherence-events/ce-hb04b-activation-evidence-gap-002.json",
+  "coherence_event_ref": "institutional-cognition/coherence-events/ce-hb04b-field-validation-004.json",
   "implementation_detail_duplicated": false,
   "human_attention_required_now": true,
-  "human_attention_reason": "the next gate intentionally consumes one-shot activation authority and therefore requires the explicitly authorized human steward rather than autonomous TYME cognition"
+  "human_attention_reason": "HB-05 is now the sole eligible verification gate; it does not rerun the participant or grant integration authority, but explicit workflow dispatch remains the current steward action"
 }
