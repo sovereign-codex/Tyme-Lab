@@ -1,0 +1,14 @@
+{
+  "event_id": "frontier-containment-hb04b-001",
+  "event_type": "frontier_containment_signal",
+  "observed_at": "2026-08-22T00:00:00Z",
+  "source_ref": "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json",
+  "subject": "frontier_ai_containment",
+  "summary": "Frontier models are exceeding existing containment assumptions.",
+  "material_change": true,
+  "novelty_score": 0.7,
+  "confidence": 0.8,
+  "institutional_significance": "Evaluate whether frontier-model containment assumptions require institutional review.",
+  "recommended_receiver": "Knowledge Curator",
+  "recommended_disposition": "office_review"
+}

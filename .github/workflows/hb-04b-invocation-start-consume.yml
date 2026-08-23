@@ -1,0 +1,187 @@
+name: HB-04B Invocation Start Consume
+
+on:
+  pull_request:
+    paths:
+      - "docs/architecture/HB_04B_INVOCATION_START_CONSUME.md"
+      - "institutional-activations/prepared/activation-hb04-frontier-containment-001.json"
+      - "governance/authorized-runtime-activation-scopes.v0.json"
+      - "governance/authorized-runtime-activation-consume-scopes.v0.json"
+      - "governance/runtime-carriers/avot-engine-monitor-runtime-v0.json"
+      - "institutional-work/records/work-review-hb-02-frontier-containment.json"
+      - "tests/first-heartbeat/hb-03-participant-binding.json"
+      - "tests/first-heartbeat/frontier-containment.signal-return.v0.1.json"
+      - "tests/first-heartbeat/hb-04b-monitor-manifest.json"
+      - "tests/first-heartbeat/hb-04b-event.json"
+      - "tests/first-heartbeat/validate_hb_04b_invocation_start.py"
+      - "tests/first-heartbeat/run_hb_04b_monitor.mjs"
+      - ".github/workflows/hb-04b-invocation-start-consume.yml"
+  workflow_dispatch:
+    inputs:
+      activation_id:
+        description: "Prepared activation ID to consume"
+        required: true
+        type: string
+      confirmation:
+        description: "Type ACTIVATE to consume the one-shot activation"
+        required: true
+        type: string
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: hb-04b-activation-hb04-frontier-containment-001
+  cancel-in-progress: false
+
+jobs:
+  validate-prepared-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Tyme-Lab
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate HB-04B inputs without consuming
+        run: python tests/first-heartbeat/validate_hb_04b_invocation_start.py validate
+
+  consume-prepared-activation:
+    name: consume-prepared-activation
+    if: github.event_name == 'workflow_dispatch'
+    needs: validate-prepared-boundary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Tyme-Lab
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Require first attempt, exact activation, and explicit confirmation
+        env:
+          REQUESTED_ACTIVATION: ${{ inputs.activation_id }}
+          CONFIRMATION: ${{ inputs.confirmation }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          test "$RUN_ATTEMPT" = "1"
+          test "$REQUESTED_ACTIVATION" = "activation-hb04-frontier-containment-001"
+          test "$CONFIRMATION" = "ACTIVATE"
+
+      - name: Fail closed if this activation was consumed by any prior run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          prior_runs=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/workflows/hb-04b-invocation-start-consume.yml/runs?event=workflow_dispatch&per_page=100" --jq '.workflow_runs[].id')
+          for run_id in $prior_runs; do
+            if [ "$run_id" = "$GITHUB_RUN_ID" ]; then
+              continue
+            fi
+            consumed=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs?per_page=100" --jq '.jobs[] | select(.name == "consume-prepared-activation" and .conclusion == "success") | .id')
+            if [ -n "$consumed" ]; then
+              echo "Activation already consumed by workflow run ${run_id}."
+              exit 1
+            fi
+          done
+
+      - name: Emit permanent consumption evidence
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TRIGGERING_ACTOR: ${{ github.triggering_actor }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          mkdir -p out
+          python tests/first-heartbeat/validate_hb_04b_invocation_start.py consume-evidence > out/hb-04b-consumption.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('out/hb-04b-consumption.json')
+          data = json.loads(p.read_text())
+          assert data['state'] == 'CONSUMED_PENDING_START'
+          assert data['work_maturity'] == 'BOUND'
+          assert data['consumed'] is True
+          assert data['replay_allowed'] is False
+          assert data['execution_authority'] == 'CONSUMED_ONE_SHOT_PENDING_START'
+          PY
+
+      - name: Preserve consumption evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: hb-04b-consumption-${{ github.run_id }}
+          path: out/hb-04b-consumption.json
+          if-no-files-found: error
+          retention-days: 90
+
+  invoke-pinned-runtime:
+    name: invoke-pinned-runtime
+    if: github.event_name == 'workflow_dispatch'
+    needs: consume-prepared-activation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Tyme-Lab
+        uses: actions/checkout@v4
+
+      - name: Checkout pinned AVOT-engine runtime
+        uses: actions/checkout@v4
+        with:
+          repository: sovereign-codex/AVOT-engine
+          ref: 2b7e72e0dd91713c0c7b0a9cdc477edc1bae96f9
+          path: .avot-engine
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Recover permanent consumption evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: hb-04b-consumption-${{ github.run_id }}
+          path: out/consume
+
+      - name: Verify consumption evidence before participant process
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('out/consume/hb-04b-consumption.json')
+          data = json.loads(p.read_text())
+          assert data['activation_id'] == 'activation-hb04-frontier-containment-001'
+          assert data['state'] == 'CONSUMED_PENDING_START'
+          assert data['work_maturity'] == 'BOUND'
+          assert data['execution_authority'] == 'CONSUMED_ONE_SHOT_PENDING_START'
+          assert data['consumed'] is True
+          assert data['replay_allowed'] is False
+          PY
+
+      - name: Invoke pinned AVOT runtime with network namespace disabled
+        run: |
+          sudo unshare --net -- node --experimental-strip-types tests/first-heartbeat/run_hb_04b_monitor.mjs
+
+      - name: Preserve process-start ACTIVE evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hb-04b-process-start-${{ github.run_id }}
+          path: out/hb-04b-process-start.json
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Preserve runtime return as unverified evidence
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hb-04b-runtime-return-${{ github.run_id }}
+          path: out/hb-04b-runtime-result.json
+          if-no-files-found: error
+          retention-days: 90
