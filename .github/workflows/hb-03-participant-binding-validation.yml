@@ -9,6 +9,8 @@ on:
       - "tests/first-heartbeat/hb-03-participant-binding.json"
       - "tests/first-heartbeat/validate_hb_03_participant_binding.py"
       - "schemas/work.v0.schema.json"
+      - "governance/runtime-carriers/avot-engine-monitor-runtime-v0.json"
+      - "governance/authorized-participant-binding-scopes.v0.json"
       - ".github/workflows/hb-03-participant-binding-validation.yml"
 
 permissions:
