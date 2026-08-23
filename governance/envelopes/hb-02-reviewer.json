@@ -1,0 +1,16 @@
+{
+  "schema_version": "0.1",
+  "actor_id": "human:sovereign-codex",
+  "actor_type": "human",
+  "origin_surface": "github",
+  "authority": {
+    "mode": "direct",
+    "scope": [
+      "review-disposition"
+    ],
+    "effect": "none"
+  },
+  "provenance": {
+    "event_ref": "signal:sig-frontier-containment-20260822-001"
+  }
+}
