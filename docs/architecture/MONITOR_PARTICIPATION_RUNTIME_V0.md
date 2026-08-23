@@ -55,12 +55,19 @@ DORMANT
 
 `AWAKEN != AUTHORIZE`.
 
+A valid monitor manifest must contain at least one activation path: one or more event types or a non-empty schedule fallback. A monitor with no activation path is invalid rather than silently dormant.
+
 ## Contract set
 
 - `schemas/monitor-manifest.v0.1.schema.json`
 - `schemas/signal-packet.v0.1.schema.json`
 - `schemas/routing-decision.v0.1.schema.json`
 - `schemas/evidence-return.v0.1.schema.json`
+
+The manifest distinguishes two output contracts:
+
+- `signal_contract: SIGNAL_PACKET_v0.1` describes a material observation;
+- `return_contract: EVIDENCE_RETURN_v0.1` closes every activation, including no-material-change and failure outcomes.
 
 ## Conduction grammar
 
@@ -73,13 +80,13 @@ source event
 -> Signal Packet OR no-material-change Evidence Return
 -> CIT Monitor Council
 -> Routing Decision
--> archive / relate / request review / eligible for Admission
+-> archive / relate / request review / submit for Admission
 -> existing institutional spine when applicable
 ```
 
 A Routing Decision has `institutional_effect: none`.
 
-`eligible_for_admission` means only that a human-reviewed routing decision may be transformed into an Institutional Event for the existing Admission boundary. It does not mean admitted, reviewed, eligible for Work, commissioned, or authorized to execute.
+`submit_for_admission` means only that a human-reviewed routing decision may be transformed into an Institutional Event for the existing Admission boundary. It does not mean admitted, eligible for Admission, reviewed, eligible for Work, commissioned, or authorized to execute.
 
 ## CIT Pilot 01 surface
 
@@ -95,7 +102,7 @@ Compare heterogeneous Signal Packets without flattening provenance.
 
 ### HANDOFF
 
-Choose among archive, relate, request review, or eligible for Admission. This surface does not call Fabricator directly.
+Choose among archive, relate, request review, or submit for Admission. This surface does not call Fabricator directly.
 
 ### CONTINUUM
 
@@ -119,6 +126,7 @@ The pilot must preserve:
 activation != authority
 observation != admission
 routing != approval
+submission != admission
 admission != work
 work eligibility != execution
 return evidence != canon
@@ -141,6 +149,6 @@ This branch does not:
 
 ## Graduation gate
 
-The contract can be considered for graduation when tests demonstrate that all three pilot monitor identities can use the same bounded participation grammar and that neither a Signal Packet nor a Routing Decision can itself create institutional consequence.
+The contract can be considered for graduation when schema-backed tests demonstrate that all three pilot monitor identities can use the same bounded participation grammar, invalid activation manifests fail closed, and neither a Signal Packet nor a Routing Decision can itself create institutional consequence.
 
 A later runtime branch may teach `AVOT-engine` to consume these contracts. A later CIT branch may render the read-first Monitor Council. Neither should redefine the authority semantics established here.
