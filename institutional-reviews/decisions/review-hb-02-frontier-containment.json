@@ -1,0 +1,34 @@
+{
+  "review_id": "review-hb-02-frontier-containment",
+  "admission_ref": "institutional-admissions/pending/adm-sig-frontier-containment-20260822-001.json",
+  "source_event_ref": "signal:sig-frontier-containment-20260822-001",
+  "reviewed_at": "2026-08-23T10:33:00.000000Z",
+  "reviewer": {
+    "actor_id": "human:sovereign-codex",
+    "actor_type": "human",
+    "origin_surface": "github",
+    "authenticated_transport": {
+      "type": "github-actions",
+      "github_actor": "sovereign-codex"
+    },
+    "authority_envelope_ref": "governance/envelopes/hb-02-reviewer.json",
+    "authority_envelope_sha256": "3b71db2bee93a5ec28cc40d92cb203b3355594c02d336a940bae0e8fc3366dfa"
+  },
+  "decision": "APPROVE_FOR_WORK",
+  "rationale": "Frontier Containment monitoring is bounded analysis-only Work eligible for independent Work Promotion.",
+  "governance": {
+    "authority_effect": "review_disposition_only",
+    "required_scope": "review-disposition",
+    "grant_policy_ref": "governance/authorized-review-scopes.v0.json",
+    "grant_policy_sha256": "60996cd564d35f757788c5affa3412995605726055295473e78d8170556efc19",
+    "matched_grant_sha256": "87f87a80c345511b13a7d63358177bbe81a3b8471c2844adb4b8e65894639889",
+    "mutation_allowed": false,
+    "work_created": false,
+    "execution_authority_granted": false
+  },
+  "promotion": {
+    "eligible_for_work_promotion": true,
+    "work_ref": null,
+    "promotion_ref": null
+  }
+}
