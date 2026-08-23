@@ -1,0 +1,17 @@
+{
+  "activation_id": "activation-office-health-001",
+  "participant_id": "avot-office-health",
+  "activation_event": "repository_event:example-001",
+  "started_at": "2026-08-22T17:10:00Z",
+  "completed_at": "2026-08-22T17:10:05Z",
+  "result": "no_material_change",
+  "signal_refs": [],
+  "source_refs": ["evidence:repository-event-example-001"],
+  "transform_refs": ["transform:semantic-delta-check-001"],
+  "error_refs": [],
+  "handoff_target": null,
+  "return_status": "returned",
+  "authority_posture": "analysis_only",
+  "institutional_effect": "none",
+  "dormancy_entered": true
+}

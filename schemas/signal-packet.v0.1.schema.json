@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/signal-packet.v0.1.schema.json",
+  "title": "Signal Packet v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "signal_id",
+    "monitor_id",
+    "participant_id",
+    "observed_at",
+    "source_type",
+    "source_refs",
+    "subject",
+    "summary",
+    "novelty_score",
+    "confidence",
+    "material_change",
+    "related_objectives",
+    "related_repositories",
+    "related_notion_surfaces",
+    "contradicts_prior_assumption",
+    "contradiction_refs",
+    "institutional_significance",
+    "recommended_receiver",
+    "recommended_disposition",
+    "authority_posture",
+    "institutional_effect",
+    "evidence_refs"
+  ],
+  "properties": {
+    "signal_id": {"type": "string", "minLength": 1},
+    "monitor_id": {"type": "string", "minLength": 1},
+    "participant_id": {"type": "string", "minLength": 1},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "source_type": {"type": "string", "minLength": 1},
+    "source_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "subject": {"type": "string", "minLength": 1},
+    "summary": {"type": "string", "minLength": 1},
+    "novelty_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "material_change": {"type": "boolean"},
+    "related_objectives": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "related_repositories": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "related_notion_surfaces": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "contradicts_prior_assumption": {"type": "boolean"},
+    "contradiction_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "institutional_significance": {"type": "string"},
+    "recommended_receiver": {"type": "string"},
+    "recommended_disposition": {
+      "enum": ["archive_only", "office_review", "research_review", "admission_candidate"]
+    },
+    "authority_posture": {"const": "analysis_only"},
+    "institutional_effect": {"const": "none"},
+    "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"contradicts_prior_assumption": {"const": true}}},
+      "then": {"properties": {"contradiction_refs": {"minItems": 1}}}
+    },
+    {
+      "if": {"properties": {"material_change": {"const": false}}},
+      "then": {
+        "properties": {
+          "recommended_disposition": {"enum": ["archive_only", "office_review"]}
+        }
+      }
+    }
+  ]
+}

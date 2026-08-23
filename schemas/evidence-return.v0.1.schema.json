@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/evidence-return.v0.1.schema.json",
+  "title": "Evidence Return v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "activation_id",
+    "participant_id",
+    "activation_event",
+    "started_at",
+    "completed_at",
+    "result",
+    "signal_refs",
+    "source_refs",
+    "transform_refs",
+    "error_refs",
+    "handoff_target",
+    "return_status",
+    "authority_posture",
+    "institutional_effect",
+    "dormancy_entered"
+  ],
+  "properties": {
+    "activation_id": {"type": "string", "minLength": 1},
+    "participant_id": {"type": "string", "minLength": 1},
+    "activation_event": {"type": "string", "minLength": 1},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "result": {"enum": ["material_signal", "no_material_change", "failed"]},
+    "signal_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "source_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "transform_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "error_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "handoff_target": {"type": ["string", "null"]},
+    "return_status": {"const": "returned"},
+    "authority_posture": {"const": "analysis_only"},
+    "institutional_effect": {"const": "none"},
+    "dormancy_entered": {"const": true}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"result": {"const": "material_signal"}}},
+      "then": {
+        "properties": {
+          "signal_refs": {"minItems": 1},
+          "source_refs": {"minItems": 1},
+          "handoff_target": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"result": {"const": "no_material_change"}}},
+      "then": {
+        "properties": {
+          "source_refs": {"minItems": 1},
+          "signal_refs": {"maxItems": 0}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"result": {"const": "failed"}}},
+      "then": {"properties": {"error_refs": {"minItems": 1}}}
+    }
+  ]
+}

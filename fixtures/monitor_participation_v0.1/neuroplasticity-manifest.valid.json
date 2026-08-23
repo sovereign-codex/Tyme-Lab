@@ -1,0 +1,28 @@
+{
+  "monitor_id": "monitor-neuroplasticity-001",
+  "participant_id": "avot-neuroplasticity",
+  "participant_class": "avot_monitor",
+  "domain": "music-neuroplasticity",
+  "status": "candidate",
+  "host_runtime": "avot-engine",
+  "activation": {
+    "event_types": ["research_signal_observation"],
+    "schedule_fallback": null
+  },
+  "sensing_scope": {
+    "sources": ["peer_reviewed_literature", "clinical_trial_results"],
+    "queries": ["music neuroplasticity stroke", "melodic intonation therapy", "rhythmic auditory stimulation"],
+    "exclusions": ["unsupported_frequency_healing_claims"]
+  },
+  "interpretive_scope": {
+    "objectives": ["harmonic-neuroplasticity-research"],
+    "repositories": ["Tyme-Lab"],
+    "notion_surfaces": ["CIT PILOT 01 — AVOT Monitor Council / Participation Runtime v0"]
+  },
+  "authority_posture": "analysis_only",
+  "permitted_actions": ["observe", "normalize", "compare", "interpret", "recommend", "return_evidence"],
+  "prohibited_actions": ["create_work", "authorize_execution", "merge", "promote_canon", "mutate_institutional_memory"],
+  "signal_contract": "SIGNAL_PACKET_v0.1",
+  "return_contract": "EVIDENCE_RETURN_v0.1",
+  "dormancy_condition": "signal returned or no material change"
+}
