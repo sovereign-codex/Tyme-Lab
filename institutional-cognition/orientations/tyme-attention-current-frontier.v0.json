@@ -1,31 +1,36 @@
 {
-  "orientation_id": "tao-2026-08-23-current-frontier-001",
+  "orientation_id": "tao-2026-08-23-current-frontier-002",
+  "observed_at": "2026-08-23T11:25:00-07:00",
+  "repository_ref": "sovereign-codex/Tyme-Lab:pilot/tyme-cognition-01-living-branch-orientation",
+  "repository_head_sha": "4bc60c4bfb1964d5f3c5854cd004abbe7dd25988",
+  "supersedes_orientation_id": "tao-2026-08-23-current-frontier-001",
   "current_frontier": "TYME Cognition Pilot 01 — Living Branch Orientation / PR #21",
-  "why_now": "The institution has multiple valid branches and workflows, but the immediate need is to prove TYME can compress that complexity into one steward-facing action before any additional execution occurs.",
+  "why_now": "The institution has multiple valid branches and workflows, but the current stewardship obligation is to accept or reject the attention-orientation contract before any authority-consuming execution resumes.",
   "current_state": "NOW",
   "current_stewardship": [
     "TYME: continuity-and-attention orientation",
-    "human:sovereign-codex: one-shot authority steward when the activation gate is reached"
+    "human:sovereign-codex: review steward now; one-shot authority steward only when the HB-04B activation gate becomes current"
   ],
   "blocked_by": [
-    "attention orientation must be established as a reliable cognition output before HB-04B execution is resumed"
+    "attention orientation v0.1 must be accepted as coherent before HB-04B is surfaced as the single executable steward gate"
   ],
-  "next_gate": "confirm this attention packet is coherent and then surface HB-04B as the single eligible one-shot human activation gate",
+  "next_gate": "accept TYME Attention Orientation v0.1 as the current attention state; after acceptance, re-evaluate whether HB-04B is the sole eligible human execution gate",
   "waiting_dependents": [
     "PR #20 — HB-05 Return Preservation + TRACE Verification"
   ],
-  "human_action_required": false,
-  "human_action_reason": "No workflow or authority-consuming action is required to establish the present attention orientation. Human action becomes required only when TYME surfaces the prepared HB-04B one-shot activation as the single valid next gate.",
+  "human_review_required_now": true,
+  "human_execution_required_now": false,
+  "next_human_gate": "HB-04B one-shot workflow_dispatch for activation-hb04-frontier-containment-001, only after TYME re-evaluation surfaces it as the sole eligible execution gate",
   "do_not_touch": [
-    "do not run HB-04B yet",
+    "do not run HB-04B before this attention state is accepted and re-evaluated",
     "do not run HB-05 before HB-04B produces qualifying return evidence",
     "do not promote or merge PR #12 solely to reduce branch count",
     "do not open a new branch, workflow, or agent role to solve the current attention problem"
   ],
   "revisit_when": [
-    "the attention orientation contract is reviewed and accepted",
-    "new evidence materially changes the open PR or branch dependency state",
-    "HB-04B becomes the only unresolved eligible steward gate"
+    "this v0.1 attention packet is accepted or rejected",
+    "repository or workflow evidence materially changes the dependency state",
+    "HB-04B becomes the only unresolved eligible human execution gate"
   ],
   "evidence_refs": [
     "docs/architecture/TYME_ATTENTION_STEWARDSHIP_PROTOCOL_V0.md",
@@ -36,6 +41,32 @@
     "branch:pilot/hb-04b-invocation-start-consume",
     "branch:repair/hb-04b-activation-gate-diagnostics"
   ],
-  "confidence": "known",
-  "one_current_steward_action": "Hold all workflow execution and review TYME Attention Orientation v0 as the current frontier; no other steward action is required yet."
+  "claims": [
+    {
+      "claim": "PR #21 is the active cognition implementation surface and remains open, mergeable, and draft at the observed snapshot.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["PR #21 metadata at head 4bc60c4bfb1964d5f3c5854cd004abbe7dd25988"]
+    },
+    {
+      "claim": "HB-04B remains a bud blocked at activation evidence, and its next execution gate requires an authorized human steward.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["institutional-cognition/returns/hb-04b-office-branch-health.v0.json"]
+    },
+    {
+      "claim": "PR #20 should remain waiting because it consumes successful HB-04B return evidence as its source.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["PR #20 — HB-05 Return Preservation + TRACE Verification"]
+    },
+    {
+      "claim": "PR #12 should remain held unless an explicit dependency requires it.",
+      "epistemic_posture": "inferred",
+      "evidence_refs": ["PR #12 — Architecture: Participant Activation v0", "TYME Attention Stewardship Protocol v0 anti-proliferation rule"]
+    },
+    {
+      "claim": "No workflow execution is required to complete the present coherence review.",
+      "epistemic_posture": "known",
+      "evidence_refs": ["TYME Attention Stewardship Protocol v0", "current packet review result"]
+    }
+  ],
+  "one_current_steward_action": "Review and accept or reject TYME Attention Orientation v0.1; do not run any workflow yet."
 }
