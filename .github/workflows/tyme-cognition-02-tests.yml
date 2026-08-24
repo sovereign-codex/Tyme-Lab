@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "schemas/tyme-work-surface-orientation.v0.schema.json"
+      - "schemas/tyme-attention-orientation.v0.schema.json"
+      - "schemas/coherence-event.v0.schema.json"
+      - "validators/tyme_work_surface_orientation_v0.py"
       - "fixtures/tyme_work_surface_orientation_v0/**"
       - "tests/test_tyme_work_surface_orientation_v0.py"
       - ".github/workflows/tyme-cognition-02-tests.yml"
