@@ -44,12 +44,11 @@ Every active frontier should reduce to one machine-readable packet containing:
 - `blocked_by`
 - `next_gate`
 - `waiting_dependents`
-- `human_action_required`
-- `human_action_reason`
+- separate human review and execution gates
 - `do_not_touch`
 - `revisit_when`
 - `evidence_refs`
-- `confidence`
+- claim-level epistemic posture
 
 Primary output rule:
 
@@ -156,13 +155,13 @@ The institution becomes healthier when:
 - autonomy increases only where authority and evidence contracts are strong enough;
 - the steward sees fewer choices, not more, as the institution grows.
 
-## Current application
+## Current application — Pilot 02
 
-- **NOW:** establish attention orientation as a reliable TYME cognition output.
-- **NEXT:** HB-04B one-shot activation only after TYME identifies it as the single valid steward gate.
-- **WAITING:** HB-05 preservation + TRACE verification.
-- **HOLD:** older participant-activation and heartbeat branches unless a dependency explicitly requires them.
-- **DO NOT SPAWN:** additional workflows, branches, or agent roles merely to accelerate the current sequence.
+- **NOW:** validate work-surface discovery and comparative attention against the live institutional field.
+- **NEXT:** add bounded fixtures and tests only after the multi-surface orientation contract is reviewed.
+- **WAITING:** event-driven reorientation until a meaningful institutional state change is observed.
+- **HOLD:** stale lineage branches unless Pilot 02 demonstrates a concrete inheritance dependency.
+- **DO NOT SPAWN:** new persistent agents or autonomous execution merely to accelerate cognition testing.
 
 ## Compression
 
