@@ -1,0 +1,43 @@
+{
+  "orientation_id": "tao2-no-human-action-001",
+  "observed_at": "2026-08-24T03:08:00Z",
+  "repository_ref": "sovereign-codex/Tyme-Lab",
+  "repository_head_sha": "0e58c79f50e2b36a3c121c889813f1abc8f127f0",
+  "institutional_snapshot_refs": ["github:Tyme-Lab/main@0e58c79f50e2b36a3c121c889813f1abc8f127f0"],
+  "supersedes_orientation_id": "tao2-review-required-001",
+  "candidates": [
+    {
+      "work_surface_id": "ws-observe-only",
+      "title": "Observe external institutional return",
+      "lineage_refs": ["notion:Office-return-surface"],
+      "current_state": "observation_only",
+      "current_stewardship": ["TYME"],
+      "evidence_refs": ["notion:Office-return-surface"],
+      "blocked_by": [],
+      "authority_boundary": "observation and reorientation only",
+      "prohibited_transitions": ["execute", "merge", "self_authorize"],
+      "next_gate": "continue observation until material evidence changes",
+      "next_human_gate": "none",
+      "attention_state": "NOW",
+      "why_this_state": "Observation is the only valid current stewardship action and requires no human judgment or execution.",
+      "comparative_priority_basis": "Other candidate surfaces remain waiting or dormant; observation alone best preserves sequence.",
+      "change_since_prior_orientation": {
+        "status": "no_material_change",
+        "rationale": "No material event has changed eligibility or authority.",
+        "evidence_refs": ["notion:Office-return-surface"]
+      },
+      "human_review_required_now": false,
+      "human_execution_required_now": false,
+      "claims": [
+        {
+          "claim": "No human action is required in this snapshot.",
+          "epistemic_posture": "known",
+          "evidence_refs": ["notion:Office-return-surface"]
+        }
+      ]
+    }
+  ],
+  "one_current_steward_action": "Continue read-only observation and reorient only if material evidence changes.",
+  "no_human_action_reason": "The sole NOW surface requires observation only and does not require human judgment or execution.",
+  "revisit_when": ["material evidence changes"]
+}
