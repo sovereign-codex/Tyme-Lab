@@ -1,0 +1,79 @@
+{
+  "orientation_id": "tao2-review-required-001",
+  "observed_at": "2026-08-24T03:06:00Z",
+  "repository_ref": "sovereign-codex/Tyme-Lab",
+  "repository_head_sha": "0e58c79f50e2b36a3c121c889813f1abc8f127f0",
+  "institutional_snapshot_refs": [
+    "github:Tyme-Lab/main@0e58c79f50e2b36a3c121c889813f1abc8f127f0",
+    "notion:TYME-Cognition-Pilot-02"
+  ],
+  "supersedes_orientation_id": null,
+  "candidates": [
+    {
+      "work_surface_id": "ws-pilot-02",
+      "title": "TYME Cognition Pilot 02 field orientation",
+      "lineage_refs": ["notion:TYME-Cognition-Pilot-02", "github:PR-21-harvest"],
+      "current_state": "schema_review_complete",
+      "current_stewardship": ["TYME", "human:steward"],
+      "evidence_refs": ["github:branch/pilot/tyme-cognition-02-work-surface-discovery"],
+      "blocked_by": [],
+      "authority_boundary": "read-oriented cognition and review only; no execution authority",
+      "prohibited_transitions": ["merge", "execute", "self_authorize", "canon_promote"],
+      "next_gate": "human review of fixtures and validation contract",
+      "next_human_gate": "accept or revise validation layer",
+      "attention_state": "NOW",
+      "why_this_state": "The validation layer is the immediate dependency before any discovery adapter is allowed.",
+      "comparative_priority_basis": "It reduces uncertainty for every later Pilot 02 execution path and is not waiting on another institutional event.",
+      "change_since_prior_orientation": {
+        "status": "material_change",
+        "rationale": "The five-file schema surface now exists and has completed boundary repair.",
+        "evidence_refs": ["github:branch/pilot/tyme-cognition-02-work-surface-discovery"]
+      },
+      "human_review_required_now": true,
+      "human_execution_required_now": false,
+      "claims": [
+        {
+          "claim": "The Pilot 02 schema surface is ready for fixture and validation review.",
+          "epistemic_posture": "known",
+          "evidence_refs": ["github:branch/pilot/tyme-cognition-02-work-surface-discovery"]
+        }
+      ]
+    },
+    {
+      "work_surface_id": "ws-branch-retirement",
+      "title": "Fabricator branch-retirement capability probe",
+      "lineage_refs": ["notion:FPP-BRANCH-RETIRE-PROBE-001"],
+      "current_state": "awaiting_return",
+      "current_stewardship": ["AVOT-Fabricator", "Office"],
+      "evidence_refs": ["notion:FPP-BRANCH-RETIRE-PROBE-001"],
+      "blocked_by": ["Fabricator execution return"],
+      "authority_boundary": "observe return only; no additional branch deletion authorized",
+      "prohibited_transitions": ["delete_additional_branch", "broaden_authority"],
+      "next_gate": "observe and verify Fabricator return",
+      "next_human_gate": "none until return requires judgment",
+      "attention_state": "WAITING",
+      "why_this_state": "The next valid transition depends on evidence not yet returned.",
+      "comparative_priority_basis": "Waiting cannot outrank an unblocked validation gate.",
+      "change_since_prior_orientation": {
+        "status": "no_material_change",
+        "rationale": "No new execution return is represented in this snapshot.",
+        "evidence_refs": ["notion:FPP-BRANCH-RETIRE-PROBE-001"]
+      },
+      "human_review_required_now": false,
+      "human_execution_required_now": false,
+      "claims": [
+        {
+          "claim": "The branch-retirement probe remains waiting on a runtime return.",
+          "epistemic_posture": "known",
+          "evidence_refs": ["notion:FPP-BRANCH-RETIRE-PROBE-001"]
+        }
+      ]
+    }
+  ],
+  "one_current_steward_action": "Review and accept or revise the Pilot 02 validation layer; do not add a discovery adapter yet.",
+  "no_human_action_reason": "",
+  "revisit_when": [
+    "validation layer is accepted or revised",
+    "a Fabricator return materially changes the field"
+  ]
+}
