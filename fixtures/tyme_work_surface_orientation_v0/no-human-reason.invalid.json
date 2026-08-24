@@ -1,0 +1,33 @@
+{
+  "orientation_id": "tao2-no-human-reason-invalid",
+  "observed_at": "2026-08-24T03:10:00Z",
+  "repository_ref": "sovereign-codex/Tyme-Lab",
+  "repository_head_sha": "0e58c79f50e2b36a3c121c889813f1abc8f127f0",
+  "institutional_snapshot_refs": ["github:Tyme-Lab/main@0e58c79f50e2b36a3c121c889813f1abc8f127f0"],
+  "supersedes_orientation_id": "tao2-review-required-001",
+  "candidates": [
+    {
+      "work_surface_id": "ws-observe-only",
+      "title": "Observe-only current frontier",
+      "lineage_refs": ["lineage:observe-only"],
+      "current_state": "observing",
+      "current_stewardship": ["TYME"],
+      "evidence_refs": ["evidence:observe-only"],
+      "blocked_by": [],
+      "authority_boundary": "read and observe only",
+      "prohibited_transitions": ["execute", "self_authorize"],
+      "next_gate": "continue observation until material change",
+      "next_human_gate": "none",
+      "attention_state": "NOW",
+      "why_this_state": "This is the current frontier but it requires no human judgment yet.",
+      "comparative_priority_basis": "No other surface has an actionable human gate.",
+      "change_since_prior_orientation": {"status": "no_material_change", "rationale": "No qualifying event has occurred.", "evidence_refs": ["evidence:observe-only"]},
+      "human_review_required_now": false,
+      "human_execution_required_now": false,
+      "claims": [{"claim": "No human action is required at this time.", "epistemic_posture": "known", "evidence_refs": ["evidence:observe-only"]}]
+    }
+  ],
+  "one_current_steward_action": "Continue observing within read-only authority.",
+  "no_human_action_reason": "",
+  "revisit_when": ["material state changes"]
+}
