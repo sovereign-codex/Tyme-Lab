@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/living-branch-orientation.v0.schema.json",
+  "title": "Living Branch Orientation v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "lineage_id",
+    "state",
+    "origin_refs",
+    "current_stewards",
+    "participants",
+    "contributors",
+    "evidence_refs",
+    "authority_boundary",
+    "next_valid_transition",
+    "return_destination",
+    "coherence_event_refs"
+  ],
+  "properties": {
+    "lineage_id": {"type": "string", "minLength": 1},
+    "parent_lineage_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "default": []},
+    "state": {"enum": ["seed", "bud", "active_branch", "field_validation", "fruit", "graft", "dormant", "pruned"]},
+    "origin_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "current_stewards": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "participants": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "contributors": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "authority_boundary": {"type": "string", "minLength": 1},
+    "next_valid_transition": {"type": "string", "minLength": 1},
+    "return_destination": {"type": "string", "minLength": 1},
+    "coherence_event_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "known": {"type": "array", "items": {"type": "string", "minLength": 1}, "default": []},
+    "inferred": {"type": "array", "items": {"type": "string", "minLength": 1}, "default": []},
+    "unresolved": {"type": "array", "items": {"type": "string", "minLength": 1}, "default": []},
+    "prohibited_transitions": {"type": "array", "items": {"type": "string", "minLength": 1}, "default": []}
+  }
+}
