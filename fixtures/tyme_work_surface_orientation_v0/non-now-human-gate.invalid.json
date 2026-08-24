@@ -1,0 +1,53 @@
+{
+  "orientation_id": "tao2-non-now-human-gate-invalid",
+  "observed_at": "2026-08-24T03:09:00Z",
+  "repository_ref": "sovereign-codex/Tyme-Lab",
+  "repository_head_sha": "0e58c79f50e2b36a3c121c889813f1abc8f127f0",
+  "institutional_snapshot_refs": ["github:Tyme-Lab/main@0e58c79f50e2b36a3c121c889813f1abc8f127f0"],
+  "supersedes_orientation_id": null,
+  "candidates": [
+    {
+      "work_surface_id": "ws-now",
+      "title": "Valid NOW surface",
+      "lineage_refs": ["lineage:now"],
+      "current_state": "reviewable",
+      "current_stewardship": ["TYME", "human:steward"],
+      "evidence_refs": ["evidence:now"],
+      "blocked_by": [],
+      "authority_boundary": "review only",
+      "prohibited_transitions": ["execute"],
+      "next_gate": "review",
+      "next_human_gate": "review",
+      "attention_state": "NOW",
+      "why_this_state": "This is the only current review gate.",
+      "comparative_priority_basis": "It is unblocked and reduces uncertainty.",
+      "change_since_prior_orientation": {"status": "material_change", "rationale": "New review surface exists.", "evidence_refs": ["evidence:now"]},
+      "human_review_required_now": true,
+      "human_execution_required_now": false,
+      "claims": [{"claim": "Review is required now.", "epistemic_posture": "known", "evidence_refs": ["evidence:now"]}]
+    },
+    {
+      "work_surface_id": "ws-waiting",
+      "title": "Waiting surface",
+      "lineage_refs": ["lineage:waiting"],
+      "current_state": "awaiting_return",
+      "current_stewardship": ["Office"],
+      "evidence_refs": ["evidence:waiting"],
+      "blocked_by": ["runtime return"],
+      "authority_boundary": "observe only",
+      "prohibited_transitions": ["execute", "broaden_authority"],
+      "next_gate": "observe return",
+      "next_human_gate": "none until return",
+      "attention_state": "WAITING",
+      "why_this_state": "It is blocked on external evidence.",
+      "comparative_priority_basis": "Blocked work does not outrank the unblocked review gate.",
+      "change_since_prior_orientation": {"status": "no_material_change", "rationale": "Still waiting.", "evidence_refs": ["evidence:waiting"]},
+      "human_review_required_now": true,
+      "human_execution_required_now": false,
+      "claims": [{"claim": "The surface remains waiting.", "epistemic_posture": "known", "evidence_refs": ["evidence:waiting"]}]
+    }
+  ],
+  "one_current_steward_action": "Review the NOW surface.",
+  "no_human_action_reason": "",
+  "revisit_when": ["runtime return arrives"]
+}
