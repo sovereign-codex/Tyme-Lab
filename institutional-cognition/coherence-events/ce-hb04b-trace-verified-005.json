@@ -1,0 +1,49 @@
+{
+  "schema": "coherence-event.v0",
+  "event_id": "ce-hb04b-trace-verified-005",
+  "observed_at": "2026-08-24T01:04:11Z",
+  "lineage_id": "hb-04b-frontier-containment",
+  "parent_event": "ce-hb04b-field-validation-004",
+  "event_type": "evidence_verification",
+  "claim": "HB-05 preserved the exact HB-04B evidence payloads in a workflow artifact bundle and TRACE verified the bounded execution chain while leaving semantic significance and integration undecided.",
+  "evidence_refs": [
+    "github-actions:run/32677238430",
+    "github-actions:artifact/9503046059",
+    "github-actions:artifact/9503046230",
+    "github-actions:source-run/32641111846"
+  ],
+  "epistemic_state": {
+    "verified": [
+      "one_shot_consumed",
+      "runtime_started",
+      "runtime_commit_pinned",
+      "network_namespace_disabled",
+      "source_run_bound_by_consumption_record",
+      "source_artifacts_bound_to_single_run_download"
+    ],
+    "validated_self_report_not_independently_observed": [
+      "return_status:returned",
+      "authority_posture:analysis_only",
+      "institutional_effect:none",
+      "dormancy_entered:true",
+      "runtime_result:material_signal"
+    ],
+    "undecided": [
+      "semantic_significance",
+      "graph_mutation",
+      "continuum_write",
+      "integration"
+    ]
+  },
+  "authority": {
+    "new_authority_granted": false,
+    "graph_mutation_authorized": false,
+    "continuum_write_authorized": false,
+    "integration_authorized": false
+  },
+  "state_before": "field_evidence_returned_pending_verification",
+  "state_after": "trace_verified_pending_semantic_significance",
+  "next_valid_transition": "semantic_significance_review",
+  "return_destination": "Knowledge Curator / TYME Cognition",
+  "append_only": true
+}
