@@ -1,0 +1,76 @@
+{
+  "schema": "institutional-inheritance-pattern.v0",
+  "pattern_id": "governed-heartbeat-pattern-v0",
+  "title": "Governed Heartbeat Pattern v0",
+  "status": "promotion_candidate",
+  "derived_from": {
+    "hb04b_source_run_id": "32641111846",
+    "hb05_verification_run_id": "32677238430",
+    "hb05_trace_artifact": "hb-05-trace-verification-32641111846",
+    "hb05_archivist_artifact": "hb-05-archivist-preservation-32641111846"
+  },
+  "purpose": "Provide a reusable institutional lifecycle for bounded execution that preserves human authority, provenance, evidence return, replay resistance, epistemic separation, and a required semantic-significance gate before any later integration.",
+  "required_sequence": [
+    "orient",
+    "bind work and participant",
+    "grant bounded one-shot authority",
+    "explicit human verification",
+    "execute pinned runtime",
+    "preserve process-start evidence",
+    "preserve runtime return",
+    "reject replay while durable consumption evidence remains observable",
+    "archive exact source payloads with hashes",
+    "TRACE-verify execution lineage",
+    "separate verified facts from self-reported consequence claims",
+    "hold integration pending an explicit semantic-significance decision",
+    "integrate only under a separate authorization gate"
+  ],
+  "invariants": [
+    "A successful workflow is evidence of execution, not automatic institutional truth.",
+    "Runtime consequence claims must not be promoted as independently observed facts without independent evidence.",
+    "One-shot authority must not be silently renewed after consumption.",
+    "Replay attempts must fail closed while authoritative consumption evidence is available; durable replay resistance requires preservation of consumed state outside ephemeral workflow history.",
+    "Evidence preservation must retain exact source payloads or accurately state its durability limits.",
+    "TRACE verification does not itself decide semantic significance.",
+    "Semantic significance must be decided before graph, Continuum, Canon, institutional-memory integration, external communication, or any other consequence-bearing promotion.",
+    "Human attention is required for meaning, authority, and irreversible or constitutional transitions—not routine evidence handling."
+  ],
+  "proven_capabilities": [
+    "explicit human gate",
+    "bounded one-shot authority consumption",
+    "replay rejection against observable GitHub workflow-run and job history",
+    "pinned runtime provenance",
+    "network-disabled execution boundary for the demonstrated heartbeat",
+    "evidence return",
+    "Archivist-ready exact-payload preservation with hashes",
+    "TRACE verification",
+    "epistemic claim separation",
+    "repair-review-promotion loop"
+  ],
+  "required_but_not_yet_proven_by_hb04b_hb05": [
+    "semantic-significance decision before integration",
+    "separate authorization for any graph, Continuum, Canon, institutional-memory, or external consequence",
+    "durable consumed-state ledger independent of GitHub workflow-run and job retention"
+  ],
+  "known_limits": [
+    "The originating frontier-containment payload was a synthetic/pre-resolved test signal and is not promoted by this pattern as fresh external truth.",
+    "GitHub workflow artifacts are time-limited preservation surfaces until institutional Archivist ingestion occurs.",
+    "HB-04B replay rejection depends on discoverable GitHub workflow-run and successful consume-job history; if that history is deleted or becomes unavailable, the current guard may no longer prove prior consumption. A durable institutional consumed-state ledger is therefore required before claiming replay resistance independent of GitHub retention.",
+    "End-to-end content provenance for the original runtime return is transport-bound rather than cryptographically embedded in the runtime payload.",
+    "The demonstrated heartbeat used a network-disabled runtime boundary; this inheritance does not generalize that fact into permission for networked execution.",
+    "This pattern does not itself authorize graph mutation, Continuum writes, Canon promotion, institutional-memory integration, external communication, authority expansion, or any other consequence-bearing action."
+  ],
+  "promotion_scope": {
+    "inherit_pattern": true,
+    "inherit_external_frontier_claim": false,
+    "runtime_change": false,
+    "authority_change": false,
+    "graph_mutation": false,
+    "continuum_write": false,
+    "institutional_memory_integration": false,
+    "canon_promotion": false,
+    "external_communication": false
+  },
+  "adoption_rule": "A future workflow may claim conformance to Governed Heartbeat Pattern v0 only if it satisfies the full required_sequence and invariants, preserves or explicitly strengthens every known-limit boundary, retains exact-payload/hash evidence preservation, does not infer network or consequence authority from this pattern, and keeps graph/Continuum/Canon/institutional-memory integration and external communication disabled until a separately evidenced semantic-significance decision and a separate explicit authorization gate are both satisfied.",
+  "next_gate": "promotion review into institutional inheritance"
+}
