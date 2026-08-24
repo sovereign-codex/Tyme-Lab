@@ -1,0 +1,138 @@
+{
+  "schema": "branch-retirement-inventory.v0",
+  "repository": "sovereign-codex/Tyme-Lab",
+  "observed_at": "2026-08-24T01:26:00Z",
+  "policy": {
+    "principle": "pruning must never mean forgetting",
+    "decision_owner": "TYME",
+    "execution_owner": "AVOT-Fabricator or equivalent governed GitHub executor",
+    "evidence_owner": "Archivist/TRACE",
+    "separate_transitions": [
+      "close_pull_request",
+      "delete_branch"
+    ],
+    "delete_branch_only_when": [
+      "branch has zero unique commits relative to current main",
+      "no active or unresolved pull request depends on the branch",
+      "useful work is demonstrably present on main or otherwise preserved",
+      "retirement action is explicitly authorized and evidenced"
+    ]
+  },
+  "branches": [
+    {
+      "branch": "architecture/work-promotion-v0",
+      "classification": "MERGED_SAFE_TO_RETIRE",
+      "ahead_by": 0,
+      "behind_by": 83,
+      "action": "RETIRE_BRANCH_AFTER_EXECUTION_AUTHORIZATION"
+    },
+    {
+      "branch": "pilot/first-heartbeat-signal-return-v0-1",
+      "classification": "MERGED_SAFE_TO_RETIRE",
+      "ahead_by": 0,
+      "behind_by": 76,
+      "action": "RETIRE_BRANCH_AFTER_EXECUTION_AUTHORIZATION"
+    },
+    {
+      "branch": "pilot/hb-02-governed-admission-work-promotion",
+      "classification": "MERGED_SAFE_TO_RETIRE",
+      "ahead_by": 0,
+      "behind_by": 64,
+      "action": "RETIRE_BRANCH_AFTER_EXECUTION_AUTHORIZATION"
+    },
+    {
+      "branch": "pilot/hb-03-participant-binding-v0",
+      "classification": "MERGED_SAFE_TO_RETIRE",
+      "ahead_by": 0,
+      "behind_by": 38,
+      "action": "RETIRE_BRANCH_AFTER_EXECUTION_AUTHORIZATION"
+    },
+    {
+      "branch": "pilot/hb-04-runtime-activation-envelope-v0",
+      "classification": "MERGED_SAFE_TO_RETIRE",
+      "ahead_by": 0,
+      "behind_by": 26,
+      "action": "RETIRE_BRANCH_AFTER_EXECUTION_AUTHORIZATION"
+    },
+    {
+      "branch": "pilot/hb-04b-invocation-start-consume",
+      "classification": "MERGED_SAFE_TO_RETIRE",
+      "ahead_by": 0,
+      "behind_by": 13,
+      "action": "RETIRE_BRANCH_AFTER_EXECUTION_AUTHORIZATION"
+    },
+    {
+      "branch": "repair/hb-04b-activation-gate-diagnostics",
+      "classification": "MERGED_SAFE_TO_RETIRE",
+      "ahead_by": 0,
+      "behind_by": 11,
+      "action": "RETIRE_BRANCH_AFTER_EXECUTION_AUTHORIZATION"
+    },
+    {
+      "branch": "pilot/hb-05-return-preserve-trace",
+      "classification": "MERGED_SAFE_TO_RETIRE",
+      "ahead_by": 0,
+      "behind_by": 4,
+      "action": "RETIRE_BRANCH_AFTER_EXECUTION_AUTHORIZATION"
+    },
+    {
+      "branch": "repair/hb-05-confirmation-choice",
+      "classification": "MERGED_SAFE_TO_RETIRE",
+      "ahead_by": 0,
+      "behind_by": 1,
+      "action": "RETIRE_BRANCH_AFTER_EXECUTION_AUTHORIZATION"
+    },
+    {
+      "branch": "architecture/participant-activation-v0",
+      "classification": "SUPERSEDED_NEEDS_HARVEST_REVIEW",
+      "ahead_by": 13,
+      "behind_by": 83,
+      "associated_open_pr": 12,
+      "action": "COMPARE_WITH_CANONICAL_HB03_PLUS_RUNTIME_WORK_BEFORE_CLOSE_OR_RETIRE"
+    },
+    {
+      "branch": "participant-activation-monitor-contract-v0",
+      "classification": "SUPERSEDED_NEEDS_HARVEST_REVIEW",
+      "ahead_by": 19,
+      "behind_by": 83,
+      "action": "HARVEST_UNIQUE_MONITOR_PARTICIPATION_CONTRACTS_BEFORE_RETIREMENT"
+    },
+    {
+      "branch": "pilot/tyme-cognition-01-living-branch-orientation",
+      "classification": "ACTIVE_HARVEST_SOURCE",
+      "ahead_by": 23,
+      "behind_by": 10,
+      "associated_open_pr": 21,
+      "action": "EXTRACT_PROVEN_INHERITANCE_THEN_RECONCILE_OR_CLOSE_PR"
+    },
+    {
+      "branch": "promotion/governed-heartbeat-pattern-v0",
+      "classification": "ACTIVE_PROMOTION",
+      "associated_open_pr": 23,
+      "action": "DO_NOT_TOUCH_PENDING_REVIEW"
+    },
+    {
+      "branch": "governance/branch-retirement-composting-v0",
+      "classification": "ACTIVE_GOVERNANCE",
+      "action": "DEFINE_AND_REVIEW_RETIREMENT_CONTRACT"
+    },
+    {
+      "branch": "main",
+      "classification": "CANONICAL_TRUNK",
+      "action": "DO_NOT_RETIRE"
+    }
+  ],
+  "first_retirement_cohort": [
+    "architecture/work-promotion-v0",
+    "pilot/first-heartbeat-signal-return-v0-1",
+    "pilot/hb-02-governed-admission-work-promotion",
+    "pilot/hb-03-participant-binding-v0",
+    "pilot/hb-04-runtime-activation-envelope-v0",
+    "pilot/hb-04b-invocation-start-consume",
+    "repair/hb-04b-activation-gate-diagnostics",
+    "pilot/hb-05-return-preserve-trace",
+    "repair/hb-05-confirmation-choice"
+  ],
+  "execution_state": "INVENTORIED_NOT_AUTHORIZED_FOR_DELETION",
+  "next_gate": "review retirement inventory, then produce Fabricator retirement packets for first cohort"
+}
