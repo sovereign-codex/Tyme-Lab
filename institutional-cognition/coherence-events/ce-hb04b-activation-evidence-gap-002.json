@@ -1,0 +1,26 @@
+{
+  "event_id": "ce-hb04b-activation-evidence-gap-002",
+  "lineage_id": "hb-04b-frontier-containment",
+  "parent_event_refs": [
+    "institutional-cognition/coherence-events/ce-hb04b-orientation-001.json"
+  ],
+  "event_type": "observation",
+  "participant_refs": [
+    "runtime:avot-engine/monitor-runtime-v0"
+  ],
+  "contributor_refs": [],
+  "steward_refs": [
+    "human:sovereign-codex"
+  ],
+  "state_before": "bud",
+  "state_after": "bud",
+  "authority_posture": "analysis_only; no autonomous activation consumption",
+  "evidence_refs": [
+    "institutional-activations/prepared/activation-hb04-frontier-containment-001.json",
+    ".github/workflows/hb-04b-invocation-start-consume.yml",
+    "institutional-cognition/returns/hb-04b-office-branch-health.v0.json"
+  ],
+  "next_valid_transition": "authorized human steward consumes the prepared one-shot activation through a first-attempt workflow_dispatch, after which TYME may evaluate process-start and runtime-return evidence",
+  "supersedes": [],
+  "institutional_effect": "none_by_event_alone"
+}

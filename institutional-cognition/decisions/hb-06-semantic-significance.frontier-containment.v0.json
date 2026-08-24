@@ -1,0 +1,53 @@
+{
+  "schema": "hb-06-semantic-significance.v0",
+  "observed_at": "2026-08-24T01:07:00Z",
+  "lineage_id": "hb-04b-frontier-containment",
+  "source_trace_ref": "hb-05-trace-verification-32641111846",
+  "source_archivist_ref": "hb-05-archivist-preservation-32641111846",
+  "decision": {
+    "institutional_capability_significance": "high",
+    "external_signal_significance": "not_yet_independently_established",
+    "inheritance_disposition": "inherit_capability_pattern_hold_external_claim",
+    "integration_authorized": false,
+    "graph_mutation_authorized": false,
+    "continuum_write_authorized": false,
+    "canon_promotion_authorized": false
+  },
+  "rationale": {
+    "capability_pattern": [
+      "The institution successfully exercised an explicit human verification gate.",
+      "One-shot runtime authority was consumed and replay resistance remained intact.",
+      "The runtime started under a pinned commit with network namespace disabled.",
+      "Three source payloads were returned, preserved together, hashed, and TRACE-verified against a single source run.",
+      "The lifecycle preserved an epistemic distinction between verified execution facts and runtime self-reported consequence claims.",
+      "A failed mobile confirmation boundary was diagnosed, repaired through a reviewed branch, promoted, and then successfully exercised without weakening the human gate."
+    ],
+    "external_signal_limit": [
+      "The runtime consumed pre-resolved public evidence rather than performing a fresh independent observation.",
+      "The returned frontier-containment signal was produced by a synthetic monitor transform.",
+      "The runtime result 'material_signal' is a validated self-report, not independently observed institutional consequence.",
+      "Therefore the statement that frontier models exceed existing containment assumptions is not promoted as a new canonical fact by this heartbeat alone."
+    ]
+  },
+  "semantic_delta": "HB-04B/HB-05 proves a governed institutional heartbeat pattern, not the truth of the test signal itself.",
+  "inheritance_candidate": {
+    "name": "Governed Heartbeat Pattern v0",
+    "status": "candidate_for_institutional_inheritance",
+    "contains": [
+      "explicit human gate",
+      "bounded one-shot authority",
+      "replay resistance",
+      "pinned runtime provenance",
+      "evidence return",
+      "Archivist preservation",
+      "TRACE verification",
+      "epistemic claim separation",
+      "repair-review-promotion loop",
+      "semantic significance gate before integration"
+    ]
+  },
+  "external_signal_next_step": "If frontier-containment content is to become institutional inheritance, commission a fresh read/research/compare return against current public evidence and evaluate its semantic delta separately from this synthetic heartbeat.",
+  "next_valid_gate": "review Governed Heartbeat Pattern v0 for promotion into institutional inheritance; keep external frontier-containment claim in candidate state pending fresh evidence",
+  "human_attention_required_now": true,
+  "human_attention_reason": "the next judgment is whether to promote the proven governance/runtime pattern as reusable inheritance, not whether to rerun the heartbeat"
+}

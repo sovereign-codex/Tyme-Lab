@@ -1,0 +1,59 @@
+{
+  "schema": "tyme-office-branch-health.v1",
+  "observed_at": "2026-08-24T01:04:11Z",
+  "lineage_id": "hb-04b-frontier-containment",
+  "supersedes": "institutional-cognition/returns/hb-04b-office-branch-health.v0.json",
+  "branch_health": "trace_verified_pending_semantic_significance",
+  "living_tree_state": "field_validation",
+  "steward_refs": [
+    "human:sovereign-codex"
+  ],
+  "participant_refs": [
+    "runtime:avot-engine/monitor-runtime-v0"
+  ],
+  "contributor_refs": [],
+  "source_execution": {
+    "hb04b_source_run_id": "32641111846",
+    "hb04b_source_run_attempt": "1",
+    "hb04b_source_head_sha": "7c188e2e72eef8a2b22bbaf68573efaf97271658",
+    "hb05_verification_run_id": "32677238430",
+    "hb05_verification_head_sha": "feb0a9df0fd6d7f75a4f5c18dc99057ddb6f99bb"
+  },
+  "evidence_posture": {
+    "archivist_bundle": "workflow artifact bundle retains exact HB-04B consumption, process-start, and runtime-return payloads plus hashes and HB-05 records; institutional Archivist ingestion remains a later receiver action",
+    "trace_state": "TRACE_VERIFIED_PENDING_INTEGRATION",
+    "verified_execution_facts": [
+      "one_shot_consumed",
+      "runtime_started",
+      "runtime_commit_pinned",
+      "network_namespace_disabled",
+      "source_run_bound_by_consumption_record",
+      "source_artifacts_bound_to_single_run_download"
+    ],
+    "validated_runtime_return_claims": {
+      "return_status": "returned",
+      "authority_posture": "analysis_only",
+      "institutional_effect": "none",
+      "dormancy_entered": true,
+      "runtime_result": "material_signal",
+      "epistemic_posture": "validated_self_report_not_independently_observed"
+    }
+  },
+  "authority_posture": "one-shot activation remains consumed; no renewed or expanded authority; graph mutation, Continuum write, and integration are not authorized",
+  "semantic_significance_decided": false,
+  "graph_mutation_authorized": false,
+  "continuum_write_authorized": false,
+  "integration_authorized": false,
+  "unresolved_contradiction": "the static prepared activation record may still represent PREPARED_UNCONSUMED while runtime-history and preserved consumption evidence prove prior one-shot consumption; reconciliation of the static declarative surface remains distinct from execution truth",
+  "next_valid_gate": "HB-06 semantic-significance review may evaluate whether the validated returned signal should become institutional inheritance; no integration action is authorized by this packet",
+  "office_receiver": "Knowledge Curator",
+  "human_attention_required_now": true,
+  "human_attention_reason": "execution truth and evidence preservation are now sufficient; the remaining question is semantic significance, which requires stewardship judgment rather than another execution retry",
+  "do_not_touch": [
+    "HB-04B rerun",
+    "authority renewal",
+    "Codex-net graph mutation",
+    "Continuum write",
+    "automatic Canon promotion"
+  ]
+}
