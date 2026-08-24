@@ -32,35 +32,37 @@ TYME MUST NOT:
 - spawn new agents, branches, Work, or workflows to solve an attention problem unless an existing function cannot satisfy the requirement;
 - become a supreme institutional governor.
 
-## TYME Attention Orientation v0
+## Authoritative cognition packet — TYME Work Surface Orientation v0
 
-Every active frontier should reduce to one machine-readable packet containing:
+New TYME cognition producers MUST emit `schemas/tyme-work-surface-orientation.v0.schema.json`.
 
-- `orientation_id`
-- `current_frontier`
-- `why_now`
-- `current_state`
-- `current_stewardship`
-- `blocked_by`
-- `next_gate`
-- `waiting_dependents`
-- separate human review and execution gates
-- `do_not_touch`
-- `revisit_when`
-- `evidence_refs`
-- claim-level epistemic posture
+The earlier `schemas/tyme-attention-orientation.v0.schema.json` is retained only as historical lineage and MUST NOT be used to produce new orientations. It intentionally rejects new instances so its weaker single-frontier semantics cannot bypass the Pilot 02 governance boundary.
+
+Every active field orientation must preserve:
+- `orientation_id` and observation/snapshot anchors;
+- an immutable `authority_posture: non_authorizing`;
+- an immutable `institutional_effect: none`;
+- candidate work-surface identity and lineage;
+- evidence-backed current state and stewardship;
+- explicit eligibility and attention state;
+- blockers, authority boundary, prohibited transitions, and external authority references where applicable;
+- comparative priority basis;
+- change-since-prior-orientation posture with evidence for material changes;
+- claim-level epistemic posture, with evidence required for claims marked `known`;
+- separate human review and execution gates;
+- explicit revisit conditions.
 
 Primary output rule:
 
 > **ONE_CURRENT_STEWARD_ACTION**
 
-If no human action is required, TYME should state that explicitly and continue observing within its read-oriented authority.
+If no human action is required, TYME must state that explicitly and continue observing within its read-oriented authority.
 
 ## Attention states
 
-- **NOW** — the single frontier that genuinely deserves current stewardship.
+- **NOW** — the single frontier that genuinely deserves current stewardship and is structurally eligible now.
 - **NEXT** — becomes eligible when the current frontier returns qualifying evidence.
-- **WAITING** — valid work with an unmet dependency or evidence condition.
+- **WAITING** — valid work with an explicit unmet dependency or evidence condition.
 - **DORMANT** — preserved lineage not relevant to the current frontier.
 - **DO NOT TOUCH** — action would violate sequence, authority, evidence, or unnecessarily increase branching/cognitive load.
 
@@ -158,7 +160,7 @@ The institution becomes healthier when:
 ## Current application — Pilot 02
 
 - **NOW:** validate work-surface discovery and comparative attention against the live institutional field.
-- **NEXT:** add bounded fixtures and tests only after the multi-surface orientation contract is reviewed.
+- **NEXT:** add a read-only discovery adapter only after the authoritative multi-surface cognition contract clears exact-head review.
 - **WAITING:** event-driven reorientation until a meaningful institutional state change is observed.
 - **HOLD:** stale lineage branches unless Pilot 02 demonstrates a concrete inheritance dependency.
 - **DO NOT SPAWN:** new persistent agents or autonomous execution merely to accelerate cognition testing.
