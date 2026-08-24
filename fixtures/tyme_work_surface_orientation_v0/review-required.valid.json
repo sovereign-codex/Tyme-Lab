@@ -31,8 +31,8 @@
       "why_this_state": "The validation layer is the immediate dependency before any discovery adapter is allowed.",
       "comparative_priority_basis": "It reduces uncertainty for every later Pilot 02 execution path and is not waiting on another institutional event.",
       "change_since_prior_orientation": {
-        "status": "material_change",
-        "rationale": "The five-file schema surface now exists and has completed boundary repair.",
+        "status": "initial_orientation",
+        "rationale": "This packet is the first orientation in this validation lineage.",
         "evidence_refs": ["github:branch/pilot/tyme-cognition-02-work-surface-discovery"]
       },
       "human_review_required_now": true,
@@ -65,8 +65,8 @@
       "why_this_state": "The next valid transition depends on evidence not yet returned.",
       "comparative_priority_basis": "Waiting cannot outrank an unblocked validation gate.",
       "change_since_prior_orientation": {
-        "status": "no_material_change",
-        "rationale": "No new execution return is represented in this snapshot.",
+        "status": "initial_orientation",
+        "rationale": "This packet is the first orientation in this validation lineage.",
         "evidence_refs": ["notion:FPP-BRANCH-RETIRE-PROBE-001"]
       },
       "human_review_required_now": false,
@@ -80,7 +80,12 @@
       ]
     }
   ],
-  "one_current_steward_action": "Review and accept or revise the Pilot 02 validation layer; do not add a discovery adapter yet.",
+  "one_current_steward_action": {
+    "work_surface_id": "ws-pilot-02",
+    "gate": "human review of fixtures and validation contract",
+    "transition": "review",
+    "instruction": "Review and accept or revise the Pilot 02 validation layer; do not add a discovery adapter yet."
+  },
   "no_human_action_reason": "",
   "revisit_when": [
     "validation layer is accepted or revised",
