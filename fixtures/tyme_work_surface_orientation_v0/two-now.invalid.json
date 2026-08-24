@@ -1,0 +1,53 @@
+{
+  "orientation_id": "tao2-two-now-invalid",
+  "observed_at": "2026-08-24T03:08:00Z",
+  "repository_ref": "sovereign-codex/Tyme-Lab",
+  "repository_head_sha": "0e58c79f50e2b36a3c121c889813f1abc8f127f0",
+  "institutional_snapshot_refs": ["github:Tyme-Lab/main@0e58c79f50e2b36a3c121c889813f1abc8f127f0"],
+  "supersedes_orientation_id": null,
+  "candidates": [
+    {
+      "work_surface_id": "ws-a",
+      "title": "Surface A",
+      "lineage_refs": ["lineage:a"],
+      "current_state": "ready",
+      "current_stewardship": ["TYME"],
+      "evidence_refs": ["evidence:a"],
+      "blocked_by": [],
+      "authority_boundary": "read only",
+      "prohibited_transitions": ["execute"],
+      "next_gate": "review",
+      "next_human_gate": "review",
+      "attention_state": "NOW",
+      "why_this_state": "Candidate A appears current.",
+      "comparative_priority_basis": "A was selected.",
+      "change_since_prior_orientation": {"status": "initial_orientation", "rationale": "Initial.", "evidence_refs": ["evidence:a"]},
+      "human_review_required_now": true,
+      "human_execution_required_now": false,
+      "claims": [{"claim": "A is current.", "epistemic_posture": "inferred", "evidence_refs": ["evidence:a"]}]
+    },
+    {
+      "work_surface_id": "ws-b",
+      "title": "Surface B",
+      "lineage_refs": ["lineage:b"],
+      "current_state": "ready",
+      "current_stewardship": ["TYME"],
+      "evidence_refs": ["evidence:b"],
+      "blocked_by": [],
+      "authority_boundary": "read only",
+      "prohibited_transitions": ["execute"],
+      "next_gate": "review",
+      "next_human_gate": "review",
+      "attention_state": "NOW",
+      "why_this_state": "Candidate B also appears current.",
+      "comparative_priority_basis": "B was also selected.",
+      "change_since_prior_orientation": {"status": "initial_orientation", "rationale": "Initial.", "evidence_refs": ["evidence:b"]},
+      "human_review_required_now": true,
+      "human_execution_required_now": false,
+      "claims": [{"claim": "B is current.", "epistemic_posture": "inferred", "evidence_refs": ["evidence:b"]}]
+    }
+  ],
+  "one_current_steward_action": "Ambiguous",
+  "no_human_action_reason": "",
+  "revisit_when": ["priority resolves"]
+}
