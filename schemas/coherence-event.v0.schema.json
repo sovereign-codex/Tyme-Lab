@@ -16,7 +16,8 @@
     "authority_posture",
     "evidence_refs",
     "next_valid_transition",
-    "supersedes"
+    "supersedes",
+    "institutional_effect"
   ],
   "properties": {
     "event_id": {"type": "string", "minLength": 1},
