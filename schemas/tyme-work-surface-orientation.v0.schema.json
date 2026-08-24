@@ -74,9 +74,23 @@
         ]
       }
     },
-    "one_current_steward_action":{"type":"string","minLength":1},
+    "one_current_steward_action": {
+      "type":"object",
+      "additionalProperties":false,
+      "required":["work_surface_id","gate","transition","instruction"],
+      "properties": {
+        "work_surface_id":{"type":"string","minLength":1},
+        "gate":{"type":"string","minLength":1},
+        "transition":{"type":"string","minLength":1},
+        "instruction":{"type":"string","minLength":1}
+      }
+    },
     "no_human_action_reason":{"type":"string"},
     "revisit_when":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}}
   },
-  "allOf":[{"if":{"properties":{"candidates":{"contains":{"type":"object","properties":{"attention_state":{"const":"NOW"},"human_review_required_now":{"const":false},"human_execution_required_now":{"const":false}},"required":["attention_state","human_review_required_now","human_execution_required_now"]}}}},"then":{"properties":{"no_human_action_reason":{"minLength":1}}},"else":{"properties":{"no_human_action_reason":{"maxLength":0}}}}]
+  "allOf":[
+    {"if":{"properties":{"candidates":{"contains":{"type":"object","properties":{"attention_state":{"const":"NOW"},"human_review_required_now":{"const":false},"human_execution_required_now":{"const":false}},"required":["attention_state","human_review_required_now","human_execution_required_now"]}}}},"then":{"properties":{"no_human_action_reason":{"minLength":1}}},"else":{"properties":{"no_human_action_reason":{"maxLength":0}}}},
+    {"if":{"properties":{"supersedes_orientation_id":{"type":"null"}},"required":["supersedes_orientation_id"]},"then":{"properties":{"candidates":{"items":{"properties":{"change_since_prior_orientation":{"properties":{"status":{"const":"initial_orientation"}}}}}}}}},
+    {"if":{"properties":{"supersedes_orientation_id":{"type":"string"}},"required":["supersedes_orientation_id"]},"then":{"properties":{"candidates":{"items":{"properties":{"change_since_prior_orientation":{"properties":{"status":{"enum":["material_change","no_material_change","unresolved"]}}}}}}}}}
+  ]
 }
