@@ -43,7 +43,12 @@
       ]
     }
   ],
-  "one_current_steward_action": "Continue read-only observation and reorient only if material evidence changes.",
+  "one_current_steward_action": {
+    "work_surface_id": "ws-observe-only",
+    "gate": "continue observation until material evidence changes",
+    "transition": "observe",
+    "instruction": "Continue read-only observation and reorient only if material evidence changes."
+  },
   "no_human_action_reason": "The sole NOW surface requires observation only and does not require human judgment or execution.",
   "revisit_when": ["material evidence changes"]
 }
