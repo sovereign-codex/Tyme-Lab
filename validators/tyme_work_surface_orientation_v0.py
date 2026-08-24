@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, FormatChecker
+from jsonschema import Draft202012Validator, FormatChecker, ValidationError
 
 SCHEMA = Path("schemas/tyme-work-surface-orientation.v0.schema.json")
 
@@ -13,7 +13,16 @@ def load_json(path):
 def validate_orientation(instance, schema_path=SCHEMA):
     schema = load_json(schema_path)
     Draft202012Validator.check_schema(schema)
-    Draft202012Validator(schema, format_checker=FormatChecker()).validate(instance)
+    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    errors = list(validator.iter_errors(instance))
+    if errors:
+        raise errors[0]
+
+    # Defensive runtime check: date-time is a semantic boundary for chronology,
+    # so do not depend only on a consumer remembering to enable format checking.
+    checker = FormatChecker()
+    if not checker.conforms(instance["observed_at"], "date-time"):
+        raise ValidationError("observed_at must conform to JSON Schema date-time format")
 
     candidates = instance["candidates"]
     ids = [candidate["work_surface_id"] for candidate in candidates]
