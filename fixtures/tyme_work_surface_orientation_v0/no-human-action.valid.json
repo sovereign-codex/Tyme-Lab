@@ -5,6 +5,8 @@
   "repository_head_sha": "0e58c79f50e2b36a3c121c889813f1abc8f127f0",
   "institutional_snapshot_refs": ["github:Tyme-Lab/main@0e58c79f50e2b36a3c121c889813f1abc8f127f0"],
   "supersedes_orientation_id": "tao2-review-required-001",
+  "authority_posture": "non_authorizing",
+  "institutional_effect": "none",
   "candidates": [
     {
       "work_surface_id": "ws-observe-only",
@@ -14,7 +16,11 @@
       "current_stewardship": ["TYME"],
       "evidence_refs": ["notion:Office-return-surface"],
       "blocked_by": [],
-      "authority_boundary": "observation and reorientation only",
+      "eligibility_state": "eligible_now",
+      "authority_posture": "non_authorizing",
+      "institutional_effect": "none",
+      "external_authority_refs": [],
+      "authority_boundary": "observation and reorientation only; this packet cannot create authority",
       "prohibited_transitions": ["execute", "merge", "self_authorize"],
       "next_gate": "continue observation until material evidence changes",
       "next_human_gate": "none",
