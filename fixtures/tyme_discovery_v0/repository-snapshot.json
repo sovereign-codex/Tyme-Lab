@@ -1,67 +1,86 @@
 {
-  "snapshot_id": "tyme-lab-pilot03-rehearsal-001",
-  "observed_at": "2026-08-25T11:15:00Z",
+  "snapshot_id": "tyme-lab-pilot03-rehearsal-002",
+  "observed_at": "2026-08-25T11:50:00Z",
   "repository_ref": "sovereign-codex/Tyme-Lab",
-  "repository_head_sha": "8a472ff5fd7d92982cd6f3a744b3c46a26ab093b",
+  "repository_head_sha": "399b946ac85a95f480d1760ae3b6c4545d2b722b",
   "snapshot_refs": [
-    "github:Tyme-Lab/main@8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
+    "github:PR-25@399b946ac85a95f480d1760ae3b6c4545d2b722b",
+    "github:PR-25-review-5018495574"
   ],
-  "surfaces": [
+  "observations": [
     {
-      "work_surface_id": "ws-pilot-03-discovery",
+      "observation_id": "obs-p03-directive",
+      "kind": "directive",
+      "subject_ref": "pilot03-read-only-discovery",
+      "subject_type": "cognition_pilot",
       "title": "TYME Cognition Pilot 03 read-only discovery",
-      "lineage_refs": [
-        "github:Tyme-Lab/main@8a472ff5fd7d92982cd6f3a744b3c46a26ab093b",
-        "github:branch/pilot/tyme-cognition-03-read-only-discovery"
-      ],
-      "current_state": "mission_contract_seated_adapter_not_built",
-      "current_stewardship": ["TYME", "human:steward"],
-      "evidence_refs": [
-        "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
-      ],
-      "blocked_by": [],
-      "eligible": true,
-      "priority_rank": 1,
-      "priority_reason": "This is the next inherited cognition gate and its deterministic adapter is not yet implemented.",
-      "next_gate": "build and validate deterministic repository-snapshot discovery adapter",
-      "next_human_gate": "review the first adapter-produced orientation packet"
+      "state": "active",
+      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
     },
     {
-      "work_surface_id": "ws-pilot-02-inheritance",
+      "observation_id": "obs-p03-review-p1-discovery",
+      "kind": "review_finding",
+      "subject_ref": "pilot03-read-only-discovery",
+      "severity": "P1",
+      "state": "open",
+      "finding": "derive work-surface priority instead of rendering authored ranking",
+      "evidence_ref": "github:PR-25#discussion_r3852629211"
+    },
+    {
+      "observation_id": "obs-p03-review-p1-tie",
+      "kind": "review_finding",
+      "subject_ref": "pilot03-read-only-discovery",
+      "severity": "P1",
+      "state": "open",
+      "finding": "fail closed when comparative evidence cannot distinguish top candidates",
+      "evidence_ref": "github:PR-25#discussion_r3852629216"
+    },
+    {
+      "observation_id": "obs-p03-stewardship",
+      "kind": "stewardship",
+      "subject_ref": "pilot03-read-only-discovery",
+      "stewards": ["TYME", "human:steward"],
+      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
+    },
+    {
+      "observation_id": "obs-p02-merge",
+      "kind": "merge",
+      "subject_ref": "pilot02-work-surface-orientation",
+      "subject_type": "inherited_contract",
       "title": "Pilot 02 inherited cognition contract",
-      "lineage_refs": [
-        "github:PR-24",
-        "github:Tyme-Lab/main@8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
-      ],
-      "current_state": "merged_verified_inherited",
-      "current_stewardship": ["TYME", "human:steward"],
-      "evidence_refs": [
-        "github:commit/8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
-      ],
-      "blocked_by": [],
-      "eligible": false,
-      "priority_rank": 3,
-      "priority_reason": "The contract is inherited and requires no further Pilot 02 development unless new evidence reveals a defect.",
-      "next_gate": "observe inherited contract for regression evidence",
-      "next_human_gate": "none unless regression evidence appears"
+      "state": "merged_verified",
+      "evidence_ref": "github:commit/8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
     },
     {
-      "work_surface_id": "ws-live-connectors",
+      "observation_id": "obs-p02-stewardship",
+      "kind": "stewardship",
+      "subject_ref": "pilot02-work-surface-orientation",
+      "stewards": ["TYME", "human:steward"],
+      "evidence_ref": "github:commit/8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
+    },
+    {
+      "observation_id": "obs-live-directive",
+      "kind": "directive",
+      "subject_ref": "live-discovery-connectors",
+      "subject_type": "integration",
       "title": "Live GitHub and Notion discovery integration",
-      "lineage_refs": [
-        "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
-      ],
-      "current_state": "deliberately_deferred",
-      "current_stewardship": ["TYME", "Office"],
-      "evidence_refs": [
-        "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
-      ],
-      "blocked_by": ["deterministic repository-snapshot discovery adapter has not yet passed rehearsal"],
-      "eligible": false,
-      "priority_rank": 2,
-      "priority_reason": "Live observation is intentionally downstream of deterministic rehearsal so the field cannot be confused with adapter behavior.",
-      "next_gate": "Pilot 03 deterministic rehearsal passes",
-      "next_human_gate": "authorize a separately bounded read-only live integration experiment"
+      "state": "proposed",
+      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
+    },
+    {
+      "observation_id": "obs-live-gate",
+      "kind": "gate",
+      "subject_ref": "live-discovery-connectors",
+      "condition": "pilot03_deterministic_rehearsal_semantically_cleared",
+      "state": "unmet",
+      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
+    },
+    {
+      "observation_id": "obs-live-stewardship",
+      "kind": "stewardship",
+      "subject_ref": "live-discovery-connectors",
+      "stewards": ["TYME", "Office"],
+      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
     }
   ]
 }
