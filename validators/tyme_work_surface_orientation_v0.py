@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker, ValidationError
@@ -10,6 +11,18 @@ def load_json(path):
     return json.loads(Path(path).read_text())
 
 
+def _validate_rfc3339_datetime(value):
+    if not isinstance(value, str):
+        raise ValidationError("observed_at must be a string")
+    normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError as exc:
+        raise ValidationError("observed_at must be an RFC3339 date-time") from exc
+    if parsed.tzinfo is None:
+        raise ValidationError("observed_at must include a timezone offset or Z")
+
+
 def validate_orientation(instance, schema_path=SCHEMA):
     schema = load_json(schema_path)
     Draft202012Validator.check_schema(schema)
@@ -18,11 +31,9 @@ def validate_orientation(instance, schema_path=SCHEMA):
     if errors:
         raise errors[0]
 
-    # Defensive runtime check: date-time is a semantic boundary for chronology,
-    # so do not depend only on a consumer remembering to enable format checking.
-    checker = FormatChecker()
-    if not checker.conforms(instance["observed_at"], "date-time"):
-        raise ValidationError("observed_at must conform to JSON Schema date-time format")
+    # Chronology is an institutional semantic boundary. Enforce it explicitly
+    # rather than relying on optional JSON Schema format behavior.
+    _validate_rfc3339_datetime(instance["observed_at"])
 
     candidates = instance["candidates"]
     ids = [candidate["work_surface_id"] for candidate in candidates]
