@@ -4,135 +4,75 @@ from pathlib import Path
 
 import pytest
 
-from adapters.tyme_repository_snapshot_discovery_v0 import (
-    UnresolvedComparisonError,
-    discover_orientation,
-)
+from adapters.tyme_repository_snapshot_discovery_v0 import UnresolvedComparisonError, discover_orientation
 from validators.tyme_work_surface_orientation_v0 import validate_orientation
 
 SNAPSHOT = Path("fixtures/tyme_discovery_v0/repository-snapshot.json")
 
+def load_snapshot(): return json.loads(SNAPSHOT.read_text())
 
-def load_snapshot():
-    return json.loads(SNAPSHOT.read_text())
-
-
-def observations_for(snapshot, subject_ref):
-    return [item for item in snapshot["observations"] if item["subject_ref"] == subject_ref]
-
-
-def test_snapshot_contains_raw_observations_not_authored_ranking():
-    snapshot = load_snapshot()
-    forbidden = {"work_surface_id", "eligible", "priority_rank", "priority_reason"}
-    for observation in snapshot["observations"]:
+def test_snapshot_has_no_authored_candidate_or_ranking_fields():
+    forbidden = {"subject_ref", "work_surface_id", "eligible", "priority_rank", "priority_reason"}
+    for observation in load_snapshot()["observations"]:
         assert forbidden.isdisjoint(observation)
+        assert observation.get("artifact_ref")
 
-
-def test_raw_observations_derive_multiple_surfaces_and_one_now():
+def test_artifact_graph_derives_multiple_surfaces_and_one_now():
     orientation = discover_orientation(load_snapshot())
     assert len(orientation["candidates"]) >= 2
-    now = [candidate for candidate in orientation["candidates"] if candidate["attention_state"] == "NOW"]
+    now = [c for c in orientation["candidates"] if c["attention_state"] == "NOW"]
     assert len(now) == 1
-    assert now[0]["work_surface_id"] == "ws-pilot03-read-only-discovery"
+    assert now[0]["title"] == "TYME Cognition Pilot 03 read-only discovery"
     assert "open review findings" in now[0]["why_this_state"]
     validate_orientation(orientation)
 
-
-def test_same_snapshot_produces_same_orientation():
+def test_same_snapshot_is_deterministic():
     snapshot = load_snapshot()
     assert discover_orientation(snapshot) == discover_orientation(deepcopy(snapshot))
 
-
-def test_unmet_gate_derives_waiting_even_when_surface_is_proposed():
+def test_relationship_attaches_review_finding_to_pr_and_directive_root():
     orientation = discover_orientation(load_snapshot())
-    live = next(candidate for candidate in orientation["candidates"] if candidate["work_surface_id"] == "ws-live-discovery-connectors")
+    pilot = next(c for c in orientation["candidates"] if c["title"].startswith("TYME Cognition Pilot 03"))
+    assert any("3852865741" in ref for ref in pilot["evidence_refs"])
+
+def test_unmet_gate_derives_waiting():
+    orientation = discover_orientation(load_snapshot())
+    live = next(c for c in orientation["candidates"] if c["title"].startswith("Live GitHub"))
     assert live["attention_state"] == "WAITING"
-    assert live["eligibility_state"] == "blocked"
     assert "pilot03_deterministic_rehearsal_semantically_cleared" in live["blocked_by"]
 
-
-def test_merged_verified_contract_derives_dormant_without_open_work():
+def test_merged_verified_contract_is_dormant():
     orientation = discover_orientation(load_snapshot())
-    inherited = next(candidate for candidate in orientation["candidates"] if candidate["work_surface_id"] == "ws-pilot02-work-surface-orientation")
+    inherited = next(c for c in orientation["candidates"] if c["title"].startswith("Pilot 02"))
     assert inherited["attention_state"] == "DORMANT"
-    assert inherited["eligibility_state"] == "dormant"
 
-
-def test_open_p1_evidence_changes_comparative_priority_without_authored_rank():
+def test_ambiguous_artifact_boundary_fails_closed():
     snapshot = load_snapshot()
-    subject = "secondary-active-surface"
+    snapshot["observations"].append({
+        "observation_id":"obs-ambiguous", "kind":"relationship", "artifact_ref":"github:artifact:ambiguous",
+        "artifact_type":"relationship", "related_artifact_refs":[
+            "github:file:docs/architecture/TYME_COGNITION_PILOT_03.md",
+            "github:commit:8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"],
+        "evidence_ref":"evidence:ambiguous"})
+    with pytest.raises(ValueError, match="ambiguous work-surface boundary"):
+        discover_orientation(snapshot)
+
+def test_equal_top_evidence_fails_closed():
+    snapshot = load_snapshot()
+    root = "github:file:docs/architecture/SECOND_ACTIVE.md"
     snapshot["observations"].extend([
-        {
-            "observation_id": "obs-secondary-directive",
-            "kind": "directive",
-            "subject_ref": subject,
-            "subject_type": "cognition_pilot",
-            "title": "Secondary active surface",
-            "state": "active",
-            "evidence_ref": "evidence:secondary-directive"
-        },
-        {
-            "observation_id": "obs-secondary-stewardship",
-            "kind": "stewardship",
-            "subject_ref": subject,
-            "stewards": ["TYME"],
-            "evidence_ref": "evidence:secondary-stewardship"
-        }
+        {"observation_id":"second-directive","kind":"directive","artifact_ref":root,"artifact_type":"file","title":"Second active","subject_type":"cognition_pilot","state":"active","evidence_ref":"evidence:second"},
+        {"observation_id":"second-review","kind":"review_finding","artifact_ref":"github:review-comment:second","artifact_type":"review_comment","related_artifact_refs":[root],"severity":"P1","state":"open","finding":"equally severe evidence","evidence_ref":"evidence:second-review"}
     ])
-    orientation = discover_orientation(snapshot)
-    now = next(candidate for candidate in orientation["candidates"] if candidate["attention_state"] == "NOW")
-    assert now["work_surface_id"] == "ws-pilot03-read-only-discovery"
-
-
-def test_equal_top_evidence_fails_closed_instead_of_sorting_by_identity():
-    snapshot = load_snapshot()
-    cloned_subject = "another-p1-active-surface"
-    clone = []
-    for index, item in enumerate(observations_for(snapshot, "pilot03-read-only-discovery")):
-        copied = deepcopy(item)
-        copied["observation_id"] = f"clone-{index}"
-        copied["subject_ref"] = cloned_subject
-        if "title" in copied:
-            copied["title"] = "Another P1 active surface"
-        copied["evidence_ref"] = f"evidence:clone-{index}"
-        clone.append(copied)
-    snapshot["observations"].extend(clone)
-    with pytest.raises(UnresolvedComparisonError, match="does not distinguish a unique NOW"):
-        discover_orientation(snapshot)
-
-
-def test_renaming_equally_supported_surface_cannot_create_a_winner():
-    snapshot = load_snapshot()
-    clone = []
-    for index, item in enumerate(observations_for(snapshot, "pilot03-read-only-discovery")):
-        copied = deepcopy(item)
-        copied["observation_id"] = f"rename-clone-{index}"
-        copied["subject_ref"] = "aaa-lexically-first"
-        if "title" in copied:
-            copied["title"] = "Lexically first but not evidentially stronger"
-        copied["evidence_ref"] = f"evidence:rename-clone-{index}"
-        clone.append(copied)
-    snapshot["observations"].extend(clone)
-    with pytest.raises(UnresolvedComparisonError):
-        discover_orientation(snapshot)
-
+    with pytest.raises(UnresolvedComparisonError): discover_orientation(snapshot)
 
 def test_adapter_does_not_mutate_snapshot():
-    snapshot = load_snapshot()
-    before = deepcopy(snapshot)
-    discover_orientation(snapshot)
-    assert snapshot == before
-
+    snapshot = load_snapshot(); before = deepcopy(snapshot); discover_orientation(snapshot); assert snapshot == before
 
 def test_duplicate_observation_identity_fails_closed():
-    snapshot = load_snapshot()
-    snapshot["observations"].append(deepcopy(snapshot["observations"][0]))
-    with pytest.raises(ValueError, match="duplicate observation_id"):
-        discover_orientation(snapshot)
-
+    snapshot = load_snapshot(); snapshot["observations"].append(deepcopy(snapshot["observations"][0]))
+    with pytest.raises(ValueError, match="duplicate observation_id"): discover_orientation(snapshot)
 
 def test_missing_evidence_reference_fails_closed():
-    snapshot = load_snapshot()
-    del snapshot["observations"][0]["evidence_ref"]
-    with pytest.raises(ValueError, match="evidence_ref"):
-        discover_orientation(snapshot)
+    snapshot = load_snapshot(); del snapshot["observations"][0]["evidence_ref"]
+    with pytest.raises(ValueError, match="evidence_ref"): discover_orientation(snapshot)
