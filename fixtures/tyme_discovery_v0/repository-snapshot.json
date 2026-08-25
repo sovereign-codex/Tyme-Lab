@@ -1,86 +1,18 @@
 {
-  "snapshot_id": "tyme-lab-pilot03-rehearsal-002",
-  "observed_at": "2026-08-25T11:50:00Z",
+  "snapshot_id": "tyme-lab-pilot03-rehearsal-003",
+  "observed_at": "2026-08-25T12:30:00Z",
   "repository_ref": "sovereign-codex/Tyme-Lab",
-  "repository_head_sha": "399b946ac85a95f480d1760ae3b6c4545d2b722b",
-  "snapshot_refs": [
-    "github:PR-25@399b946ac85a95f480d1760ae3b6c4545d2b722b",
-    "github:PR-25-review-5018495574"
-  ],
+  "repository_head_sha": "f7a22f8182209e397a77f36096e8137b13338663",
+  "snapshot_refs": ["github:pr:25", "github:commit:8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"],
   "observations": [
-    {
-      "observation_id": "obs-p03-directive",
-      "kind": "directive",
-      "subject_ref": "pilot03-read-only-discovery",
-      "subject_type": "cognition_pilot",
-      "title": "TYME Cognition Pilot 03 read-only discovery",
-      "state": "active",
-      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
-    },
-    {
-      "observation_id": "obs-p03-review-p1-discovery",
-      "kind": "review_finding",
-      "subject_ref": "pilot03-read-only-discovery",
-      "severity": "P1",
-      "state": "open",
-      "finding": "derive work-surface priority instead of rendering authored ranking",
-      "evidence_ref": "github:PR-25#discussion_r3852629211"
-    },
-    {
-      "observation_id": "obs-p03-review-p1-tie",
-      "kind": "review_finding",
-      "subject_ref": "pilot03-read-only-discovery",
-      "severity": "P1",
-      "state": "open",
-      "finding": "fail closed when comparative evidence cannot distinguish top candidates",
-      "evidence_ref": "github:PR-25#discussion_r3852629216"
-    },
-    {
-      "observation_id": "obs-p03-stewardship",
-      "kind": "stewardship",
-      "subject_ref": "pilot03-read-only-discovery",
-      "stewards": ["TYME", "human:steward"],
-      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
-    },
-    {
-      "observation_id": "obs-p02-merge",
-      "kind": "merge",
-      "subject_ref": "pilot02-work-surface-orientation",
-      "subject_type": "inherited_contract",
-      "title": "Pilot 02 inherited cognition contract",
-      "state": "merged_verified",
-      "evidence_ref": "github:commit/8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
-    },
-    {
-      "observation_id": "obs-p02-stewardship",
-      "kind": "stewardship",
-      "subject_ref": "pilot02-work-surface-orientation",
-      "stewards": ["TYME", "human:steward"],
-      "evidence_ref": "github:commit/8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
-    },
-    {
-      "observation_id": "obs-live-directive",
-      "kind": "directive",
-      "subject_ref": "live-discovery-connectors",
-      "subject_type": "integration",
-      "title": "Live GitHub and Notion discovery integration",
-      "state": "proposed",
-      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
-    },
-    {
-      "observation_id": "obs-live-gate",
-      "kind": "gate",
-      "subject_ref": "live-discovery-connectors",
-      "condition": "pilot03_deterministic_rehearsal_semantically_cleared",
-      "state": "unmet",
-      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
-    },
-    {
-      "observation_id": "obs-live-stewardship",
-      "kind": "stewardship",
-      "subject_ref": "live-discovery-connectors",
-      "stewards": ["TYME", "Office"],
-      "evidence_ref": "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
-    }
+    {"observation_id":"obs-p03-directive","kind":"directive","artifact_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md","artifact_type":"file","title":"TYME Cognition Pilot 03 read-only discovery","subject_type":"cognition_pilot","state":"active","evidence_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"},
+    {"observation_id":"obs-p03-pr","kind":"relationship","artifact_ref":"github:pr:25","artifact_type":"pull_request","related_artifact_refs":["github:file:docs/architecture/TYME_COGNITION_PILOT_03.md"],"state":"open","evidence_ref":"github:pr:25@f7a22f8182209e397a77f36096e8137b13338663"},
+    {"observation_id":"obs-p03-review-p1-boundary","kind":"review_finding","artifact_ref":"github:review-comment:3852865741","artifact_type":"review_comment","related_artifact_refs":["github:pr:25"],"severity":"P1","state":"open","finding":"derive candidate boundaries from artifact coordinates and relationships","evidence_ref":"github:pr:25#discussion_r3852865741"},
+    {"observation_id":"obs-p03-stewardship","kind":"stewardship","artifact_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md","artifact_type":"file","stewards":["TYME","human:steward"],"evidence_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"},
+    {"observation_id":"obs-p02-merge","kind":"merge","artifact_ref":"github:commit:8a472ff5fd7d92982cd6f3a744b3c46a26ab093b","artifact_type":"commit","title":"Pilot 02 inherited cognition contract","subject_type":"inherited_contract","state":"merged_verified","evidence_ref":"github:commit:8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"},
+    {"observation_id":"obs-p02-stewardship","kind":"stewardship","artifact_ref":"github:commit:8a472ff5fd7d92982cd6f3a744b3c46a26ab093b","artifact_type":"commit","stewards":["TYME","human:steward"],"evidence_ref":"github:commit:8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"},
+    {"observation_id":"obs-live-directive","kind":"directive","artifact_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md#live-integration","artifact_type":"file_anchor","title":"Live GitHub and Notion discovery integration","subject_type":"integration","state":"proposed","evidence_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md#live-integration"},
+    {"observation_id":"obs-live-gate","kind":"gate","artifact_ref":"github:gate:pilot03-live-integration","artifact_type":"gate","related_artifact_refs":["github:file:docs/architecture/TYME_COGNITION_PILOT_03.md#live-integration"],"condition":"pilot03_deterministic_rehearsal_semantically_cleared","state":"unmet","evidence_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md#live-integration"},
+    {"observation_id":"obs-live-stewardship","kind":"stewardship","artifact_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md#live-integration","artifact_type":"file_anchor","stewards":["TYME","Office"],"evidence_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md#live-integration"}
   ]
 }
