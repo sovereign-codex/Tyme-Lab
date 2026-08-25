@@ -7,7 +7,7 @@ from jsonschema import Draft202012Validator, FormatChecker, ValidationError
 
 SCHEMA = Path("schemas/tyme-work-surface-orientation.v0.schema.json")
 RFC3339_RE = re.compile(
-    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$"
+    r"^\d{4}-\d{2}-\d{2}[Tt]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:[Zz]|[+-]\d{2}:\d{2})$"
 )
 
 
@@ -21,7 +21,9 @@ def _validate_rfc3339_datetime(value):
     if RFC3339_RE.fullmatch(value) is None:
         raise ValidationError("observed_at must use strict RFC3339 date-time syntax")
 
-    normalized = value[:-1] + "+00:00" if value.endswith("Z") else value
+    normalized = value.replace("t", "T")
+    if normalized.endswith(("Z", "z")):
+        normalized = normalized[:-1] + "+00:00"
     try:
         parsed = datetime.fromisoformat(normalized)
     except ValueError as exc:
