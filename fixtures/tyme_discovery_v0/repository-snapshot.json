@@ -1,0 +1,67 @@
+{
+  "snapshot_id": "tyme-lab-pilot03-rehearsal-001",
+  "observed_at": "2026-08-25T11:15:00Z",
+  "repository_ref": "sovereign-codex/Tyme-Lab",
+  "repository_head_sha": "8a472ff5fd7d92982cd6f3a744b3c46a26ab093b",
+  "snapshot_refs": [
+    "github:Tyme-Lab/main@8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
+  ],
+  "surfaces": [
+    {
+      "work_surface_id": "ws-pilot-03-discovery",
+      "title": "TYME Cognition Pilot 03 read-only discovery",
+      "lineage_refs": [
+        "github:Tyme-Lab/main@8a472ff5fd7d92982cd6f3a744b3c46a26ab093b",
+        "github:branch/pilot/tyme-cognition-03-read-only-discovery"
+      ],
+      "current_state": "mission_contract_seated_adapter_not_built",
+      "current_stewardship": ["TYME", "human:steward"],
+      "evidence_refs": [
+        "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
+      ],
+      "blocked_by": [],
+      "eligible": true,
+      "priority_rank": 1,
+      "priority_reason": "This is the next inherited cognition gate and its deterministic adapter is not yet implemented.",
+      "next_gate": "build and validate deterministic repository-snapshot discovery adapter",
+      "next_human_gate": "review the first adapter-produced orientation packet"
+    },
+    {
+      "work_surface_id": "ws-pilot-02-inheritance",
+      "title": "Pilot 02 inherited cognition contract",
+      "lineage_refs": [
+        "github:PR-24",
+        "github:Tyme-Lab/main@8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
+      ],
+      "current_state": "merged_verified_inherited",
+      "current_stewardship": ["TYME", "human:steward"],
+      "evidence_refs": [
+        "github:commit/8a472ff5fd7d92982cd6f3a744b3c46a26ab093b"
+      ],
+      "blocked_by": [],
+      "eligible": false,
+      "priority_rank": 3,
+      "priority_reason": "The contract is inherited and requires no further Pilot 02 development unless new evidence reveals a defect.",
+      "next_gate": "observe inherited contract for regression evidence",
+      "next_human_gate": "none unless regression evidence appears"
+    },
+    {
+      "work_surface_id": "ws-live-connectors",
+      "title": "Live GitHub and Notion discovery integration",
+      "lineage_refs": [
+        "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
+      ],
+      "current_state": "deliberately_deferred",
+      "current_stewardship": ["TYME", "Office"],
+      "evidence_refs": [
+        "github:docs/architecture/TYME_COGNITION_PILOT_03.md@c3936f09c8cb7201e689a7e6f315b470ccb96ed0"
+      ],
+      "blocked_by": ["deterministic repository-snapshot discovery adapter has not yet passed rehearsal"],
+      "eligible": false,
+      "priority_rank": 2,
+      "priority_reason": "Live observation is intentionally downstream of deterministic rehearsal so the field cannot be confused with adapter behavior.",
+      "next_gate": "Pilot 03 deterministic rehearsal passes",
+      "next_human_gate": "authorize a separately bounded read-only live integration experiment"
+    }
+  ]
+}
