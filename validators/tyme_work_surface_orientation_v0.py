@@ -24,8 +24,23 @@ def _validate_rfc3339_datetime(value):
     normalized = value.replace("t", "T")
     if normalized.endswith(("Z", "z")):
         normalized = normalized[:-1] + "+00:00"
+
+    # Python datetime cannot represent RFC3339 leap second 60. Validate the
+    # surrounding calendar/timezone fields by temporarily substituting 59,
+    # while preserving the original value as the accepted institutional datum.
+    second_match = re.search(r"T\d{2}:\d{2}:(\d{2})", normalized)
+    if second_match is None:
+        raise ValidationError("observed_at must contain an RFC3339 time component")
+    second = int(second_match.group(1))
+    if second > 60:
+        raise ValidationError("observed_at seconds must be between 00 and 60")
+    parse_value = normalized
+    if second == 60:
+        start, end = second_match.span(1)
+        parse_value = normalized[:start] + "59" + normalized[end:]
+
     try:
-        parsed = datetime.fromisoformat(normalized)
+        parsed = datetime.fromisoformat(parse_value)
     except ValueError as exc:
         raise ValidationError("observed_at must be a valid RFC3339 date-time") from exc
     if parsed.tzinfo is None:
