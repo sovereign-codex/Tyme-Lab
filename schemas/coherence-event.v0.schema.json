@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/coherence-event.v0.schema.json",
+  "title": "Coherence Event v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "lineage_id",
+    "event_type",
+    "participant_refs",
+    "contributor_refs",
+    "steward_refs",
+    "state_before",
+    "state_after",
+    "authority_posture",
+    "evidence_refs",
+    "next_valid_transition",
+    "supersedes",
+    "institutional_effect"
+  ],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "lineage_id": {"type": "string", "minLength": 1},
+    "parent_event_refs": {"type": "array", "items": {"type": "string", "minLength": 1}, "default": []},
+    "event_type": {"enum": ["observation", "transition", "return"]},
+    "participant_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "contributor_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "steward_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "state_before": {"type": "string", "minLength": 1},
+    "state_after": {"type": "string", "minLength": 1},
+    "authority_posture": {"type": "string", "minLength": 1},
+    "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "next_valid_transition": {"type": "string", "minLength": 1},
+    "supersedes": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "institutional_effect": {"const": "none_by_event_alone"}
+  }
+}

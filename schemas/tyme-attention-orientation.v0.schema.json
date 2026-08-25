@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/tyme-attention-orientation.v0.schema.json",
+  "title": "TYME Attention Orientation v0.1 — DEPRECATED",
+  "description": "Deprecated single-frontier contract retained only as lineage. New producers MUST use schemas/tyme-work-surface-orientation.v0.schema.json. This schema intentionally rejects all new instances so the stronger non-authorizing Pilot 02 guardrails cannot be bypassed.",
+  "deprecated": true,
+  "not": {}
+}
