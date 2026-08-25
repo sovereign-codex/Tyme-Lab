@@ -176,6 +176,7 @@ def test_observed_at_format_is_enforced():
         "20260824T030600+0000",
         "2026-W35-1T03:06:00+00:00",
         "2026-08-24 03:06:00+00:00",
+        "2026-08-24T03:06:61Z",
     ]
     for value in invalid_values:
         orientation = review_fixture(); orientation["observed_at"] = value
@@ -186,6 +187,12 @@ def test_observed_at_format_is_enforced():
 def test_lowercase_rfc3339_designators_are_accepted():
     orientation = review_fixture()
     orientation["observed_at"] = "2026-08-24t03:06:00z"
+    validate_orientation(orientation)
+
+
+def test_rfc3339_leap_second_is_accepted():
+    orientation = review_fixture()
+    orientation["observed_at"] = "1990-12-31T23:59:60Z"
     validate_orientation(orientation)
 
 
