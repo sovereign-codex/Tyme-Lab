@@ -183,6 +183,12 @@ def test_observed_at_format_is_enforced():
             validate_orientation(orientation)
 
 
+def test_lowercase_rfc3339_designators_are_accepted():
+    orientation = review_fixture()
+    orientation["observed_at"] = "2026-08-24t03:06:00z"
+    validate_orientation(orientation)
+
+
 def test_coherence_event_requires_non_effect_marker():
     schema = load_json(COHERENCE_SCHEMA)
     Draft202012Validator.check_schema(schema)
