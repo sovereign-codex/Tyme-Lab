@@ -48,8 +48,36 @@ def test_ambiguous_artifact_boundary_fails_closed():
 
 def test_equal_top_resolved_evidence_fails_closed():
     snapshot=load_snapshot(); root="github:file:SECOND_ACTIVE.md"
-    snapshot["resolved_artifacts"].append({"artifact_ref":root,"artifact_type":"file","git_blob_sha":"deadbeef","content":"<!-- TYME_SURFACE\nrole: directive\nstate: active\ntitle: Second active\nsubject_type: cognition_pilot\n-->\n"})
-    with pytest.raises(UnresolvedComparisonError): discover_orientation(snapshot)
+    snapshot["resolved_artifacts"].append({
+        "artifact_ref":root,
+        "artifact_type":"file",
+        "git_blob_sha":"deadbeef",
+        "content":"<!-- TYME_SURFACE\nrole: directive\nstate: active\ntitle: Second active\nsubject_type: cognition_pilot\n-->\n"
+    })
+    snapshot["observations"].append({
+        "observation_id":"second-p1",
+        "kind":"review_finding",
+        "artifact_ref":"github:review-comment:second-p1",
+        "related_artifact_refs":[root],
+        "severity":"P1",
+        "state":"open",
+        "finding":"equally severe evidence-backed defect",
+        "evidence_ref":"evidence:second-p1"
+    })
+    with pytest.raises(UnresolvedComparisonError,match="does not distinguish a unique NOW"):
+        discover_orientation(snapshot)
+
+def test_resolved_but_weaker_candidate_does_not_force_false_tie():
+    snapshot=load_snapshot(); root="github:file:SECOND_ACTIVE_WEAKER.md"
+    snapshot["resolved_artifacts"].append({
+        "artifact_ref":root,
+        "artifact_type":"file",
+        "git_blob_sha":"deadbeef2",
+        "content":"<!-- TYME_SURFACE\nrole: directive\nstate: active\ntitle: Second active weaker\nsubject_type: cognition_pilot\n-->\n"
+    })
+    orientation=discover_orientation(snapshot)
+    now=next(c for c in orientation["candidates"] if c["attention_state"]=="NOW")
+    assert now["title"]=="TYME Cognition Pilot 03 read-only discovery"
 
 def test_same_snapshot_is_deterministic_and_immutable():
     snapshot=load_snapshot(); before=deepcopy(snapshot)
