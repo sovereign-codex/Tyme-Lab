@@ -171,8 +171,16 @@ def test_change_posture_is_required():
 
 
 def test_observed_at_format_is_enforced():
-    orientation = review_fixture(); orientation["observed_at"] = "not-a-date"
-    with pytest.raises(ValidationError): validate_orientation(orientation)
+    invalid_values = [
+        "not-a-date",
+        "20260824T030600+0000",
+        "2026-W35-1T03:06:00+00:00",
+        "2026-08-24 03:06:00+00:00",
+    ]
+    for value in invalid_values:
+        orientation = review_fixture(); orientation["observed_at"] = value
+        with pytest.raises(ValidationError):
+            validate_orientation(orientation)
 
 
 def test_coherence_event_requires_non_effect_marker():
