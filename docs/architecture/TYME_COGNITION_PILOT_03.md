@@ -1,3 +1,10 @@
+<!-- TYME_SURFACE
+role: directive
+state: active
+title: TYME Cognition Pilot 03 read-only discovery
+subject_type: cognition_pilot
+-->
+
 # TYME Cognition Pilot 03 — Read-Only Institutional Discovery
 
 ## Purpose
