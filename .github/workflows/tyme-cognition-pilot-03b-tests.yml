@@ -3,8 +3,10 @@ name: TYME Cognition Pilot 03B Tests
 on:
   pull_request:
     paths:
+      - 'adapters/tyme_github_live_read_v0.py'
       - 'adapters/tyme_github_snapshot_overview_v0.py'
       - 'adapters/tyme_repository_snapshot_discovery_v0.py'
+      - 'tests/test_tyme_github_live_read_v0.py'
       - 'tests/test_tyme_github_snapshot_overview_v0.py'
       - 'tests/test_tyme_github_snapshot_overview_integration_v0.py'
       - 'tests/test_tyme_repository_snapshot_discovery_v0.py'
@@ -29,6 +31,8 @@ jobs:
           python-version: '3.12'
       - name: Install test dependencies
         run: python -m pip install pytest jsonschema
+      - name: Run live GitHub acquisition boundary tests
+        run: python -m pytest -q tests/test_tyme_github_live_read_v0.py
       - name: Run Snapshot Overview tests
         run: python -m pytest -q tests/test_tyme_github_snapshot_overview_v0.py
       - name: Run Snapshot Overview integration rehearsal
