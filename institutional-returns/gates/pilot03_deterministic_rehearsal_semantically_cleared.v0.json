@@ -1,7 +1,7 @@
 {
   "schema": "tyme-gate-satisfaction-return.v0",
   "gate": "pilot03_deterministic_rehearsal_semantically_cleared",
-  "disposition": "satisfied",
+  "disposition": "unresolved",
   "subject": {
     "repository": "sovereign-codex/Tyme-Lab",
     "pull_request": 25,
@@ -22,6 +22,18 @@
       "evidence_ref": "github:pr:25#issuecomment-5418635367"
     },
     {
+      "kind": "unresolved_semantic_review_finding",
+      "severity": "P1",
+      "evidence_ref": "github:pr:25#discussion_r3858546569",
+      "finding": "semantic root identity could be multiplied through authored aliases of one verified repository path"
+    },
+    {
+      "kind": "unresolved_semantic_review_finding",
+      "severity": "P1",
+      "evidence_ref": "github:pr:25#discussion_r3858546574",
+      "finding": "unverified observations could influence comparative priority"
+    },
+    {
       "kind": "merged_pr",
       "commit_sha": "5969f02ca6381bb11a93fe08b1719126c44dce16",
       "evidence_ref": "github:pr:25"
@@ -30,10 +42,10 @@
   "probe_projection": {
     "gate": "pilot03_deterministic_rehearsal_semantically_cleared",
     "commit_sha": "5969f02ca6381bb11a93fe08b1719126c44dce16",
-    "evidence_ref": "github:pr:25",
-    "disposition": "satisfied"
+    "evidence_ref": "github:pr:25#discussion_r3858546574",
+    "disposition": "unresolved"
   },
   "authority_effect": "none",
   "root_mutation": "none",
-  "note": "This return records evidence that the deterministic Pilot 03 rehearsal gate was crossed. It does not itself authorize live integration, mutation, promotion, execution, or any other institutional consequence."
+  "note": "This return corrects a premature satisfied disposition. Exact-head CI and a semantic-review request did not constitute semantic clearance: two non-outdated P1 findings remained unresolved. A future satisfied return requires repaired exact-head evidence plus a fresh semantic review with no promotion-blocking defect."
 }
