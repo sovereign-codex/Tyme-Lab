@@ -35,9 +35,11 @@ def loader_for(state, *, tamper_sha=None):
 
 def baseline_loader(): return loader_for(baseline_git_state())
 
-def add_second_claim(snapshot, state):
+def add_second_claim(snapshot, state, *, proposed=False):
     path = "fixtures/tyme_discovery_v0/SECOND_ACTIVE.md"
-    content = SECOND.read_text(); state[path] = content
+    content = SECOND.read_text()
+    if proposed: content = content.replace("state: active", "state: proposed", 1)
+    state[path] = content
     root = "github:file:" + path
     snapshot["resolved_artifacts"].append({"artifact_ref": root, "artifact_type": "file", "repository_path": path, "git_blob_sha": git_blob_sha(content)})
     return root
@@ -60,7 +62,7 @@ def test_live_gate_is_parsed_only_after_provenance_verification():
 
 def test_fictitious_claimed_path_fails_closed():
     snapshot=load_snapshot(); snapshot["resolved_artifacts"][0]["repository_path"]="DOES_NOT_EXIST.md"
-    with pytest.raises(ValueError,match="does not resolve"): discover_orientation(snapshot, baseline_loader())
+    with pytest.raises(ValueError,match="derived from verified repository_path"): discover_orientation(snapshot, baseline_loader())
 
 def test_wrong_claimed_blob_sha_fails_closed():
     snapshot=load_snapshot(); snapshot["resolved_artifacts"][0]["git_blob_sha"]="deadbeef"
@@ -75,6 +77,15 @@ def test_tampered_bytes_fail_against_claimed_git_identity():
     state[path]=state[path].replace("state: active","state: proposed",1)
     with pytest.raises(ValueError,match="provenance mismatch"): discover_orientation(snapshot, loader_for(state))
 
+def test_authored_root_alias_cannot_manufacture_second_surface():
+    snapshot=load_snapshot(); claim=deepcopy(snapshot["resolved_artifacts"][0]); claim["artifact_ref"]="github:file:alias-for-active-root"
+    snapshot["resolved_artifacts"].append(claim)
+    with pytest.raises(ValueError,match="derived from verified repository_path"): discover_orientation(snapshot, baseline_loader())
+
+def test_duplicate_verified_repository_path_fails_closed():
+    snapshot=load_snapshot(); snapshot["resolved_artifacts"].append(deepcopy(snapshot["resolved_artifacts"][0]))
+    with pytest.raises(ValueError,match="duplicate resolved repository_path"): discover_orientation(snapshot, baseline_loader())
+
 def test_observation_cannot_declare_fictitious_root():
     snapshot=load_snapshot(); snapshot["observations"].append({"observation_id":"fake-root","kind":"directive","artifact_ref":"github:file:FAKE.md","title":"Manufactured","state":"active","evidence_ref":"evidence:fake"})
     with pytest.raises(ValueError,match="not related to a verified semantic root"): discover_orientation(snapshot, baseline_loader())
@@ -84,13 +95,20 @@ def test_ambiguous_artifact_boundary_fails_closed():
     snapshot["observations"].append({"observation_id":"ambiguous","kind":"relationship","artifact_ref":"github:artifact:ambiguous","related_artifact_refs":roots,"evidence_ref":"evidence:ambiguous"})
     with pytest.raises(ValueError,match="ambiguous work-surface boundary"): discover_orientation(snapshot, baseline_loader())
 
-def test_equal_top_provenance_valid_evidence_fails_closed():
-    snapshot=load_snapshot(); state=baseline_git_state(); root=add_second_claim(snapshot,state)
-    snapshot["observations"].append({"observation_id":"second-p1","kind":"review_finding","artifact_ref":"github:review-comment:second-p1","related_artifact_refs":[root],"severity":"P1","state":"open","finding":"equally severe evidence-backed defect","evidence_ref":"evidence:second-p1"})
+def test_equal_top_verified_semantics_fail_closed_without_observation_scoring():
+    snapshot=load_snapshot(); state=baseline_git_state(); add_second_claim(snapshot,state)
     with pytest.raises(UnresolvedComparisonError,match="does not distinguish a unique NOW"): discover_orientation(snapshot, loader_for(state))
 
+def test_unverified_review_finding_cannot_change_comparative_priority():
+    snapshot=load_snapshot(); state=baseline_git_state(); root=add_second_claim(snapshot,state,proposed=True)
+    snapshot["observations"].append({"observation_id":"fake-p1","kind":"review_finding","artifact_ref":"github:review-comment:fake-p1","related_artifact_refs":[root],"severity":"P1","state":"open","finding":"unverified injected finding","evidence_ref":"evidence:unverified"})
+    orientation=discover_orientation(snapshot, loader_for(state))
+    now=next(c for c in orientation["candidates"] if c["attention_state"]=="NOW")
+    assert now["title"]=="TYME Cognition Pilot 03 read-only discovery"
+    assert "unverified injected finding" not in now["comparative_priority_basis"]
+
 def test_provenance_valid_but_weaker_candidate_does_not_force_false_tie():
-    snapshot=load_snapshot(); state=baseline_git_state(); add_second_claim(snapshot,state)
+    snapshot=load_snapshot(); state=baseline_git_state(); add_second_claim(snapshot,state,proposed=True)
     orientation=discover_orientation(snapshot, loader_for(state))
     now=next(c for c in orientation["candidates"] if c["attention_state"]=="NOW")
     assert now["title"]=="TYME Cognition Pilot 03 read-only discovery"
