@@ -1,6 +1,7 @@
 from collections import defaultdict
 from copy import deepcopy
 import hashlib
+import posixpath
 import re
 
 from validators.tyme_work_surface_orientation_v0 import validate_orientation
@@ -13,6 +14,15 @@ class UnresolvedComparisonError(ValueError): pass
 def git_blob_sha(content):
     raw = content.encode("utf-8")
     return hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
+
+
+def _canonical_repository_path(path):
+    if not isinstance(path, str) or not path or path.startswith("/") or "\\" in path:
+        raise ValueError("repository_path must be a canonical repository-relative POSIX path")
+    normalized = posixpath.normpath(path)
+    if normalized in {"", ".", ".."} or normalized.startswith("../") or normalized != path:
+        raise ValueError("repository_path must be a canonical repository-relative POSIX path")
+    return normalized
 
 
 def _parse_surface(content):
@@ -36,6 +46,7 @@ def _verify_resolved_artifacts(snapshot, artifact_loader):
         ref, path, claimed_sha = claim.get("artifact_ref"), claim.get("repository_path"), claim.get("git_blob_sha")
         if claim.get("artifact_type") != "file" or not ref or not path or not claimed_sha:
             raise ValueError("resolved artifact claim is incomplete")
+        path = _canonical_repository_path(path)
         canonical_ref = f"github:file:{path}"
         if ref != canonical_ref:
             raise ValueError("resolved artifact_ref must be derived from verified repository_path")
