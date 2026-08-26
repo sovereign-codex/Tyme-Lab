@@ -86,6 +86,21 @@ def test_duplicate_verified_repository_path_fails_closed():
     snapshot=load_snapshot(); snapshot["resolved_artifacts"].append(deepcopy(snapshot["resolved_artifacts"][0]))
     with pytest.raises(ValueError,match="duplicate resolved repository_path"): discover_orientation(snapshot, baseline_loader())
 
+@pytest.mark.parametrize("alias", [
+    "docs/architecture/./TYME_COGNITION_PILOT_03.md",
+    "docs//architecture/TYME_COGNITION_PILOT_03.md",
+    "docs/architecture/../architecture/TYME_COGNITION_PILOT_03.md",
+    "docs\\architecture\\TYME_COGNITION_PILOT_03.md",
+    "../docs/architecture/TYME_COGNITION_PILOT_03.md",
+    "/docs/architecture/TYME_COGNITION_PILOT_03.md",
+])
+def test_noncanonical_repository_path_aliases_fail_closed(alias):
+    snapshot=load_snapshot(); claim=deepcopy(snapshot["resolved_artifacts"][0])
+    claim["repository_path"]=alias; claim["artifact_ref"]="github:file:"+alias
+    snapshot["resolved_artifacts"].append(claim)
+    with pytest.raises(ValueError,match="canonical repository-relative POSIX path"):
+        discover_orientation(snapshot, baseline_loader())
+
 def test_observation_cannot_declare_fictitious_root():
     snapshot=load_snapshot(); snapshot["observations"].append({"observation_id":"fake-root","kind":"directive","artifact_ref":"github:file:FAKE.md","title":"Manufactured","state":"active","evidence_ref":"evidence:fake"})
     with pytest.raises(ValueError,match="not related to a verified semantic root"): discover_orientation(snapshot, baseline_loader())
