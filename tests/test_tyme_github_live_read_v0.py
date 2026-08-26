@@ -47,6 +47,7 @@ def test_live_read_freezes_all_semantic_files_at_one_immutable_head():
         "source": "github_live_read",
         "default_branch": "main",
         "captured_head_sha": HEAD,
+        "field_of_view": "explicit_paths",
         "semantic_path_count": 2,
         "mutation_authority": "none",
     }
