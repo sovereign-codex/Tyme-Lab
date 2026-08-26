@@ -26,6 +26,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install test dependencies
+        run: python -m pip install pytest jsonschema
       - name: Run Snapshot Overview tests
         run: python -m pytest -q tests/test_tyme_github_snapshot_overview_v0.py
       - name: Run inherited Pilot 03 discovery tests
