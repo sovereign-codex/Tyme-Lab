@@ -1,0 +1,27 @@
+{
+  "snapshot_id": "tyme-lab-pilot03-rehearsal-005",
+  "observed_at": "2026-08-25T13:10:00Z",
+  "repository_ref": "sovereign-codex/Tyme-Lab",
+  "repository_head_sha": "8470d75efc1d90cfdffce3288d78d8e5f779e7ca",
+  "snapshot_refs": ["github:commit:8470d75efc1d90cfdffce3288d78d8e5f779e7ca"],
+  "resolved_artifacts": [
+    {
+      "artifact_ref": "github:file:docs/architecture/TYME_COGNITION_PILOT_03.md",
+      "artifact_type": "file",
+      "repository_path": "docs/architecture/TYME_COGNITION_PILOT_03.md",
+      "git_blob_sha": "a08b08d7542e29cd93cba60e438741696ed7c2df"
+    },
+    {
+      "artifact_ref": "github:file:docs/architecture/TYME_COGNITION_PILOT_03_LIVE_INTEGRATION_DEFERRED.md",
+      "artifact_type": "file",
+      "repository_path": "docs/architecture/TYME_COGNITION_PILOT_03_LIVE_INTEGRATION_DEFERRED.md",
+      "git_blob_sha": "785f6e6a0e46c6a98ff28e144a985385c48358fa"
+    }
+  ],
+  "observations": [
+    {"observation_id":"obs-p03-pr","kind":"relationship","artifact_ref":"github:pr:25","related_artifact_refs":["github:file:docs/architecture/TYME_COGNITION_PILOT_03.md"],"evidence_ref":"github:pr:25@1967d73e84bd29a1e3fd4b4627a3c88893b33368"},
+    {"observation_id":"obs-p03-review","kind":"review_finding","artifact_ref":"github:review-comment:3857557066","related_artifact_refs":["github:pr:25"],"severity":"P1","state":"open","finding":"verify resolved artifacts against their Git identities","evidence_ref":"github:pr:25#discussion_r3857557066"},
+    {"observation_id":"obs-p03-stewardship","kind":"stewardship","artifact_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03.md","stewards":["TYME","human:steward"],"evidence_ref":"github:blob:a08b08d7542e29cd93cba60e438741696ed7c2df"},
+    {"observation_id":"obs-live-stewardship","kind":"stewardship","artifact_ref":"github:file:docs/architecture/TYME_COGNITION_PILOT_03_LIVE_INTEGRATION_DEFERRED.md","stewards":["TYME","Office"],"evidence_ref":"github:blob:785f6e6a0e46c6a98ff28e144a985385c48358fa"}
+  ]
+}
