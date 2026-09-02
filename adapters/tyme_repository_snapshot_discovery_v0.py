@@ -1,11 +1,11 @@
 from collections import defaultdict
 from copy import deepcopy
 import hashlib
+import posixpath
 import re
 
 from validators.tyme_work_surface_orientation_v0 import validate_orientation
 
-SEVERITY_WEIGHT = {"P1": 100, "P2": 50, "P3": 20}
 SURFACE_BLOCK = re.compile(r"<!--\s*TYME_SURFACE\s*\n(?P<body>.*?)\n-->", re.DOTALL)
 
 class UnresolvedComparisonError(ValueError): pass
@@ -14,6 +14,15 @@ class UnresolvedComparisonError(ValueError): pass
 def git_blob_sha(content):
     raw = content.encode("utf-8")
     return hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
+
+
+def _canonical_repository_path(path):
+    if not isinstance(path, str) or not path or path.startswith("/") or "\\" in path:
+        raise ValueError("repository_path must be a canonical repository-relative POSIX path")
+    normalized = posixpath.normpath(path)
+    if normalized in {"", ".", ".."} or normalized.startswith("../") or normalized != path:
+        raise ValueError("repository_path must be a canonical repository-relative POSIX path")
+    return normalized
 
 
 def _parse_surface(content):
@@ -32,10 +41,18 @@ def _parse_surface(content):
 def _verify_resolved_artifacts(snapshot, artifact_loader):
     if artifact_loader is None: raise ValueError("artifact_loader is required for provenance verification")
     verified = {}
+    seen_paths = set()
     for claim in snapshot.get("resolved_artifacts", []):
         ref, path, claimed_sha = claim.get("artifact_ref"), claim.get("repository_path"), claim.get("git_blob_sha")
         if claim.get("artifact_type") != "file" or not ref or not path or not claimed_sha:
             raise ValueError("resolved artifact claim is incomplete")
+        path = _canonical_repository_path(path)
+        canonical_ref = f"github:file:{path}"
+        if ref != canonical_ref:
+            raise ValueError("resolved artifact_ref must be derived from verified repository_path")
+        if path in seen_paths:
+            raise ValueError("duplicate resolved repository_path")
+        seen_paths.add(path)
         if ref in verified: raise ValueError("duplicate resolved artifact_ref")
         actual = artifact_loader(snapshot["repository_ref"], snapshot["repository_head_sha"], path)
         if not actual or actual.get("path") != path: raise ValueError(f"artifact path does not resolve at declared head: {path}")
@@ -46,7 +63,7 @@ def _verify_resolved_artifacts(snapshot, artifact_loader):
             raise ValueError(f"artifact provenance mismatch for {path}")
         semantics = _parse_surface(content)
         if semantics is not None:
-            verified[ref] = {"semantics": semantics, "git_blob_sha": claimed_sha, "repository_path": path}
+            verified[canonical_ref] = {"semantics": semantics, "git_blob_sha": claimed_sha, "repository_path": path}
     return verified
 
 
@@ -89,19 +106,17 @@ def _surface_id(root): return "ws-artifact-" + hashlib.sha256(root.encode()).hex
 def _derive_surface(root, group):
     semantics, observations = group["verified"]["semantics"], group["observations"]
     blockers = [semantics["gate"]] if semantics.get("gate") else []
-    open_findings = [x for x in observations if x["kind"] == "review_finding" and x.get("state") == "open"]
-    if any(x.get("severity") not in SEVERITY_WEIGHT for x in open_findings): raise ValueError("unsupported review severity")
+    # Observation provenance is not yet independently verified. Observations may
+    # contribute lineage/stewardship context, but MUST NOT affect eligibility or
+    # comparative priority until a verifier admits them as institutional facts.
     if blockers: eligibility, score, state, gate = "blocked", None, "blocked_by_unmet_gate", f"satisfy verified gate: {blockers[0]}"
-    elif semantics["state"] == "active":
-        eligibility, score = "eligible", 200 + sum(SEVERITY_WEIGHT[x["severity"]] for x in open_findings)
-        state, gate = ("active_with_open_findings", "resolve open review findings") if open_findings else ("active", "review active directive gate")
+    elif semantics["state"] == "active": eligibility, score, state, gate = "eligible", 200, "active", "review active directive gate"
     elif semantics["state"] == "proposed": eligibility, score, state, gate = "eligible", 100, "proposed", "review proposed work surface"
     else: raise ValueError(f"verified root {root} has unsupported state")
     evidence = sorted({x["evidence_ref"] for x in observations} | {f"github:blob:{group['verified']['git_blob_sha']}"})
     stewardship = sorted({s for x in observations if x["kind"] == "stewardship" for s in x.get("stewards", [])}) or ["TYME"]
     reason = f"Git-verified artifact declares {semantics['state']} {semantics['role']} semantics."
-    if blockers: reason += f" Gate remains unmet: {blockers[0]}."
-    elif open_findings: reason += " Open evidence-backed findings: " + "; ".join(x["finding"] for x in open_findings) + "."
+    if blockers: reason += f" Gate remains recorded as unmet: {blockers[0]}."
     return {"work_surface_id":_surface_id(root),"title":semantics["title"],"lineage_refs":evidence,"current_state":state,"current_stewardship":stewardship,"evidence_refs":evidence,"blocked_by":blockers,"derived_eligibility":eligibility,"comparison_score":score,"comparison_reason":reason,"next_gate":gate,"next_human_gate":"review derived orientation before any institutional action"}
 
 
@@ -121,6 +136,6 @@ def discover_orientation(snapshot, artifact_loader):
         if s["work_surface_id"]==now["work_surface_id"]: attention,eligibility,human="NOW","eligible_now",True
         elif s["derived_eligibility"]=="blocked": attention,eligibility,human="WAITING","blocked",False
         else: attention,eligibility,human="NEXT","eligible_next",False
-        candidates.append({"work_surface_id":s["work_surface_id"],"title":s["title"],"lineage_refs":s["lineage_refs"],"current_state":s["current_state"],"current_stewardship":s["current_stewardship"],"evidence_refs":s["evidence_refs"],"blocked_by":s["blocked_by"],"eligibility_state":eligibility,"authority_posture":"non_authorizing","institutional_effect":"none","external_authority_refs":[],"authority_boundary":"read-only discovery; this orientation cannot authorize or execute institutional mutation","prohibited_transitions":["execute","merge","dispatch","self_authorize","canon_promote"],"next_gate":s["next_gate"],"next_human_gate":s["next_human_gate"],"attention_state":attention,"why_this_state":s["comparison_reason"],"comparative_priority_basis":s["comparison_reason"],"change_since_prior_orientation":{"status":"initial_orientation","rationale":"First orientation derived from Git-verified artifact snapshot.","evidence_refs":s["evidence_refs"]},"human_review_required_now":human,"human_execution_required_now":False,"claims":[{"claim":s["comparison_reason"],"epistemic_posture":"known","evidence_refs":s["evidence_refs"]}]})
-    orientation={"orientation_id":f"{snapshot['snapshot_id']}-orientation","observed_at":snapshot["observed_at"],"repository_ref":snapshot["repository_ref"],"repository_head_sha":snapshot["repository_head_sha"],"institutional_snapshot_refs":snapshot["snapshot_refs"],"supersedes_orientation_id":None,"authority_posture":"non_authorizing","institutional_effect":"none","candidates":candidates,"one_current_steward_action":{"work_surface_id":now["work_surface_id"],"gate":now["next_gate"],"transition":"review","instruction":f"Review the evidence-derived gate for {now['title']}; do not execute or mutate the observed field."},"no_human_action_reason":"","revisit_when":["verified artifact snapshot changes","selected NOW gate is reviewed","new evidence changes eligibility or comparative priority"]}
+        candidates.append({"work_surface_id":s["work_surface_id"],"title":s["title"],"lineage_refs":s["lineage_refs"],"current_state":s["current_state"],"current_stewardship":s["current_stewardship"],"evidence_refs":s["evidence_refs"],"blocked_by":s["blocked_by"],"eligibility_state":eligibility,"authority_posture":"non_authorizing","institutional_effect":"none","external_authority_refs":[],"authority_boundary":"read-only discovery; this orientation cannot authorize or execute institutional mutation","prohibited_transitions":["execute","merge","dispatch","self_authorize","canon_promote"],"next_gate":s["next_gate"],"next_human_gate":s["next_human_gate"],"attention_state":attention,"why_this_state":s["comparison_reason"],"comparative_priority_basis":s["comparison_reason"],"change_since_prior_orientation":{"status":"initial_orientation","rationale":"First orientation derived from Git-verified artifact snapshot.","evidence_refs":s["evidence_refs"]},"human_review_required_now":human,"human_execution_required_now":False,"claims":[{"claim":s["comparison_reason"],"epistemic_posture":"known","evidence_refs":[f"github:blob:{grouped[next(root for root in grouped if _surface_id(root)==s['work_surface_id'])]['verified']['git_blob_sha']}"]}]})
+    orientation={"orientation_id":f"{snapshot['snapshot_id']}-orientation","observed_at":snapshot["observed_at"],"repository_ref":snapshot["repository_ref"],"repository_head_sha":snapshot["repository_head_sha"],"institutional_snapshot_refs":snapshot["snapshot_refs"],"supersedes_orientation_id":None,"authority_posture":"non_authorizing","institutional_effect":"none","candidates":candidates,"one_current_steward_action":{"work_surface_id":now["work_surface_id"],"gate":now["next_gate"],"transition":"review","instruction":f"Review the evidence-derived gate for {now['title']}; do not execute or mutate the observed field."},"no_human_action_reason":"","revisit_when":["verified artifact snapshot changes","selected NOW gate is reviewed","new verified evidence changes eligibility or comparative priority"]}
     validate_orientation(orientation); return orientation

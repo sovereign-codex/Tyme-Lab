@@ -1,0 +1,57 @@
+name: TYME Cognition Pilot 03B Tests
+
+on:
+  pull_request:
+    paths:
+      - 'adapters/tyme_github_live_read_v0.py'
+      - 'adapters/tyme_github_snapshot_overview_v0.py'
+      - 'adapters/tyme_gate_resolution_probe_v0.py'
+      - 'adapters/tyme_gate_return_lookup_v0.py'
+      - 'adapters/tyme_snapshot_temporal_view_v0.py'
+      - 'adapters/tyme_repository_snapshot_discovery_v0.py'
+      - 'institutional-returns/gates/**'
+      - 'tests/test_tyme_github_live_read_v0.py'
+      - 'tests/test_tyme_github_snapshot_overview_v0.py'
+      - 'tests/test_tyme_github_snapshot_overview_integration_v0.py'
+      - 'tests/test_tyme_gate_resolution_probe_v0.py'
+      - 'tests/test_tyme_gate_return_lookup_v0.py'
+      - 'tests/test_tyme_snapshot_temporal_view_v0.py'
+      - 'tests/test_tyme_temporal_observability_integration_v0.py'
+      - 'tests/test_tyme_repository_snapshot_discovery_v0.py'
+      - 'validators/tyme_work_surface_orientation_v0.py'
+      - 'schemas/tyme-work-surface-orientation.v0.schema.json'
+      - 'docs/architecture/TYME_COGNITION_PILOT_03B.md'
+      - '.github/workflows/tyme-cognition-pilot-03b-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-snapshot-overview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test dependencies
+        run: python -m pip install pytest jsonschema
+      - name: Run live GitHub acquisition boundary tests
+        run: python -m pytest -q tests/test_tyme_github_live_read_v0.py
+      - name: Run Snapshot Overview tests
+        run: python -m pytest -q tests/test_tyme_github_snapshot_overview_v0.py
+      - name: Run Probe 01 gate-resolution tests
+        run: python -m pytest -q tests/test_tyme_gate_resolution_probe_v0.py
+      - name: Run bounded institutional memory lookup tests
+        run: python -m pytest -q tests/test_tyme_gate_return_lookup_v0.py
+      - name: Run temporal Snapshot Overview view tests
+        run: python -m pytest -q tests/test_tyme_snapshot_temporal_view_v0.py
+      - name: Run real temporal observability integration
+        run: python -m pytest -q tests/test_tyme_temporal_observability_integration_v0.py
+      - name: Run Snapshot Overview integration rehearsal
+        run: python -m pytest -q tests/test_tyme_github_snapshot_overview_integration_v0.py
+      - name: Run inherited Pilot 03 discovery tests
+        run: python -m pytest -q tests/test_tyme_repository_snapshot_discovery_v0.py
