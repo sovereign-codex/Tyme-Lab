@@ -1,0 +1,16 @@
+{
+  "repository_ref": "sovereign-codex/Tyme-Lab",
+  "observed_at": "2026-09-02T15:34:44Z",
+  "pr_number": 26,
+  "witnessed_head_sha": "15ec1f92133eac7a30006dae5167f3778da496a4",
+  "merge_sha": "27e8a8e85f42cafd8e03f040a1e8694e020abed4",
+  "repository_head_sha": "27e8a8e85f42cafd8e03f040a1e8694e020abed4",
+  "evidence_refs": [
+    "github:pr:26",
+    "github:pr:26#issuecomment-5509648546",
+    "github:pr:26#issuecomment-5510349454",
+    "git:commit:15ec1f92133eac7a30006dae5167f3778da496a4",
+    "git:commit:27e8a8e85f42cafd8e03f040a1e8694e020abed4",
+    "sha256:fa905d0d28703e452a4007780017dbd5ca2fc281861403ad03a383d382fb9ab4"
+  ]
+}
