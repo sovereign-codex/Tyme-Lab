@@ -3,7 +3,10 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from adapters.tyme_orientation_projection_v0 import orientation_sha256
+from adapters.tyme_orientation_projection_v0 import (
+    derive_orientation_projections,
+    orientation_sha256,
+)
 
 SCHEMA = Path("schemas/tyme-orientation-projection.v0.schema.json")
 
@@ -92,5 +95,13 @@ def validate_orientation_projection(projection, source_orientation, schema_path=
         raise ValueError("projection set may not alter authority posture")
     if projection["institutional_effect"] != source_orientation["institutional_effect"]:
         raise ValueError("projection set may not alter institutional effect")
+
+    # Presentation freedom is intentionally narrow in Pilot 05. Every rendered
+    # field is deterministic from the validated source orientation. This final
+    # equality check closes gaps where an audience-facing explanation or
+    # instruction could retain provenance while silently changing its meaning.
+    expected_projection = derive_orientation_projections(source_orientation)
+    if projection != expected_projection:
+        raise ValueError("projection must remain the deterministic source-derived view set")
 
     return projection
