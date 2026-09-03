@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/tyme-orientation-projection.v0.schema.json",
+  "title": "TYME Orientation Projection v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projection_set_id",
+    "source_orientation_id",
+    "source_orientation_sha256",
+    "repository_ref",
+    "repository_head_sha",
+    "shared_core",
+    "views",
+    "authority_posture",
+    "institutional_effect"
+  ],
+  "properties": {
+    "projection_set_id": {"type": "string", "minLength": 1},
+    "source_orientation_id": {"type": "string", "minLength": 1},
+    "source_orientation_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "repository_ref": {"type": "string", "minLength": 1},
+    "repository_head_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "shared_core": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability_transition",
+        "authority_transition",
+        "what_materially_changed",
+        "drift_conditions",
+        "unresolved",
+        "evidence_refs",
+        "one_current_steward_action"
+      ],
+      "properties": {
+        "capability_transition": {"type": "object"},
+        "authority_transition": {"type": "object"},
+        "what_materially_changed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "drift_conditions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "unresolved": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "one_current_steward_action": {"type": "object"}
+      }
+    },
+    "views": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["modev", "public_hall"],
+      "properties": {
+        "modev": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "view_type",
+            "source_orientation_sha256",
+            "motive",
+            "current_event",
+            "capability_demonstrated",
+            "authority_ceiling",
+            "drift_warning",
+            "what_remains_unproven",
+            "next_steward_decision",
+            "authority_posture",
+            "institutional_effect"
+          ],
+          "properties": {
+            "view_type": {"const": "modev"},
+            "source_orientation_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "motive": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["posture", "value"],
+              "properties": {
+                "posture": {"enum": ["encoded", "unresolved"]},
+                "value": {"type": ["string", "null"]}
+              }
+            },
+            "current_event": {"type": "string", "minLength": 1},
+            "capability_demonstrated": {"type": "string", "minLength": 1},
+            "authority_ceiling": {"type": "string", "minLength": 1},
+            "drift_warning": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "what_remains_unproven": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "next_steward_decision": {"type": "object"},
+            "authority_posture": {"const": "non_authorizing"},
+            "institutional_effect": {"const": "none"}
+          }
+        },
+        "public_hall": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "view_type",
+            "source_orientation_sha256",
+            "what_we_investigated",
+            "why_it_matters",
+            "what_changed",
+            "what_the_evidence_supports",
+            "what_remains_uncertain",
+            "participation",
+            "authority_posture",
+            "institutional_effect"
+          ],
+          "properties": {
+            "view_type": {"const": "public_hall"},
+            "source_orientation_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+            "what_we_investigated": {"type": "string", "minLength": 1},
+            "why_it_matters": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["posture", "value", "provenance_refs"],
+              "properties": {
+                "posture": {"const": "derived"},
+                "value": {"type": "string", "minLength": 1},
+                "provenance_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+              }
+            },
+            "what_changed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "what_the_evidence_supports": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+            "what_remains_uncertain": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "participation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["posture", "instruction"],
+              "properties": {
+                "posture": {"enum": ["encoded", "unresolved"]},
+                "instruction": {"type": "string", "minLength": 1}
+              }
+            },
+            "authority_posture": {"const": "non_authorizing"},
+            "institutional_effect": {"const": "none"}
+          }
+        }
+      }
+    },
+    "authority_posture": {"const": "non_authorizing"},
+    "institutional_effect": {"const": "none"}
+  }
+}
