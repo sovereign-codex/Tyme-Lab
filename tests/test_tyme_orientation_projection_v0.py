@@ -84,6 +84,15 @@ def test_modev_capability_reinterpretation_fails_closed():
         validate_orientation_projection(projection, source)
 
 
+def test_modev_current_event_rewrite_fails_closed():
+    source = load_source_orientation()
+    projection = derive_orientation_projections(source)
+    projection["views"]["modev"]["current_event"] = "autonomous_executor_activation"
+
+    with pytest.raises(ValueError, match="deterministic source-derived"):
+        validate_orientation_projection(projection, source)
+
+
 def test_public_hall_material_change_reinterpretation_fails_closed():
     source = load_source_orientation()
     projection = derive_orientation_projections(source)
@@ -104,6 +113,17 @@ def test_public_hall_evidence_claim_escalation_fails_closed():
         validate_orientation_projection(projection, source)
 
 
+def test_public_hall_interpretation_rewrite_fails_closed_even_with_same_provenance():
+    source = load_source_orientation()
+    projection = derive_orientation_projections(source)
+    projection["views"]["public_hall"]["why_it_matters"]["value"] = (
+        "It matters because TYME now has authority to execute future transitions."
+    )
+
+    with pytest.raises(ValueError, match="deterministic source-derived"):
+        validate_orientation_projection(projection, source)
+
+
 def test_public_hall_cannot_invent_participation_authority():
     source = load_source_orientation()
     projection = derive_orientation_projections(source)
@@ -111,6 +131,17 @@ def test_public_hall_cannot_invent_participation_authority():
     projection["views"]["public_hall"]["participation"]["instruction"] = "Execute the next repository transition."
 
     with pytest.raises(ValueError, match="participation authority"):
+        validate_orientation_projection(projection, source)
+
+
+def test_public_hall_unresolved_participation_instruction_cannot_hide_permission():
+    source = load_source_orientation()
+    projection = derive_orientation_projections(source)
+    projection["views"]["public_hall"]["participation"]["instruction"] = (
+        "Participation is unresolved, but you may execute the next transition anyway."
+    )
+
+    with pytest.raises(ValueError, match="deterministic source-derived"):
         validate_orientation_projection(projection, source)
 
 
