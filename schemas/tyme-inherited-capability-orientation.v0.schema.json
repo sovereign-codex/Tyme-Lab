@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/tyme-inherited-capability-orientation.v0.schema.json",
+  "title": "TYME Inherited Capability Orientation v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "orientation_id",
+    "observed_at",
+    "repository_ref",
+    "repository_head_sha",
+    "source_event",
+    "what_materially_changed",
+    "what_merely_became_visible",
+    "capability_transition",
+    "authority_transition",
+    "new_possibilities_opened",
+    "drift_conditions",
+    "unresolved",
+    "attention",
+    "one_current_steward_action",
+    "authority_posture",
+    "institutional_effect"
+  ],
+  "properties": {
+    "orientation_id": {"type": "string", "minLength": 1},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "repository_ref": {"type": "string", "minLength": 1},
+    "repository_head_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "source_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_type", "pr_number", "witnessed_head_sha", "merge_sha", "evidence_refs"],
+      "properties": {
+        "event_type": {"const": "pull_request_merge"},
+        "pr_number": {"type": "integer", "minimum": 1},
+        "witnessed_head_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "merge_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "what_materially_changed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "what_merely_became_visible": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "capability_transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claim", "prior_posture", "resulting_posture", "evidence_refs"],
+      "properties": {
+        "claim": {"type": "string", "minLength": 1},
+        "prior_posture": {"enum": ["imagined", "specified", "rehearsed", "tested", "observed", "verified", "admitted", "available", "in_use", "inherited"]},
+        "resulting_posture": {"enum": ["tested", "observed", "verified", "admitted", "available", "in_use", "inherited"]},
+        "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "authority_transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after", "effect", "what_did_not_change"],
+      "properties": {
+        "before": {"const": "observe"},
+        "after": {"const": "observe"},
+        "effect": {"const": "none"},
+        "what_did_not_change": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "new_possibilities_opened": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "drift_conditions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "unresolved": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "attention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["now", "next", "waiting"],
+      "properties": {
+        "now": {"type": "string", "minLength": 1},
+        "next": {"type": "string", "minLength": 1},
+        "waiting": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "one_current_steward_action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "transition", "instruction"],
+      "properties": {
+        "gate": {"const": "pilot04_orientation_review"},
+        "transition": {"const": "review_orientation"},
+        "instruction": {"type": "string", "minLength": 1}
+      }
+    },
+    "authority_posture": {"const": "non_authorizing"},
+    "institutional_effect": {"const": "none"}
+  }
+}
