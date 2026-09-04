@@ -66,6 +66,29 @@ def test_projection_is_deterministic_and_does_not_mutate_source():
     assert source == original
 
 
+def test_public_hall_meaning_is_derived_from_non_inherited_transition():
+    source = load_source_orientation()
+    source["orientation_id"] = "tyme-pilot04-counterfactual-tested-verified"
+    source["capability_transition"]["claim"] = (
+        "TYME can verify a bounded live repository observation against durable evidence without expanding authority"
+    )
+    source["capability_transition"]["prior_posture"] = "tested"
+    source["capability_transition"]["resulting_posture"] = "verified"
+    source["what_materially_changed"] = [
+        "bounded live read-only GitHub observation moved from tested to verified capability evidence",
+    ]
+    source = validate_inherited_capability_orientation(source)
+
+    projection = derive_orientation_projections(source)
+    public = projection["views"]["public_hall"]
+
+    assert "tested -> verified" in public["what_we_investigated"]
+    assert "tested -> verified" in public["why_it_matters"]["value"]
+    assert "inheritable" not in public["why_it_matters"]["value"].lower()
+    assert public["what_changed"] == source["what_materially_changed"]
+    validate_orientation_projection(projection, source)
+
+
 def test_modev_authority_escalation_fails_closed():
     source = load_source_orientation()
     projection = derive_orientation_projections(source)
