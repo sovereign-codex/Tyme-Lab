@@ -67,11 +67,19 @@ def derive_orientation_projections(orientation):
     action = orientation["one_current_steward_action"]
     digest = orientation_sha256(orientation)
 
+    prior_posture = capability.get("prior_posture")
+    resulting_posture = capability.get("resulting_posture")
+    if not isinstance(prior_posture, str) or not prior_posture:
+        raise OrientationProjectionError("capability prior_posture is required")
+    if not isinstance(resulting_posture, str) or not resulting_posture:
+        raise OrientationProjectionError("capability resulting_posture is required")
+
     current_event = f"{source['event_type']}:pr:{source['pr_number']}"
     authority_ceiling = authority["after"]
     authority_statement = (
         f"Authority remained {authority['before']} -> {authority['after']} with effect {authority['effect']}."
     )
+    transition_statement = f"{prior_posture} -> {resulting_posture}"
 
     shared_core = {
         "capability_transition": copy.deepcopy(capability),
@@ -104,12 +112,12 @@ def derive_orientation_projections(orientation):
         "view_type": "public_hall",
         "source_orientation_sha256": digest,
         "what_we_investigated": (
-            "whether a bounded repository capability could become inherited without expanding authority"
+            f"whether a bounded repository capability could move through {transition_statement} without expanding authority"
         ),
         "why_it_matters": {
             "posture": "derived",
             "value": (
-                "It demonstrates that institutional capability can become inheritable while its authority ceiling remains unchanged."
+                f"It demonstrates a source-evidenced capability transition of {transition_statement} while its authority ceiling remains unchanged."
             ),
             "provenance_refs": copy.deepcopy(evidence_refs),
         },
