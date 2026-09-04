@@ -83,6 +83,8 @@ participation posture
 
 Public explanation may contain deterministic source-derived interpretation, but it must retain provenance references. If the source orientation does not encode participation authority, the projection must report participation posture as unresolved and refer outward to an existing Hall participation contract before consequence-bearing action.
 
+The Hall interpretation must be derived from the actual capability transition encoded in the source orientation. It must not assume that every valid transition ends in `inherited` merely because the first specimen does. For example, a valid `tested -> verified` transition must be rendered as `tested -> verified`, not described as becoming inheritable. This requirement protects semantic truth across future source orientations, not only the first fixture.
+
 ## Disclosure law
 
 > **A projection may omit or redact information appropriate to its audience; it may not contradict the inherited orientation.**
@@ -112,6 +114,7 @@ It may not:
 6. Missing motive remains unresolved; missing participation authority remains unresolved.
 7. Counterfactual authority or capability escalation in either view fails closed.
 8. Projection replay is deterministic and does not mutate its source.
+9. Public Hall meaning is derived from `prior_posture -> resulting_posture`; a valid non-inherited transition must not be mislabeled as inheritance.
 
 ## Operational sequencing boundary
 
