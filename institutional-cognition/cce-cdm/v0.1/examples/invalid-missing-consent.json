@@ -1,0 +1,12 @@
+{
+  "event_id": "urn:uuid:7fa5842b-78be-4770-9cdd-a263613b183d",
+  "schema_version": "0.1",
+  "participant": { "id": "urn:example:synthetic-learner-02", "role": "learner" },
+  "occurred_at": "2026-09-05T15:00:00Z",
+  "recorded_at": "2026-09-05T16:10:00Z",
+  "context": { "environment": "TYME Hall pilot", "mode": "self-directed inquiry", "visibility": "private", "synthetic_fixture": true },
+  "action": { "verb": "investigated", "object": "atmospheric water yield" },
+  "evidence": [{ "type": "simulation_result", "digest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", "location": "urn:example:synthetic-evidence:003" }],
+  "provenance": { "recorder": "urn:example:synthetic-learner-02", "source_system": "tyme-hall-synthetic-fixture", "transformations": [] },
+  "integrity": { "digest_algorithm": "sha-256", "signature_type": "data-integrity-proof", "proof": "detached-proof-placeholder" }
+}

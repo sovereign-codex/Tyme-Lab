@@ -1,0 +1,19 @@
+{
+  "event_id": "urn:uuid:29f797f0-1480-4a67-ae56-063959b677a2",
+  "schema_version": "0.1",
+  "participant": { "id": "urn:example:synthetic-learner-01", "role": "learner" },
+  "occurred_at": { "start": "2026-09-05T15:00:00Z", "end": "2026-09-05T16:00:00Z" },
+  "recorded_at": "2026-09-05T16:10:00Z",
+  "context": { "environment": "TYME Hall pilot", "mode": "guided simulation", "visibility": "private", "synthetic_fixture": true },
+  "inquiry": "How does relative humidity affect atmospheric water yield?",
+  "action": { "verb": "modeled", "object": "psychrometric water-yield relationship", "result": "Revised a temperature-only hypothesis." },
+  "evidence": [{ "type": "simulation_result", "digest": "sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789", "location": "urn:example:synthetic-evidence:002", "media_type": "application/json" }],
+  "reflection": "I revised my assumption that temperature alone determines yield.",
+  "competency_alignment": [{ "framework": "urn:example:case-framework", "competency_id": "systems-modeling-01", "relationship": "supports" }],
+  "attestations": [{ "issuer": "urn:example:synthetic-mentor-01", "claim": "Participant constructed and revised a causal model under the declared simulation conditions.", "method": "artifact-and-explanation review", "scope": "single guided simulation", "confidence": 0.86, "issued_at": "2026-09-05T17:00:00Z", "proof": "detached-attestation-placeholder" }],
+  "developmental_signals": [{ "dimension": "epistemic correction", "state": "demonstrated", "evaluator": "urn:example:synthetic-mentor-01", "method": "comparison of initial and revised explanations", "evidence_refs": ["evidence:0"], "confidence": 0.82, "review_state": "affirmed" }],
+  "provenance": { "recorder": "urn:example:synthetic-learner-01", "source_system": "tyme-hall-synthetic-fixture", "transformations": [] },
+  "consent": { "capture": "participant", "retention": "until-revoked", "default_disclosure": "private", "secondary_use": "prohibited" },
+  "disclosure_policy": { "allow": ["bounded-capability-attestation"], "deny": ["raw-reflection", "full-lineage"] },
+  "integrity": { "digest_algorithm": "sha-256", "signature_type": "data-integrity-proof", "proof": "detached-proof-placeholder" }
+}
