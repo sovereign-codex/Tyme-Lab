@@ -4,7 +4,7 @@ This package turns the CCE/CDM architecture draft into a small validation surfac
 
 ## Contents
 
-- `cce.schema.json` — canonical JSON Schema for Cognitive Contribution Events.
+- `cce.schema.json` — candidate JSON Schema for Cognitive Contribution Events.
 - `examples/valid-minimal.json` — smallest accepted synthetic event.
 - `examples/valid-attested.json` — richer synthetic event with reflection, alignment, and attestation.
 - `examples/invalid-missing-consent.json` — synthetic fixture that must fail validation.

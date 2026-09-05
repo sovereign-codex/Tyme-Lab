@@ -114,15 +114,16 @@ A CCE is a signed, consent-aware event envelope describing a meaningful learning
 
 ```json
 {
-  "event_id": "urn:uuid:example-cce-id",
+  "event_id": "urn:uuid:00000000-0000-4000-8000-000000000001",
   "schema_version": "0.1",
-  "participant": { "id": "did:example:learner", "role": "learner" },
+  "participant": { "id": "urn:example:synthetic-learner", "role": "learner" },
   "occurred_at": "2026-09-05T15:00:00Z",
   "recorded_at": "2026-09-05T16:10:00Z",
   "context": {
     "environment": "TYME Hall pilot",
     "mode": "self-directed inquiry",
-    "visibility": "private"
+    "visibility": "private",
+    "synthetic_fixture": true
   },
   "inquiry": "How does relative humidity affect atmospheric water yield?",
   "action": {
@@ -131,8 +132,8 @@ A CCE is a signed, consent-aware event envelope describing a meaningful learning
   },
   "evidence": [{
     "type": "simulation_result",
-    "digest": "sha256:example",
-    "location": "private://contribution-trail/example"
+    "digest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "location": "urn:example:synthetic-evidence:specimen"
   }],
   "reflection": "I revised my assumption that temperature alone determines yield.",
   "competency_alignment": [{
@@ -141,8 +142,8 @@ A CCE is a signed, consent-aware event envelope describing a meaningful learning
     "relationship": "supports"
   }],
   "provenance": {
-    "recorder": "did:example:learner",
-    "source_system": "tyme-hall",
+    "recorder": "urn:example:synthetic-learner",
+    "source_system": "tyme-hall-synthetic-fixture",
     "transformations": []
   },
   "consent": {
@@ -158,7 +159,7 @@ A CCE is a signed, consent-aware event envelope describing a meaningful learning
 }
 ```
 
-This example is illustrative rather than a finalized JSON Schema. Identifiers and proof suites remain implementation choices until the threat model and standards review are complete.
+This example is explicitly synthetic and illustrative rather than a finalized JSON Schema. It contains no real participant or evidence location. Identifiers and proof suites remain implementation choices until the threat model and standards review are complete.
 
 ## 5. Cognitive Development Matrix
 
