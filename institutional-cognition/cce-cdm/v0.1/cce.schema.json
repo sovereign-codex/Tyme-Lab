@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/cce/0.1/cce.schema.json",
+  "title": "Cognitive Contribution Event",
+  "description": "A learner-controlled, consent-aware envelope for meaningful learning and contribution evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "schema_version", "participant", "occurred_at", "recorded_at", "context", "action", "evidence", "provenance", "consent", "integrity"],
+  "properties": {
+    "event_id": { "type": "string", "format": "uri", "minLength": 8 },
+    "schema_version": { "const": "0.1" },
+    "participant": { "$ref": "#/$defs/actor" },
+    "occurred_at": { "oneOf": [{ "type": "string", "format": "date-time" }, { "$ref": "#/$defs/interval" }] },
+    "recorded_at": { "type": "string", "format": "date-time" },
+    "context": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["environment", "mode", "visibility"],
+      "properties": {
+        "environment": { "type": "string", "minLength": 1 },
+        "mode": { "type": "string", "minLength": 1 },
+        "visibility": { "enum": ["private", "restricted", "public"] }
+      }
+    },
+    "inquiry": { "type": "string", "minLength": 1 },
+    "action": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verb", "object"],
+      "properties": {
+        "verb": { "type": "string", "minLength": 1 },
+        "object": { "type": "string", "minLength": 1 },
+        "result": { "type": ["string", "object", "array", "number", "boolean", "null"] }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "digest", "location"],
+        "properties": {
+          "type": { "type": "string", "minLength": 1 },
+          "digest": { "type": "string", "pattern": "^sha256:[A-Fa-f0-9]{64}$" },
+          "location": { "type": "string", "format": "uri" },
+          "media_type": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "reflection": { "type": "string", "minLength": 1 },
+    "competency_alignment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["framework", "competency_id", "relationship"],
+        "properties": {
+          "framework": { "type": "string" },
+          "competency_id": { "type": "string" },
+          "relationship": { "enum": ["supports", "demonstrates", "prerequisite", "related"] }
+        }
+      }
+    },
+    "contribution": { "type": "object", "additionalProperties": true },
+    "attestations": { "type": "array", "items": { "$ref": "#/$defs/attestation" } },
+    "lineage": { "type": "array", "items": { "type": "string", "format": "uri" }, "uniqueItems": true },
+    "developmental_signals": { "type": "array", "items": { "$ref": "#/$defs/developmentalSignal" } },
+    "disclosure_policy": { "type": "object", "additionalProperties": true },
+    "expiry": { "type": "object", "additionalProperties": true },
+    "supersedes": { "type": "array", "items": { "type": "string", "format": "uri" }, "uniqueItems": true },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recorder", "source_system", "transformations"],
+      "properties": {
+        "recorder": { "type": "string", "format": "uri" },
+        "source_system": { "type": "string", "minLength": 1 },
+        "transformations": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capture", "retention", "default_disclosure"],
+      "properties": {
+        "capture": { "enum": ["participant", "guardian-with-assent", "guardian-no-assent-capacity", "legal-authority"] },
+        "retention": { "type": "string", "minLength": 1 },
+        "default_disclosure": { "const": "private" },
+        "secondary_use": { "enum": ["prohibited", "separately-consented"] },
+        "consent_receipt": { "type": "string", "format": "uri" }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["digest_algorithm", "signature_type", "proof"],
+      "properties": {
+        "digest_algorithm": { "const": "sha-256" },
+        "signature_type": { "type": "string", "minLength": 1 },
+        "proof": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "role"],
+      "properties": {
+        "id": { "type": "string", "format": "uri" },
+        "role": { "enum": ["learner", "contributor", "researcher", "mentor", "steward"] }
+      }
+    },
+    "interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "string", "format": "date-time" },
+        "end": { "type": "string", "format": "date-time" }
+      }
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issuer", "claim", "method", "scope", "issued_at", "proof"],
+      "properties": {
+        "issuer": { "type": "string", "format": "uri" },
+        "claim": { "type": "string", "minLength": 1 },
+        "method": { "type": "string", "minLength": 1 },
+        "scope": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "issued_at": { "type": "string", "format": "date-time" },
+        "proof": { "type": "string", "minLength": 1 }
+      }
+    },
+    "developmentalSignal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimension", "state", "evaluator", "method", "evidence_refs", "review_state"],
+      "properties": {
+        "dimension": { "type": "string", "minLength": 1 },
+        "state": { "enum": ["observed", "emerging", "demonstrated", "repeated", "transferred", "stewarded", "contested", "superseded"] },
+        "evaluator": { "type": "string", "format": "uri" },
+        "method": { "type": "string", "minLength": 1 },
+        "evidence_refs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "review_state": { "enum": ["unreviewed", "affirmed", "contested"] }
+      }
+    }
+  }
+}
