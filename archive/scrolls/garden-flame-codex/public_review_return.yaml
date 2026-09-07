@@ -1,0 +1,62 @@
+packet_id: gfc-0001-public-review-return-2026-09-07
+packet_type: scroll_public_review_return
+schema_posture: provisional
+observed_at: "2026-09-07"
+
+authority_posture: non_authorizing
+institutional_effect: public_review_complete
+publication_authorized: false
+
+artifact:
+  scroll_id: GFC-0001
+  title: "Garden Flame Codex - Ethical Inheritance"
+  wrapper_version: "0.1.0"
+  evidence_tier: Canon
+  public_posture: PUBLIC_REVIEWED
+  artifact_class: ethical_governance_inheritance
+
+source_evidence:
+  provenance_reconstruction: archive/scrolls/garden-flame-codex/provenance-review.md
+  historical_body: archive/scrolls/garden-flame-codex/historical-body.tyme-loom-injection-v1.md
+  source_map: archive/scrolls/garden-flame-codex/source-map.yaml
+  strongest_surviving_body_repository: sovereign-codex/LoomofTyme
+  strongest_surviving_body_commit: b2eddb178960bf5fd5b63d613da708c6f2637531
+  strongest_surviving_body_source_label: tyme_loom_injection_v1
+  proven_original_source: false
+  unresolved_primary_repository: sovereign-codex/Garden-Flame-Kodex
+
+review:
+  canon_steward_verdict: valid_with_conditions
+  canon_steward_review: "Canon Steward Public-Wrapper Review - Garden Flame Codex - 2026-09-07"
+  stable_wrapper_identity_assigned: true
+  final_exact_diff_projection_review: passed
+  conditions_satisfied_for_public_review: true
+
+conditions_satisfied:
+  historical_body_preserved_separately: true
+  missing_primary_source_uncertainty_preserved: true
+  normative_and_empirical_claims_separated: true
+  historical_certification_tiers_non_operational: true
+  avot_guardian_non_authorizing: true
+  operational_derivative_relationship_is_implements_or_interprets: true
+  supersession_not_inferred: true
+  wrapper_identity_not_attributed_to_historical_body: true
+  sensitive_material_exposed: false
+  private_infrastructure_exposed: false
+
+reviewed_artifacts:
+  - archive/scrolls/garden-flame-codex/public.md
+  - archive/scrolls/garden-flame-codex/public_review_manifest.yaml
+  - archive/scrolls/garden-flame-codex/public_review_return.yaml
+
+prohibited_transitions:
+  - publish_to_tymehall_without_explicit_human_authorization
+  - mark_published_canonical_without_public_release_return
+  - infer_empirical_validation_from_canon_tier
+  - activate_historical_certification_tiers_without_current_governance_authorization
+  - allow_avot_guardian_to_confer_institutional_authority
+  - assert_missing_primary_repository_history_without_evidence
+  - assert_tyme_v1_runtime_supersedes_historical_scroll_without_evidence
+
+next_gate: publication_authorization
+next_valid_action: preserve_public_reviewed_representation_on_main
