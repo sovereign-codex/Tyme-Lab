@@ -99,7 +99,7 @@
       "properties": {
         "digest_algorithm": { "const": "sha-256" },
         "canonicalization": { "const": "jcs-rfc8785" },
-        "digest": { "type": "string", "pattern": "^sha256:[A-Fa-f0-9]{64}$" },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
         "signature_type": { "type": "string", "minLength": 1 },
         "proof": { "type": "string", "minLength": 1 }
       }
