@@ -1,0 +1,130 @@
+{
+  "contract": "public_office_state_v0",
+  "snapshot_id": "public-office:2026-09-07:001",
+  "generated_at": "2026-09-07T07:20:00Z",
+  "authority_posture": "non_authorizing",
+  "institutional_effect": "none",
+  "projection": {
+    "source_state_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "internal_source_refs_exposed": false,
+    "sensitive_material_exposed": false,
+    "projection_policy": "public_projection_v0"
+  },
+  "current_priority": {
+    "id": "public-surface-contract-proof",
+    "title": "Prove the TYME Hall public/internal state boundary",
+    "summary": "Freeze the public-surface doctrine and validate the first read-only Office projection contract before building a live public renderer.",
+    "posture": "NOW",
+    "public_evidence_refs": [
+      "https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/TYME_HALL_PUBLIC_SURFACE_DOCTRINE_V0.md"
+    ],
+    "public_refs": [
+      "https://github.com/sovereign-codex/Tyme-Lab"
+    ]
+  },
+  "active_matters": [
+    {
+      "id": "scroll-publication-boundary",
+      "title": "Scroll publication boundary",
+      "summary": "Define the review conditions required before completed Scrolls become public canonical inheritance.",
+      "posture": "ACTIVE",
+      "public_evidence_refs": [
+        "https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/SCROLL_PUBLICATION_GATE_V0.md"
+      ],
+      "public_refs": []
+    }
+  ],
+  "change_log": [
+    {
+      "id": "public-doctrine-frozen",
+      "title": "Public-surface doctrine frozen",
+      "summary": "Office, Scrolls, Laboratory, Constellation, and Contribution are now defined as distinct public relationships to institutional state and inheritance.",
+      "posture": "GRADUATED",
+      "public_evidence_refs": [
+        "https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/TYME_HALL_PUBLIC_SURFACE_DOCTRINE_V0.md"
+      ],
+      "public_refs": []
+    }
+  ],
+  "next": [
+    {
+      "id": "scroll-inventory-pass",
+      "title": "Inventory completed Scroll candidates",
+      "summary": "Classify completed Scrolls against provenance, epistemic, authority, public-safety, supersession, and regenerability gates.",
+      "posture": "NEXT",
+      "public_evidence_refs": [
+        "https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/SCROLL_PUBLICATION_GATE_V0.md"
+      ],
+      "public_refs": []
+    }
+  ],
+  "waiting": [
+    {
+      "id": "office-renderer",
+      "title": "Read-only /office renderer",
+      "summary": "Rendering waits until the public projection schema and review boundary clear repository review.",
+      "posture": "WAITING",
+      "public_evidence_refs": [
+        "https://github.com/sovereign-codex/Tyme-Lab"
+      ],
+      "public_refs": []
+    }
+  ],
+  "human_review": [
+    {
+      "id": "public-surface-branch-review",
+      "title": "Review first public-surface contract branch",
+      "summary": "Confirm that the new projection and publication contracts preserve the non-authorizing and fail-closed institutional boundaries.",
+      "posture": "REVIEW",
+      "public_evidence_refs": [
+        "https://github.com/sovereign-codex/Tyme-Lab"
+      ],
+      "public_refs": []
+    }
+  ],
+  "recent_returns": [
+    {
+      "id": "office-state-schema-return",
+      "title": "Public Office state schema returned",
+      "summary": "A strict read-only schema now expresses the minimum public institutional state needed for an Office surface.",
+      "posture": "RETURNED",
+      "public_evidence_refs": [
+        "https://github.com/sovereign-codex/Tyme-Lab/blob/main/schemas/public_office_state.v0.schema.json"
+      ],
+      "public_refs": []
+    }
+  ],
+  "surface_updates": [
+    {
+      "surface": "office",
+      "change": "First machine-readable public projection contract defined.",
+      "public_ref": "https://github.com/sovereign-codex/Tyme-Lab/blob/main/schemas/public_office_state.v0.schema.json"
+    },
+    {
+      "surface": "scrolls",
+      "change": "Canonical publication gate defined.",
+      "public_ref": "https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/SCROLL_PUBLICATION_GATE_V0.md"
+    },
+    {
+      "surface": "laboratory",
+      "change": "Experimental publication explicitly separated from Canon promotion.",
+      "public_ref": "https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/TYME_HALL_PUBLIC_SURFACE_DOCTRINE_V0.md"
+    },
+    {
+      "surface": "constellation",
+      "change": "Public relationship view constrained to derived institutional relationships rather than a second hand-maintained graph.",
+      "public_ref": "https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/TYME_HALL_PUBLIC_SURFACE_DOCTRINE_V0.md"
+    }
+  ],
+  "contribution_entry_points": [
+    {
+      "id": "observe-public-architecture",
+      "title": "Observe the public architecture",
+      "description": "Review the public Tyme-Lab architecture and its explicit authority boundaries before any consequential participation.",
+      "entry_surface": "contribution",
+      "authority_posture": "none",
+      "public_ref": "https://github.com/sovereign-codex/Tyme-Lab"
+    }
+  ],
+  "public_notice": "This document is a read-only public projection of approved institutional state. It does not grant authority or replace internal sources of truth."
+}
