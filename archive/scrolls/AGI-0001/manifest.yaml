@@ -1,0 +1,77 @@
+artifact_id: AGI-0001
+scroll_id: AGI-0001
+title: "AGI Manifesto Scroll - Autonomous Governing Intelligence"
+version: "0.1.0"
+status: review
+public_posture: PUBLIC_REVIEWED
+artifact_type: foundational_manifesto
+evidence_tier: Canon
+visibility: Public
+
+stewardship:
+  office: Governance Hall
+  steward: Canon Steward
+
+authority:
+  posture: non_self_authorizing
+  institutional_effect: none
+  publication_authorized: false
+
+source:
+  filename: AGI_Manifesto_Scroll.pdf
+  sha256: 347bfaaa8d6c73c59697a43022c415b2a45819b9e5e39aa7a07862695d0caeca
+  size_bytes: 2456688
+  pages: 2
+  source_created_at: "2025-09-30T19:41:38Z"
+  source_version: unversioned_historical_source
+  duplicate_copy:
+    filename: "AGI_Manifesto_Scroll(1).pdf"
+    byte_identical: true
+    sha256: 347bfaaa8d6c73c59697a43022c415b2a45819b9e5e39aa7a07862695d0caeca
+
+review:
+  canon_steward_verdict: valid_with_conditions
+  review_record: "Canon Steward Review - AGI Manifesto Scroll - 2026-09-07"
+  final_public_projection_review: passed
+  publication_gate_ref: https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/SCROLL_PUBLICATION_GATE_V0.md
+  conditions:
+    - preserve source digest and historical-source distinction
+    - frame the public artifact as foundational manifesto and governance doctrine
+    - distinguish metaphor and aspiration from empirical claims
+    - state explicitly that governing capability does not create institutional authority
+    - preserve supersession and inheritance fields
+    - require explicit publication authorization before PUBLISHED_CANONICAL
+
+epistemic_posture:
+  artifact_class: normative_doctrine
+  empirical_specification: false
+  normative_claims_reviewed: true
+  empirical_claims_asserted_by_public_wrapper: false
+  metaphor_and_aspiration_labeled_in_public_wrapper: true
+  notes:
+    - "Terms such as guardian lattice, harmonic mediation, resonance, and field resonance are treated as philosophical, metaphorical, or aspirational unless separately evidenced."
+
+projection:
+  sensitive_material_exposed: false
+  internal_source_refs_exposed: false
+  public_representation: archive/scrolls/AGI-0001/public.md
+  publication_target: tymehall.org/scrolls
+
+relationships:
+  supersedes: []
+  superseded_by: []
+  related_scrolls: []
+  laboratory_refs: []
+  constellation_refs:
+    - sovereign-intelligence
+    - governance
+    - human-sovereignty
+    - reciprocal-learning
+
+regenerability:
+  internal_lineage_preserved: true
+  exact_source_digest_preserved: true
+  public_representation_versioned: true
+  public_presentation_is_sole_copy: false
+
+next_gate: publication_authorization
