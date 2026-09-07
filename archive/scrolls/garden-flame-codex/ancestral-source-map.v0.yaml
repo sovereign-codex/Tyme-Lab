@@ -1,5 +1,5 @@
 artifact_slug: garden-flame-codex
-map_version: "0.1.0"
+map_version: "0.1.1"
 map_date: "2026-09-07"
 posture: ANCESTRAL_RECOVERY_PASS_02
 publication_authorized: false
@@ -35,7 +35,7 @@ ancestral_strata:
       - Garden Flame Codex and Living Kodex are paired under Codex & Ethics.
       - Codex Integration plans to sync both Codex PDFs into the Hub.
     relationship_inference:
-      garden_flame_role: upstream_constitutional_ethics_root
+      garden_flame_role: upstream_ethics_root
       living_kodex_relation: paired_ethics_surface
     prohibited_inference: snapshot_is_original_garden_flame_source
 
@@ -57,6 +57,7 @@ ancestral_strata:
       - AVOT returns are routed through an Archivist channel.
       - Digital Laboratory identifies itself as an inhale contributor and points to the canonical scroll in the Garden Flame Kodex.
       - Tyme-Open and GardenFlame-Kodex copies of the Breath Cycle protocol share the same archive size/CRC signature in the recovered package.
+      - The GardenFlame-Kodex folder name corroborates historical naming and package structure, but does not prove that the unresolved GitHub repository reference existed in the same form.
     relationship_inference:
       garden_flame_role:
         - inheritance_source
@@ -165,7 +166,8 @@ present_architecture_echoes:
 reconstruction_findings:
   garden_flame_is_more_than_single_document: strongly_supported
   single_proven_original_body_recovered: false
-  multiple_independent_historical_manifestations_recovered: true
+  multiple_distinct_historical_manifestations_recovered: true
+  independence_between_manifestations_established: false
   paired_relation_with_living_kodex: strongly_supported
   inheritance_return_cycle_role: strongly_supported
   contributor_governance_role: supported
