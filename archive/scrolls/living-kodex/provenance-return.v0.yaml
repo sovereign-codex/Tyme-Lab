@@ -69,6 +69,16 @@ source_boundaries:
   - The later CODEX_KERNEL registry is later governance codification and cannot retroactively prove historical maturity or text.
   - Guardian review does not itself grant canon or institutional authority.
 
+source_surface_recovery:
+  completed_for_current_access: true
+  github_body_recovered: false
+  gmail_body_or_pdf_recovered: false
+  notion_body_recovered: false
+  chatgpt_library_body_recovered: false
+  conclusion: body_not_recovered_across_accessible_surfaces
+  absence_proves_nonexistence: false
+  reopening_condition: genuinely_new_external_source_repository_backup_file_or_provenance_record
+
 returned_artifacts:
   - archive/scrolls/living-kodex/source-map.v0.yaml
   - archive/scrolls/living-kodex/provenance-review.v0.md
@@ -82,7 +92,8 @@ unresolved_evidence:
 
 next_gate: canon_steward_artifact_identity_review
 next_valid_action: >-
-  Continue historical body recovery while reviewing whether Living Kodex should
-  be modeled as a missing-body Scroll, a living framework with versioned
-  snapshots, or a two-layer artifact. Do not assign a canonical Scroll ID or
-  prepare a public wrapper until that identity relationship is reviewed.
+  Treat historical body recovery as closed for currently accessible source
+  surfaces. Review the three artifact-identity models. If no new external source
+  is introduced, use the two-layer artifact as the leading hypothesis and
+  define its inheritance-to-operational relationship/version contract before
+  assigning a canonical Scroll ID or preparing a public wrapper.
