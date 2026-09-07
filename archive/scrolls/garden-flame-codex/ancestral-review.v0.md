@@ -63,7 +63,7 @@ This is not proof that one repository implemented a complete working protocol ex
 
 ## Recovered ancestral roles
 
-### 1. Upstream constitutional ethics root
+### 1. Upstream ethics root
 
 A 2025-09-02 Sovereign Intelligence Hub snapshot describes Sovereign Intelligence as ethical and rooted in both the Garden Flame Codex and the Living Kodex for EAI. The two are paired under Codex & Ethics, and the roadmap plans to synchronize both Codex bodies into the Hub.
 
@@ -78,6 +78,8 @@ The 2025-09-12 Breath Cycle Package is the strongest newly recovered evidence of
 - every AVOT as tethered to Garden Flame before its first act;
 - AVOT returns routed through an Archivist channel;
 - the Digital Laboratory as an inhale contributor referencing the canonical Garden Flame scroll.
+
+The same package contains a `GardenFlame-Kodex/` path as well as a Tyme-Open copy of the Breath Cycle protocol. That package-level naming corroborates the historical Garden Flame architecture, but it does **not** prove that the unresolved GitHub repository reference `sovereign-codex/Garden-Flame-Kodex` existed in the same form.
 
 **Assessment:** strongly supports a historical pattern of inheritance → work → return.
 
@@ -123,7 +125,7 @@ It should remain provisional until the Living Kodex body itself receives the sam
 
 ## Relationship to TYME Hall and the Office ecology
 
-Present institutional architecture later developed a compatible but independently reviewed pattern:
+Present institutional architecture later developed a compatible but separately reviewed pattern:
 
 - Offices persist as enduring responsibilities rather than prompts, agents, folders, or schedules.
 - Chronicles preserve enduring remembrance rather than every event.
@@ -132,7 +134,7 @@ Present institutional architecture later developed a compatible but independentl
 
 These are **architectural echoes**, not proof of direct descent from the 2025 Garden Flame documents.
 
-Their importance is that the ancestral Garden Flame pattern is not alien to the present architecture: inheritance, return, remembrance, stewardship, and navigation have re-emerged as central design concerns through later independent reconciliation.
+Their importance is that the ancestral Garden Flame pattern is not alien to the present architecture: inheritance, return, remembrance, stewardship, and navigation have re-emerged as central design concerns through later reconciliation.
 
 ## Revised model
 
@@ -182,6 +184,8 @@ Any future reviewed representation must preserve all of the following:
 
 - the Loom survivor is not proven to be the lost original source;
 - the referenced `Garden-Flame-Kodex` repository remains unresolved;
+- the `GardenFlame-Kodex/` path recovered inside the Breath Cycle package corroborates historical naming and package structure but does not establish the unresolved GitHub repository as a recovered source;
+- multiple recovered manifestations are historically distinct, but their independence from one another is not established;
 - repeated backup snapshots are lineage evidence, not independent canonical authorities;
 - historical metaphysical / spiritual / speculative language remains labeled as such;
 - contributor governance does not create coercive participation rights;
