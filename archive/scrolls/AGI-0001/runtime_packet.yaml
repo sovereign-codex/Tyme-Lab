@@ -1,10 +1,10 @@
 packet_id: tymehall-scroll-agi-0001-public-review-2026-09-07
-packet_type: scroll_public_review_preparation
+packet_type: scroll_public_review_return
 schema_posture: provisional
 observed_at: "2026-09-07"
 
 authority_posture: non_authorizing
-institutional_effect: review_candidate_only
+institutional_effect: public_review_complete
 
 artifact:
   artifact_id: AGI-0001
@@ -12,13 +12,14 @@ artifact:
   version: "0.1.0"
   evidence_tier: Canon
   registry_status: Review
-  public_posture: PUBLIC_CANDIDATE
+  public_posture: PUBLIC_REVIEWED
 
 source_evidence:
   source_filename: AGI_Manifesto_Scroll.pdf
   source_sha256: 347bfaaa8d6c73c59697a43022c415b2a45819b9e5e39aa7a07862695d0caeca
   duplicate_byte_identity_verified: true
   canon_steward_verdict: valid_with_conditions
+  final_public_projection_review: passed
 
 returned_artifacts:
   - archive/scrolls/AGI-0001/manifest.yaml
@@ -29,17 +30,21 @@ returned_artifacts:
 conditions_satisfied:
   source_identity_bound: true
   duplicate_lineage_reconciled: true
+  stable_wrapper_identity_assigned: true
   manifesto_framing_added: true
   metaphor_and_aspiration_boundary_added: true
   non_self_authorizing_boundary_added: true
+  supersession_fields_preserved: true
   sensitive_material_detected: false
+  internal_source_refs_exposed: false
+  final_public_projection_review: true
 
 prohibited_transitions:
-  - publish_to_tymehall
-  - mark_published_canonical
+  - publish_to_tymehall_without_authorization
+  - mark_published_canonical_without_authorization
   - infer_empirical_validation_from_canon_tier
   - grant_institutional_authority_to_agi
   - overwrite_or_rewrite_historical_source
 
-next_gate: final_public_projection_review
-next_valid_action: review_pr_ready_public_representation
+next_gate: publication_authorization
+next_valid_action: preserve_reviewed_representation_on_main
