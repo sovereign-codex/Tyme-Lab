@@ -1,0 +1,118 @@
+artifact_slug: garden-flame-codex
+artifact_title: Garden Flame Codex
+reconstruction_version: "0.1.0"
+reconstruction_date: "2026-09-07"
+posture: PROVENANCE_RECONSTRUCTION
+publication_authorized: false
+canonical_scroll_id: null
+
+registry:
+  system: Notion Scroll Registry
+  evidence_tier: Canon
+  status: Review
+  visibility: Public
+  steward: Canon Steward
+  body_present_in_registry: false
+
+source_strata:
+  - stratum: early_axiom_snapshot
+    date: "2025-09-08"
+    repository: sovereign-codex/Quantum-intelligence-lattice
+    path: app/behaviors/codex_herald.py
+    ref: 6d37e7f0a80b1fea045cc8c00111f5cfc78ae6e9
+    artifact_name: day001_codex_herald.md
+    role: generated_preface_snapshot
+    authority_assessment: lineage_evidence_not_full_body
+    notes:
+      - generated text names Garden Flame Codex preface and preserves remembrance / surrendered-sovereignty axioms
+      - historical screenshots corroborate successful orchestration and artifact generation
+
+  - stratum: archive_skeleton
+    date: "2025-09-20T09:16:02Z"
+    repository: sovereign-codex/LoomofTyme
+    path: attached_assets/04_Garden_Flame_Codex/scroll.md
+    commit: 60af68e73b5b8454711af545cb9dcb06f754c90e
+    replit_session: eb5adecc-ba46-453b-94e4-39ff329b178e
+    role: archive_placeholder
+    authority_assessment: not_full_body
+    notes:
+      - identifies Node Ethical Layer, AVOT-Guardian, glyph garden-flame
+      - Abstract and Scroll Body are placeholders
+      - sibling README labels the artifact Completed, creating a storage/completeness mismatch
+
+  - stratum: surviving_full_body
+    date: "2025-09-20T09:22:33Z"
+    repository: sovereign-codex/LoomofTyme
+    path: client/src/lib/tymeLoomScrolls.ts
+    commit: b2eddb178960bf5fd5b63d613da708c6f2637531
+    replit_session: eb5adecc-ba46-453b-94e4-39ff329b178e
+    embedded_source_label: tyme_loom_injection_v1
+    role: full_historical_body_candidate
+    authority_assessment: strongest_surviving_body_candidate
+    notes:
+      - introduced six minutes after archive skeleton in the same Replit session
+      - contains complete Garden Flame Codex body, metadata, tags, and closing text
+      - preserved separately in this reconstruction without silently rewriting the historical text
+
+  - stratum: referenced_primary_repository
+    date_range: "2025-09 to 2025-11"
+    repository_name_reference: sovereign-codex/Garden-Flame-Kodex
+    role: referenced_primary_kodex_repository
+    authority_assessment: unresolved_missing_source
+    current_retrieval_status: not_found_in_accessible_sovereign_codex_repository_set
+    evidence:
+      - sovereign-codex/Tyme/orchestration/integrations/policies.garden-flame.md
+      - sovereign-codex/Tyme/orchestration/integrations/repos.map.yml
+      - sovereign-codex/LoomofTyme/.github/workflows/tyme-dream-injector.yml
+    notes:
+      - references are strong evidence that a primary repository was expected or existed
+      - absence from the currently accessible repository set does not establish deletion, rename, or prior content
+
+  - stratum: operational_derivative
+    date: "2025-11-18T21:13:35Z"
+    repository: sovereign-codex/Tyme
+    path: engine/garden_flame_kodex.py
+    commit: fcab409523dbde2b9f18d721a49b6c7c75d847a1
+    role: operational_policy_runtime
+    authority_assessment: later_implementation_not_source_body
+    protocols:
+      - Coherence-Check
+      - Resonance-Alignment
+      - Harmonic-Safety
+    notes:
+      - describes Garden Flame Kodex as the primary ethical substrate for reasoning loops, agent outputs, and system actions
+      - operationalizes consent, sovereignty, safety, lineage, and contextual-integrity constraints
+
+  - stratum: operational_installation_record
+    date: "2025-11-19"
+    repository: sovereign-codex/Tyme
+    path: chronicle/garden_flame_kodex.json
+    commits:
+      - fcab409523dbde2b9f18d721a49b6c7c75d847a1
+      - d57e90e6958385d415661fb39ced4036de36ae0d
+    role: runtime_binding_and_installation_evidence
+    authority_assessment: implementation_evidence
+    installed_kodex_version: "1.0.0"
+    installed_primary: true
+    coverage:
+      agent_outputs: 6
+      reasoning_loops: 4
+      system_actions: 4
+
+reconstruction_findings:
+  full_body_materially_recovered: true
+  historical_body_candidate: sovereign-codex/LoomofTyme@b2eddb178960bf5fd5b63d613da708c6f2637531:client/src/lib/tymeLoomScrolls.ts
+  missing_referenced_primary_repository: true
+  later_operational_derivative_recovered: true
+  body_and_runtime_derivative_are_same_artifact: false
+  supersession_relationship_established: false
+  publication_ready: false
+
+provisional_relationship_model:
+  historical_scroll_body: Garden Flame Codex / tyme_loom_injection_v1
+  operational_derivative: Garden Flame Kodex v1.0.0 / Tyme
+  proposed_relation_for_review: implements_or_interprets
+  prohibited_inference: operational_derivative_supersedes_historical_scroll
+
+next_gate: canon_steward_provenance_reconciliation
+next_valid_action: determine authoritative historical body and relationship to operational derivative before assigning canonical scroll ID or preparing a public wrapper

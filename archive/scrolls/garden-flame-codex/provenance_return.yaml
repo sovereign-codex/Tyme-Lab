@@ -1,0 +1,84 @@
+packet_id: garden-flame-codex-provenance-return-2026-09-07
+packet_type: scroll_provenance_reconstruction_return
+schema_posture: provisional
+observed_at: "2026-09-07"
+
+authority_posture: non_authorizing
+institutional_effect: provenance_reconstruction_only
+publication_authorized: false
+
+artifact:
+  title: Garden Flame Codex
+  canonical_scroll_id: null
+  evidence_tier: Canon
+  registry_status: Review
+  visibility: Public
+  steward: Canon Steward
+
+reconstruction:
+  result: provenance_sufficient_with_unresolved_primary_source
+  full_body_materially_recovered: true
+  strongest_surviving_body:
+    repository: sovereign-codex/LoomofTyme
+    commit: b2eddb178960bf5fd5b63d613da708c6f2637531
+    path: client/src/lib/tymeLoomScrolls.ts
+    embedded_source_label: tyme_loom_injection_v1
+    introduced_at: "2025-09-20T09:22:33Z"
+    preserved_copy: archive/scrolls/garden-flame-codex/historical-body.tyme-loom-injection-v1.md
+  archive_skeleton:
+    repository: sovereign-codex/LoomofTyme
+    commit: 60af68e73b5b8454711af545cb9dcb06f754c90e
+    path: attached_assets/04_Garden_Flame_Codex/scroll.md
+    introduced_at: "2025-09-20T09:16:02Z"
+    body_complete: false
+  same_replit_session: eb5adecc-ba46-453b-94e4-39ff329b178e
+
+unresolved_source:
+  referenced_primary_repository: sovereign-codex/Garden-Flame-Kodex
+  repository_recovered: false
+  guardian_repository_reference: sovereign-codex/Guardian-Codex
+  guardian_repository_recovered: false
+  prohibited_inferences:
+    - missing_repository_was_deleted
+    - missing_repository_was_never_created
+    - missing_repository_was_renamed
+    - loom_body_is_proven_original_source
+
+operational_derivative:
+  repository: sovereign-codex/Tyme
+  engine_path: engine/garden_flame_kodex.py
+  engine_commit: fcab409523dbde2b9f18d721a49b6c7c75d847a1
+  chronicle_path: chronicle/garden_flame_kodex.json
+  installed_version: "1.0.0"
+  installed_primary: true
+  relationship_to_historical_scroll: implements_or_interprets
+  supersession_proven: false
+  protocols:
+    - Coherence-Check
+    - Resonance-Alignment
+    - Harmonic-Safety
+
+epistemic_reconciliation:
+  normative_ethics_identified: true
+  speculative_or_metaphysical_language_present: true
+  empirical_validation_implied_by_reconstruction: false
+  historical_certification_scheme_present: true
+  current_siri_certification_authority_established: false
+  avot_can_confer_institutional_authority: false
+
+conditions_for_next_gate:
+  - preserve historical body without silent modernization
+  - preserve missing-primary-source uncertainty
+  - separate normative ethics from metaphysical or empirical claims
+  - treat historical certification tiers as proposals unless re-authorized
+  - keep operational derivative distinct from historical source
+  - require Canon Steward review of any conditioned public representation
+
+returned_artifacts:
+  - archive/scrolls/garden-flame-codex/source-map.yaml
+  - archive/scrolls/garden-flame-codex/historical-body.tyme-loom-injection-v1.md
+  - archive/scrolls/garden-flame-codex/provenance-review.md
+  - archive/scrolls/garden-flame-codex/provenance_return.yaml
+
+next_gate: canon_steward_epistemic_and_public_wrapper_review
+next_valid_action: record_provenance_reconciliation_then_prepare_conditioned_review_candidate
