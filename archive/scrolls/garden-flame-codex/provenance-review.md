@@ -9,7 +9,7 @@
 
 The Garden Flame Codex is **materially recovered but not yet publication-ready**.
 
-The strongest surviving full historical body is the `Garden Flame Codex` entry embedded in `sovereign-codex/LoomofTyme/client/src/lib/tymeLoomScrolls.ts` at commit `b2eddb178960bf5fd5b63d613da708c6f2637531`, introduced at 2025-09-20T09:22:33Z. That body was created six minutes after the archive skeleton in the same Replit session (`eb5adecc-ba46-453b-94e4-39ff329b178e`).
+The strongest surviving full historical body is the `Garden Flame Codex` entry embedded in `sovereign-codex/LoomofTyme/client/src/lib/tymeLoomScrolls.ts` at commit `b2eddb178960bf5fd5b63d613da708c6f2637531`, introduced at 2025-09-20T09:22:33Z. That full-body entry was committed six minutes after the archive skeleton in the same Replit session (`eb5adecc-ba46-453b-94e4-39ff329b178e`). The repository timestamp establishes when this survivor entered Loom history, not when the underlying prose was first authored.
 
 This is strong reconstruction evidence, but it is not sufficient to claim that the Loom injection is the lost original source. Later Tyme integration records explicitly reference a separate primary repository named `Garden-Flame-Kodex`, which is not present in the currently accessible sovereign-codex repository set. The missing repository must remain an explicit provenance uncertainty.
 
