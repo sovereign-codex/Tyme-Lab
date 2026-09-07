@@ -1,12 +1,15 @@
-# Garden Flame Codex — Conditioned Public Review Candidate
+# Garden Flame Codex — Ethical Inheritance
 
+**Wrapper Scroll ID:** `GFC-0001`  
+**Wrapper version:** `0.1.0`  
 **Review posture:** `PUBLIC_CANDIDATE`  
 **Publication authorization:** `false`  
-**Canonical public Scroll ID:** not assigned  
 **Artifact class:** ethical / governance inheritance derived from a historical Codex  
 **Steward:** Canon Steward / Governance Hall
 
-> This is a review candidate, not a publication. It preserves the historical Garden Flame Codex separately and proposes a conditioned public reading that can be evaluated without presenting historical metaphysical language, credential proposals, or AVOT recognition as current empirical fact or institutional authority.
+> `GFC-0001` and version `0.1.0` identify this contemporary review wrapper only. They are not retroactively attributed to the historical Garden Flame Codex body. This is a review candidate, not a publication.
+
+This representation preserves the historical Garden Flame Codex separately and proposes a conditioned public reading that can be evaluated without presenting historical metaphysical language, credential proposals, or AVOT recognition as current empirical fact or institutional authority.
 
 ## Provenance boundary
 
@@ -108,9 +111,9 @@ This candidate does not claim that:
 - Garden Flame Kodex `v1.0.0` formally superseded the historical Scroll;
 - this artifact is already published or approved for TYME Hall.
 
-## Inheritance proposition for review
+## Inheritance proposition under review
 
-The candidate asks the Canon Steward to evaluate whether the enduring Garden Flame inheritance can be expressed as:
+The enduring Garden Flame inheritance is expressed here as:
 
 **consent + responsibility + reciprocity + traceable coherence + safety + sovereign stewardship + living review**
 
@@ -125,6 +128,6 @@ while the full historical body remains separately preserved with its original me
 
 ## Current gate
 
-`conditioned_public_wrapper → Canon Steward epistemic / projection review`
+`GFC-0001 / v0.1.0 → final exact-diff public-projection review`
 
 No publication action is authorized by this candidate.
