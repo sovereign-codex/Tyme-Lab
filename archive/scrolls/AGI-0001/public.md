@@ -3,7 +3,7 @@ scroll_id: AGI-0001
 title: "AGI Manifesto Scroll - Autonomous Governing Intelligence"
 version: 0.1.0
 status: review
-public_posture: PUBLIC_CANDIDATE
+public_posture: PUBLIC_REVIEWED
 artifact_type: foundational_manifesto
 steward: Canon Steward
 source_sha256: 347bfaaa8d6c73c59697a43022c415b2a45819b9e5e39aa7a07862695d0caeca
@@ -60,6 +60,6 @@ In practice, AGI manifests through:
 
 ## Publication state
 
-This representation is **under review**.
+This representation has cleared **public projection review** and is `PUBLIC_REVIEWED`.
 
-It may become `PUBLIC_REVIEWED` after the conditioned representation clears final projection review. It must not be presented as `PUBLISHED_CANONICAL` until explicit publication authorization is recorded.
+It is **not `PUBLISHED_CANONICAL`** and `publication_authorized` remains `false`. Public deployment to TYME Hall requires a separate explicit publication authorization and publication record.
