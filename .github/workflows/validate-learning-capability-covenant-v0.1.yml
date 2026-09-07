@@ -15,7 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Checkout reviewed commit
+      - name: Checkout exact reviewed head
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
       - name: Validate deterministic three-mode fixture
         run: node institutional-cognition/learning-capability-covenant/v0.1/validate_fixture.mjs
