@@ -105,3 +105,12 @@ def test_current_priority_must_be_now():
 
     with pytest.raises(ValueError, match="posture NOW"):
         validate_public_office_state(drifted)
+
+
+def test_second_now_frontier_fails_closed():
+    state = load_fixture()
+    drifted = copy.deepcopy(state)
+    drifted["active_matters"][0]["posture"] = "NOW"
+
+    with pytest.raises(ValueError, match="exactly one NOW posture"):
+        validate_public_office_state(drifted)
