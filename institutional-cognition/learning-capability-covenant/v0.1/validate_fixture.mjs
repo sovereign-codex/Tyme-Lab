@@ -42,6 +42,13 @@ function validate(doc) {
   if (!doc.mission?.question || !doc.mission?.task) errors.push("mission:incomplete");
   if (!Array.isArray(doc.runs) || doc.runs.length !== 3) errors.push("runs:must-have-exactly-three");
 
+  const control = doc.participant_control ?? {};
+  if (control.mode_choice !== "participant_declared_or_confirmed") errors.push("participant-control:mode-not-participant-declared-or-confirmed");
+  if (control.mode_override_allowed !== true) errors.push("participant-control:mode-override-disabled");
+  if (control.capability_effect_contestable !== true) errors.push("participant-control:capability-effect-not-contestable");
+  if (control.contestation_preserves_evidence !== true) errors.push("participant-control:contestation-may-erase-evidence");
+  if (!control.contestation_effect) errors.push("participant-control:contestation-effect-missing");
+
   const modes = (doc.runs ?? []).map(run => run.assistance_mode);
   for (const mode of MODES) {
     if (modes.filter(value => value === mode).length !== 1) errors.push(`mode:${mode}:must-appear-once`);
@@ -125,5 +132,17 @@ ok &&= expect("reject-ranking-field", rankingLeak, false);
 const inferredDelegateCapability = clone(fixture);
 inferredDelegateCapability.runs.find(run => run.assistance_mode === "delegate").capability_effect = "increased";
 ok &&= expect("reject-delegation-as-learning", inferredDelegateCapability, false);
+
+const disabledModeOverride = clone(fixture);
+disabledModeOverride.participant_control.mode_override_allowed = false;
+ok &&= expect("reject-disabled-mode-override", disabledModeOverride, false);
+
+const nonContestableEffect = clone(fixture);
+nonContestableEffect.participant_control.capability_effect_contestable = false;
+ok &&= expect("reject-noncontestable-capability-effect", nonContestableEffect, false);
+
+const eraseOnContest = clone(fixture);
+eraseOnContest.participant_control.contestation_preserves_evidence = false;
+ok &&= expect("reject-contestation-that-erases-evidence", eraseOnContest, false);
 
 process.exitCode = ok ? 0 : 1;
