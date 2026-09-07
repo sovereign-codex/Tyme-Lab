@@ -14,8 +14,9 @@ stewardship:
 
 authority:
   posture: non_self_authorizing
-  institutional_effect: none
-  publication_authorized: false
+  institutional_effect: publication_authorized_release_committed
+  publication_authorized: true
+  authorized_by: human_publication_authority
 
 source:
   filename: AGI_Manifesto_Scroll.pdf
@@ -41,6 +42,17 @@ review:
     - state explicitly that governing capability does not create institutional authority
     - preserve supersession and inheritance fields
     - require explicit publication authorization before PUBLISHED_CANONICAL
+
+publication:
+  institution: Sovereign Intelligence Research Institute
+  publication_number: 1
+  canonical_url: https://tymehall.org/scrolls/AGI-0001/
+  public_surface_repository: sovereign-codex/Codex-interface-
+  release_commit: f9046a64e6790f0c059a268c5ce6b6cd9cd4432b
+  release_source_merged: true
+  domain_verification: pending_external
+  intended_posture_after_verification: PUBLISHED_CANONICAL
+  public_machine_record: https://tymehall.org/scrolls/AGI-0001/publication.json
 
 epistemic_posture:
   artifact_class: normative_doctrine
@@ -74,4 +86,4 @@ regenerability:
   public_representation_versioned: true
   public_presentation_is_sole_copy: false
 
-next_gate: publication_authorization
+next_gate: canonical_domain_verification
