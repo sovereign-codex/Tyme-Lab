@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -8,6 +9,20 @@ const examples = path.join(root, "examples");
 
 function load(name) {
   return JSON.parse(fs.readFileSync(path.join(examples, name), "utf8"));
+}
+
+// RFC 8785 uses ECMAScript primitive serialization and recursively sorted object keys.
+function canonicalize(value) {
+  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(canonicalize).join(",")}]`;
+  return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonicalize(value[key])}`).join(",")}}`;
+}
+
+function eventDigest(event) {
+  const preimage = structuredClone(event);
+  delete preimage.integrity.digest;
+  delete preimage.integrity.proof;
+  return `sha256:${createHash("sha256").update(canonicalize(preimage), "utf8").digest("hex")}`;
 }
 
 function validate(event) {
@@ -22,8 +37,9 @@ function validate(event) {
   }
   if (event.integrity?.canonicalization !== "jcs-rfc8785") errors.push("integrity:bad-canonicalization");
   if (!/^sha256:[a-f0-9]{64}$/i.test(event.integrity?.digest ?? "")) errors.push("integrity:bad-digest");
+  else if (event.integrity.digest !== eventDigest(event)) errors.push("integrity:digest-mismatch");
   for (const signal of event.developmental_signals ?? []) {
-    for (const key of ["context_boundaries", "confidence", "interpreted_at", "review_condition"]) {
+    for (const key of ["evaluator_role", "context_boundaries", "confidence", "interpreted_at", "review_condition"]) {
       if (!(key in signal)) errors.push(`developmental-signal:missing-${key}`);
     }
     if (!signal.context_boundaries || Object.keys(signal.context_boundaries).length === 0) errors.push("developmental-signal:empty-context-boundaries");

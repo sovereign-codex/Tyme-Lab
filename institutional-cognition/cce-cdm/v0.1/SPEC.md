@@ -279,7 +279,13 @@ A valid signature proves origin and integrity, not truth, educational quality, o
 
 Version 0.1 uses JSON Canonicalization Scheme (RFC 8785) and SHA-256. To avoid a circular digest, the producer removes `integrity.digest` and `integrity.proof` from the event, canonicalizes the remaining JSON, and computes SHA-256 over those canonical UTF-8 bytes. The resulting lowercase hexadecimal value is stored as `sha256:<64 hex characters>` in `integrity.digest`.
 
-The detached proof signs that digest with explicit domain separation for the CCE schema version. A verifier must reproduce the canonical digest before checking the proof. This establishes byte-level integrity of the declared event fields; it does not establish the truth, quality, or educational meaning of the evidence.
+The detached proof signs this exact octet sequence:
+
+1. the 18 ASCII bytes `CCE-SIGNATURE-V0.1`;
+2. one zero byte (`0x00`); and
+3. the 32 raw bytes obtained by hexadecimal-decoding the value after `sha256:` in `integrity.digest`.
+
+Thus the signature preimage is 51 bytes and does not include the textual `sha256:` prefix. A verifier must reproduce the canonical digest and this byte sequence before checking the proof. Future schema versions must use a different domain string. This establishes byte-level integrity of the declared event fields; it does not establish the truth, quality, or educational meaning of the evidence.
 
 Minimum security expectations include:
 

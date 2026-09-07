@@ -9,5 +9,5 @@
   "evidence": [{ "type": "simulation_result", "digest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", "location": "urn:example:synthetic-evidence:001" }],
   "provenance": { "recorder": "urn:example:synthetic-learner-01", "source_system": "tyme-hall-synthetic-fixture", "transformations": [] },
   "consent": { "capture": "participant", "retention": "until-revoked", "default_disclosure": "private", "secondary_use": "prohibited" },
-  "integrity": { "digest_algorithm": "sha-256", "canonicalization": "jcs-rfc8785", "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "signature_type": "data-integrity-proof", "proof": "detached-proof-placeholder" }
+  "integrity": { "digest_algorithm": "sha-256", "canonicalization": "jcs-rfc8785", "digest": "sha256:98cc7931b11d756c96af729beab230c18eede2dac29fd2a032ebe93ac66673fa", "signature_type": "data-integrity-proof", "proof": "detached-proof-placeholder" }
 }
