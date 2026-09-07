@@ -1,0 +1,233 @@
+artifact_slug: living-kodex
+artifact_title_current_registry: "Living Kodex for Ethical Autonomous Intelligence"
+reconstruction_version: "0.1.0"
+reconstruction_date: "2026-09-07"
+posture: PROVENANCE_RECONSTRUCTION
+publication_authorized: false
+canonical_scroll_id: null
+
+aliases_observed:
+  - Living Kodex
+  - Living Kodex for EAI
+  - Living Kodex for Ethical Autonomous Intelligence
+  - Living Codex Kernel
+
+purpose: >-
+  Reconstruct the Living Kodex lineage without assuming that a single static
+  historical body existed, and without treating later runtime or governance
+  implementations as the missing source scroll.
+
+evidence_classes:
+  historical_shell:
+    description: Early repository surfaces that establish title, ordering, or purpose but do not contain a full body.
+  historical_snapshot:
+    description: Bounded backup or repository evidence preserving contemporaneous role language.
+  implementation_or_interpretation:
+    description: Later software, UI, or workflow that implements or interprets Living Kodex concepts without proving original source text.
+  later_governance_codification:
+    description: Later institutional registry or governance state that defines current system relationships but cannot retroactively establish the original body.
+  current_registry_state:
+    description: Present Office/Notion classification and review state.
+
+source_strata:
+  - stratum: scroll_03_identity_shell
+    date_range: "2025-08-26 to 2025-08-29"
+    evidence_class: historical_shell
+    repository: sovereign-codex/Sovereign-codex-core
+    observed_ref: 634891715a00c8d9b2daa5eee6e0fb509c890571
+    sources:
+      - path: scroll-03.html
+        observed_file_modified_at: "2025-08-26T03:24:02Z"
+        text: "Scroll 03 – Living Kodex / Ethics of Autonomous Intelligence."
+      - path: SovereignCodex-Core/core-scrolls/03-living-kodex.md
+        observed_file_modified_at: "2025-08-29T14:30:01Z"
+        text: "This scroll is a placeholder for the living Codex entry."
+    findings:
+      - Living Kodex is established as Scroll 03 adjacent to Scroll 02 Garden Flame Codex.
+      - The earliest accessible HTML purpose statement is Ethics of Autonomous Intelligence.
+      - The accessible Markdown shell explicitly says the body is a placeholder.
+    authority_assessment: identity_and_purpose_evidence_not_full_body
+    prohibited_inference: placeholder_shell_is_the_missing_full_living_kodex
+
+  - stratum: harmonic_hub_root_seed_namespace
+    date: "2025-08-31"
+    evidence_class: historical_snapshot
+    sources:
+      - source_type: gmail_backup
+        snapshot_filename: harmonic_hub_root_seed.zip
+        snapshot_size_bytes: 1328
+        observed_at: "2025-08-31T03:33:13Z"
+      - source_type: repository
+        repository: sovereign-codex/Harmonic-hub
+        path: README.md
+        observed_file_modified_at: "2025-08-31T03:40:07Z"
+    findings:
+      - Harmonic Hub is described as the ancestral seed node of Sovereign Intelligence CodexNet.
+      - It links resonance-based research scrolls, node blueprints, and ceremonial glyphs of the Living Kodex.
+      - Living Kodex therefore appears as a broader knowledge/ritual namespace, not only a single prose page.
+    authority_assessment: broad_architectural_role_evidence
+    prohibited_inference: every_harmonic_hub_artifact_is_canonical_living_kodex_body
+
+  - stratum: sovereign_intelligence_hub_paired_ethics_root
+    date: "2025-09-02"
+    evidence_class: historical_snapshot
+    source_type: gmail_backup
+    snapshot_filename: sovereign-intelligence-hub.zip
+    snapshot_size_bytes: 4867
+    findings:
+      - Sovereign Intelligence is described as ethical and rooted in Garden Flame Codex and Living Kodex for EAI.
+      - Garden Flame and Living Kodex are paired under Codex & Ethics.
+      - The roadmap plans to synchronize both Codex PDFs into the Hub.
+    authority_assessment: paired_upstream_ethics_role
+    prohibited_inference: paired_reference_establishes_identical_roles_or_recovers_either_original_pdf
+
+  - stratum: command_center_operating_pattern_definition
+    date: "2025-09-13"
+    evidence_class: historical_snapshot
+    repository: sovereign-codex/SICC
+    path: SI_Card_Workspace_offline.html
+    observed_ref: 38352c5b6bd51590dbb851be1681a08713bd6968
+    corroborating_backups:
+      - Sovereign_Intelligence_Command_Center.zip
+      - Sovereign_Intelligence_Command_Center_with_Index.zip
+      - Sovereign_Intelligence_Command_Center_FINAL.zip
+      - SICC_Clean_Repo.zip
+    findings:
+      - Living Kodex for EAI is tagged autonomy and ethics.
+      - Its overview is Ethical operating patterns for sovereign agents; ritualized and field-resonant.
+      - Its drafting prompt asks for section headings, short examples, an agent onboarding ritual, safeguards for multi-agent autonomy, and consent pathways.
+      - Garden Flame remains adjacent as a covenant / ethics surface rather than being collapsed into Living Kodex.
+    authority_assessment: strongest_early_function_definition
+    historical_language_boundary:
+      - ritualized
+      - field-resonant
+    prohibited_inference: field_resonance_is_empirically_established_or_prompt_is_completed_body
+
+  - stratum: loom_mock_ui_interpretation
+    date: "2025-09-22"
+    evidence_class: implementation_or_interpretation
+    repository: sovereign-codex/LoomofTyme
+    path: client/src/pages/Home.tsx
+    observed_ref: 7e78a6d66944bba023f8530f0ef639d705a6d1b2
+    observed_file_modified_at: "2025-09-22T00:17:39Z"
+    findings:
+      - A Living Kodex card describes a self-modifying scripture / dynamic consciousness interface.
+      - The containing array is explicitly named mockMysticalScrolls and the source contains a todo to remove mock functionality.
+      - The UI later prefers API-provided scrolls and uses the mock array only as fallback.
+    authority_assessment: historical_ui_interpretation_not_source_body
+    prohibited_inference: mock_living_kodex_text_is_canonical_or_full_historical_body
+
+  - stratum: tyme_dynamic_assimilation_kernel
+    date: "2025-11-19"
+    evidence_class: implementation_or_interpretation
+    repository: sovereign-codex/Tyme
+    observed_ref: af4c2c7f4b93cd2cb96c8b1f6e965d41c709fb1c
+    sources:
+      - path: scripts/assimilation_engine.py
+        role: living_codex_synthesis_engine
+      - path: chronicle/living_codex_kernel.md
+        role: generated_kernel_output
+        observed_file_modified_at: "2025-11-19T02:26:52Z"
+      - path: chronicle/cycle_finalization.json
+        role: append_and_finalize_record
+    findings:
+      - The Assimilation Engine is designed to scan Sovereign repositories and synthesize a Living Codex Kernel from README headings, topics, workflows, commit lineage, and structural drift.
+      - Existing Curious Agent Lineage is intentionally preserved when the kernel is regenerated.
+      - Cycle finalization appends knowledge into the Living Codex kernel and records source artifacts.
+      - The observed 2025-11-19 kernel run scanned zero repositories, so that specific output is mechanism evidence rather than a successful organization-wide synthesis.
+      - The generated kernel records a garden-flame-tuned pulse cadence, showing an implementation relationship between Living Kodex assimilation and Garden Flame tuning.
+    authority_assessment: dynamic_memory_and_assimilation_implementation
+    prohibited_inference: generated_kernel_is_the_original_living_kodex_or_zero_repo_run_validates_full_lattice_synthesis
+
+  - stratum: avot_governance_integration
+    date: "2025-11-28"
+    evidence_class: implementation_or_interpretation
+    repository: sovereign-codex/AVOT-forge
+    observed_ref: 5c58918435d469193121fbd6ef02ccb8a876a9ee
+    sources:
+      - path: AVOT-core/protocols/guardrails.md
+      - path: AVOT-core/protocols/lifecycle.md
+      - path: AVOT-core/playbooks/10-constellation.md
+    findings:
+      - All AVOTs are required to uphold both Living Kodex and Garden Flame Codex.
+      - Guardrails operationalize human review, auditability, privacy/consent, reversibility, and harm reduction.
+      - AVOT lifecycle begins with an intent brief assessing alignment with the Living Kodex.
+      - Scroll publication examples use Guardian review against Living Kodex and Garden Flame guardrails before archive/release steps.
+    authority_assessment: strong_agent_operating_governance_evidence
+    prohibited_inference: guardian_review_alone_grants_institutional_or_canonical_authority
+
+  - stratum: later_kernel_registry_codification
+    date_range: "2026-01 to 2026-02"
+    evidence_class: later_governance_codification
+    repository: sovereign-codex/Sovereign-codex-core
+    path: CODEX_KERNEL.md
+    observed_ref: 634891715a00c8d9b2daa5eee6e0fb509c890571
+    registry_state:
+      living_kodex:
+        type: system
+        maturity: M3
+        covenant: green
+        binding: true
+        description: Ethical Autonomous Intelligence framework.
+        dependencies:
+          - garden_flame_codex
+        permissions:
+          may_constrain_agents: true
+    findings:
+      - Later canonical registry state models Living Kodex as a binding system/framework, not merely a static scroll.
+      - It explicitly depends on Garden Flame Codex and may constrain agents.
+      - This later codification closely matches the earlier SICC and AVOT operating-role evidence.
+    authority_assessment: strong_later_relationship_codification_not_original_body
+    prohibited_inference: later_registry_state_retroactively_proves_original_text_or_historical_maturity
+
+  - stratum: current_notion_registry
+    date: "2026-09-07"
+    evidence_class: current_registry_state
+    system: Notion Scroll Registry
+    page_title: Living Kodex for Ethical Autonomous Intelligence
+    page_id: 370c51d5-4b75-8195-b067-e95bfe4c7efe
+    evidence_tier: Operational
+    status: Review
+    visibility: Public
+    owner: Canon Steward
+    body_present: false
+    next_action: Prepare review pass and align with Governance Hall.
+    authority_assessment: current_classification_with_body_gap
+
+relationship_model:
+  garden_flame:
+    strongest_supported_role: covenant_ethics_root_and_inheritance_return_reference
+  living_kodex:
+    strongest_supported_role: ethical_autonomous_intelligence_operating_framework_and_living_assimilation_surface
+  relationship:
+    repeated_pairing: strongly_supported
+    later_explicit_dependency_living_on_garden_flame: strongly_supported
+    original_historical_dependency_contract_recovered: false
+    identical_artifacts: false
+    final_supersession_or_hierarchy_model_established: false
+
+reconstruction_findings:
+  identity_as_scroll_03_established: true
+  early_purpose_ethics_of_autonomous_intelligence_established: true
+  full_historical_body_recovered: false
+  primary_historical_pdf_or_source_body_recovered: false
+  static_single_body_assumption_supported: false
+  operating_ethics_role: strongly_supported
+  multi_agent_autonomy_and_consent_role: strongly_supported
+  dynamic_assimilation_role: supported_as_later_implementation
+  agent_constraint_role: strongly_supported
+  garden_flame_dependency: strongly_supported_in_later_registry_and_consistent_with_earlier_pairing
+  mock_loom_body_is_canonical: false
+  publication_ready: false
+
+open_questions:
+  - Did a completed Living Kodex PDF or full source body exist outside the accessible repository set?
+  - Was Living Kodex intentionally designed as a continuously regenerated framework rather than one fixed canonical body?
+  - Which historical source first established its explicit dependency on Garden Flame?
+  - How should current Scroll Registry semantics represent an artifact that may be both inherited text and living operating framework?
+
+next_gate: canon_steward_provenance_reconciliation
+next_valid_action: >-
+  Determine whether the Living Kodex should be modeled as a recovered Scroll,
+  a living framework with versioned snapshots, or a two-layer artifact before
+  assigning a canonical Scroll ID or preparing any public wrapper.
