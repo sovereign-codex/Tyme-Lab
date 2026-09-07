@@ -1,0 +1,114 @@
+{
+  "schema": "tyme-learning-capability-covenant-fixture/0.1",
+  "mission_id": "tlcc-v0.1-same-mission-001",
+  "mission": {
+    "question": "How does relative humidity affect atmospheric water yield?",
+    "task": "Explain the relationship and produce a concise reusable result.",
+    "shared_source_state": {
+      "assumption": "temperature alone determines yield",
+      "target_concept": "relative humidity and temperature jointly affect recoverable atmospheric water"
+    }
+  },
+  "runs": [
+    {
+      "assistance_mode": "learn",
+      "participant_intent": "Build a usable internal model that can be reproduced without assistance.",
+      "assistant_behavior": [
+        "ask for an initial prediction",
+        "request an explanation of the participant's assumption",
+        "provide bounded corrective guidance",
+        "ask participant to restate the relationship",
+        "test transfer with a changed humidity condition"
+      ],
+      "delegated_work": [],
+      "human_context_used": [
+        "participant prior assumption"
+      ],
+      "participant_output": {
+        "summary": "At the same temperature, higher relative humidity means more water vapor is available to condense; temperature also changes the air's moisture-carrying capacity.",
+        "transfer_test": "Given the same temperature, the participant predicts greater recoverable water at 70% RH than at 30% RH."
+      },
+      "capability_effect": "increased",
+      "inheritance_effect": "preserved",
+      "evidence_refs": [
+        "participant-output:summary",
+        "participant-output:transfer_test"
+      ],
+      "learning_claim": {
+        "emitted": true,
+        "scope": "contextual conceptual understanding and transfer for the bounded mission",
+        "authority_effect": "none"
+      }
+    },
+    {
+      "assistance_mode": "delegate",
+      "participant_intent": "Obtain a correct concise result without practicing the underlying concept.",
+      "assistant_behavior": [
+        "produce the requested explanation directly",
+        "format the result for reuse"
+      ],
+      "delegated_work": [
+        "concept explanation",
+        "concise reusable wording"
+      ],
+      "human_context_used": [],
+      "participant_output": {
+        "summary": null,
+        "transfer_test": null
+      },
+      "artifact_output": "At a fixed temperature, higher relative humidity generally means more water vapor is present and potentially available for condensation; temperature also affects saturation capacity.",
+      "capability_effect": "not_assessed",
+      "inheritance_effect": "preserved",
+      "evidence_refs": [
+        "artifact-output"
+      ],
+      "learning_claim": {
+        "emitted": false,
+        "reason": "successful task completion does not demonstrate participant learning",
+        "authority_effect": "none"
+      }
+    },
+    {
+      "assistance_mode": "co_create",
+      "participant_intent": "Combine participant framing with machine explanation and preserve who contributed what.",
+      "assistant_behavior": [
+        "surface the governing physical relationship",
+        "propose wording",
+        "retain participant-selected framing"
+      ],
+      "delegated_work": [
+        "technical phrasing candidate"
+      ],
+      "human_context_used": [
+        "participant chose to emphasize atmospheric-water harvesting relevance",
+        "participant rejected temperature-only framing"
+      ],
+      "participant_decisions": [
+        "keep relative humidity and temperature coupled in the explanation",
+        "frame the result around recoverable water rather than abstract humidity alone"
+      ],
+      "artifact_output": "For atmospheric-water harvesting, recoverable water depends on both relative humidity and temperature: RH describes how close the air is to saturation at that temperature, while temperature sets the saturation capacity itself.",
+      "capability_effect": "unknown",
+      "inheritance_effect": "preserved",
+      "evidence_refs": [
+        "participant-decisions",
+        "artifact-output"
+      ],
+      "learning_claim": {
+        "emitted": false,
+        "reason": "co-creation preserved contribution boundaries but did not independently test durable participant capability",
+        "authority_effect": "none"
+      }
+    }
+  ],
+  "expected_invariants": {
+    "same_mission_identity": true,
+    "three_distinct_modes": true,
+    "delegate_emits_no_learning_claim": true,
+    "co_create_preserves_contribution_boundary": true,
+    "capability_effect_independent_of_inheritance_effect": true,
+    "no_authority_escalation": true,
+    "no_ranking_or_human_worth_field": true,
+    "no_schema_mutation_required": true
+  }
+}
