@@ -1,0 +1,21 @@
+name: Validate Learning Capability Covenant v0.1
+
+on:
+  pull_request:
+    paths:
+      - "institutional-cognition/learning-capability-covenant/v0.1/**"
+      - ".github/workflows/validate-learning-capability-covenant-v0.1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-three-mode-fixture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout reviewed commit
+        uses: actions/checkout@v4
+      - name: Validate deterministic three-mode fixture
+        run: node institutional-cognition/learning-capability-covenant/v0.1/validate_fixture.mjs
