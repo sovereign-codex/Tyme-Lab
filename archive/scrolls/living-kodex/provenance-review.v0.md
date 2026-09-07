@@ -30,7 +30,7 @@ living repository assimilation + lineage memory
 
 This suggests that the word **Living** may have become architectural rather than ornamental: the Kodex was repeatedly treated as something that guides agent behavior and, later, as something capable of being updated through repository and lineage returns.
 
-That interpretation is materially supported. It is not yet sufficient to claim that no fixed historical body ever existed.
+That interpretation is materially supported. It is not sufficient to claim that no fixed historical body ever existed.
 
 ## Earliest accessible identity
 
@@ -238,7 +238,7 @@ Living Kodex inheritance layer = articulated EAI principles
 Living Kodex operational layer = versioned application to agents and institutional learning
 ```
 
-The exact historical source body remains the missing evidence needed to stabilize this model.
+The exact historical source body remains missing from the currently accessible inheritance surfaces.
 
 ## What is not recovered
 
@@ -251,29 +251,47 @@ This pass has **not** recovered:
 - evidence that the Loom mock text was ever promoted from fallback UI to canon;
 - evidence that the 2025-11 Living Codex Kernel superseded Scroll 03.
 
+## Cross-surface recovery closure
+
+This pass has now checked the distinct accessible inheritance surfaces available in the current institutional environment:
+
+- accessible `sovereign-codex` GitHub repositories and relevant history;
+- the recovered 2025 Gmail backup cluster, including Harmonic Hub, Sovereign Intelligence Hub, and SICC variants;
+- current Notion Registry and Governance surfaces;
+- the persistent ChatGPT File Library, including exact/semantic title retrieval and document-only content retrieval.
+
+No completed historical Living Kodex body or standalone historical Living Kodex PDF was recovered from those accessible surfaces.
+
+This **does not establish that no completed body ever existed**, nor that one was deleted. It establishes a narrower and institutionally useful fact:
+
+> **The historical body is not currently recoverable from the accessible inheritance surfaces examined in this pass.**
+
+That closes repeated archaeology for the current access boundary while leaving a clean reopening condition: a genuinely new external source, repository, backup, file, or provenance record may reopen body recovery.
+
 ## Recommended next action
 
 Do not prepare a public wrapper yet.
 
-First:
+The next valid work is no longer another undifferentiated search of the same source surfaces. It is:
 
-1. preserve this provenance map;
-2. search remaining historical backups and repository history for a completed Scroll 03 / Living Kodex body;
-3. ask Canon Steward to review the three artifact-identity models;
-4. if the body remains missing, define a relationship contract before any canonical Scroll ID is assigned.
+1. preserve this closed recovery map;
+2. ask Canon Steward to review the three artifact-identity models;
+3. prefer **Model C as the leading hypothesis** if no new external source is introduced;
+4. define an explicit two-layer relationship/version contract before assigning a canonical Scroll ID;
+5. reopen body recovery only when genuinely new evidence enters the institution.
 
 A future public representation should not pretend a reconstructed ethical summary is the original Living Kodex if the institution actually inherited a **living framework with missing source text**.
 
 ## Current gate
 
 ```text
-PROVENANCE_RECONSTRUCTION
+PROVENANCE_RECONSTRUCTION_COMPLETE_FOR_CURRENT_ACCESS
         ↓
 Canon Steward artifact-identity review
         ↓
-recover body OR define two-layer relationship contract
+if no new external source: define two-layer relationship contract
         ↓
-assign canonical identity only after evidence supports it
+assign canonical identity only after review
         ↓
 public review / publication remain separate later gates
 ```
