@@ -1,6 +1,6 @@
 artifact_slug: living-kodex
 artifact_title_current_registry: "Living Kodex for Ethical Autonomous Intelligence"
-reconstruction_version: "0.1.0"
+reconstruction_version: "0.1.1"
 reconstruction_date: "2026-09-07"
 posture: PROVENANCE_RECONSTRUCTION
 publication_authorized: false
@@ -191,8 +191,34 @@ source_strata:
     visibility: Public
     owner: Canon Steward
     body_present: false
-    next_action: Prepare review pass and align with Governance Hall.
+    next_action: Cross-surface recovery complete for current access; artifact identity review required.
     authority_assessment: current_classification_with_body_gap
+
+source_surface_recovery_check:
+  completed_at: "2026-09-07"
+  completed_for_current_access: true
+  surfaces_checked:
+    github_repository_set:
+      result: no_completed_historical_body_recovered
+    gmail_backup_cluster:
+      result: no_standalone_completed_body_or_pdf_recovered
+      matched_cluster:
+        - harmonic_hub_root_seed.zip
+        - sovereign-intelligence-hub.zip
+        - Sovereign_Intelligence_Command_Center.zip
+        - Sovereign_Intelligence_Command_Center_with_Index.zip
+        - Sovereign_Intelligence_Command_Center_FINAL.zip
+        - SICC_Clean_Repo.zip
+    notion_workspace:
+      result: registry_and_governance_context_recovered_body_absent
+    chatgpt_persistent_file_library:
+      result: no_matching_completed_body_recovered
+      methods:
+        - exact_and_semantic_title_search
+        - document_only_content_search
+      note: No relevant completed Living Kodex or Scroll 03 body was returned from accessible saved files.
+  conclusion: body_not_recovered_across_accessible_surfaces
+  prohibited_inference: no_body_found_does_not_establish_nonexistence_deletion_or_that_no_completed_body_ever_existed
 
 relationship_model:
   garden_flame:
@@ -211,6 +237,8 @@ reconstruction_findings:
   early_purpose_ethics_of_autonomous_intelligence_established: true
   full_historical_body_recovered: false
   primary_historical_pdf_or_source_body_recovered: false
+  cross_surface_body_recovery_completed_for_current_access: true
+  body_absence_establishes_nonexistence: false
   static_single_body_assumption_supported: false
   operating_ethics_role: strongly_supported
   multi_agent_autonomy_and_consent_role: strongly_supported
@@ -221,13 +249,15 @@ reconstruction_findings:
   publication_ready: false
 
 open_questions:
-  - Did a completed Living Kodex PDF or full source body exist outside the accessible repository set?
+  - Did a completed Living Kodex PDF or full source body exist outside the currently accessible inheritance surfaces?
   - Was Living Kodex intentionally designed as a continuously regenerated framework rather than one fixed canonical body?
   - Which historical source first established its explicit dependency on Garden Flame?
   - How should current Scroll Registry semantics represent an artifact that may be both inherited text and living operating framework?
 
-next_gate: canon_steward_provenance_reconciliation
+next_gate: canon_steward_artifact_identity_review
 next_valid_action: >-
-  Determine whether the Living Kodex should be modeled as a recovered Scroll,
-  a living framework with versioned snapshots, or a two-layer artifact before
-  assigning a canonical Scroll ID or preparing any public wrapper.
+  Treat body recovery as closed for currently accessible source surfaces. Review
+  whether the Living Kodex should be modeled as a missing-body Scroll, a living
+  framework with versioned snapshots, or a two-layer artifact. If no new
+  external source is introduced, define the identity and relationship contract
+  before assigning a canonical Scroll ID or preparing any public wrapper.
