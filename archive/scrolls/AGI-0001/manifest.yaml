@@ -3,7 +3,7 @@ scroll_id: AGI-0001
 title: "AGI Manifesto Scroll - Autonomous Governing Intelligence"
 version: "0.1.0"
 status: review
-public_posture: PUBLIC_CANDIDATE
+public_posture: PUBLIC_REVIEWED
 artifact_type: foundational_manifesto
 evidence_tier: Canon
 visibility: Public
@@ -32,6 +32,7 @@ source:
 review:
   canon_steward_verdict: valid_with_conditions
   review_record: "Canon Steward Review - AGI Manifesto Scroll - 2026-09-07"
+  final_public_projection_review: passed
   publication_gate_ref: https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/SCROLL_PUBLICATION_GATE_V0.md
   conditions:
     - preserve source digest and historical-source distinction
@@ -39,7 +40,7 @@ review:
     - distinguish metaphor and aspiration from empirical claims
     - state explicitly that governing capability does not create institutional authority
     - preserve supersession and inheritance fields
-    - run final public projection review before publication
+    - require explicit publication authorization before PUBLISHED_CANONICAL
 
 epistemic_posture:
   artifact_class: normative_doctrine
@@ -73,4 +74,4 @@ regenerability:
   public_representation_versioned: true
   public_presentation_is_sole_copy: false
 
-next_gate: final_public_projection_review
+next_gate: publication_authorization
