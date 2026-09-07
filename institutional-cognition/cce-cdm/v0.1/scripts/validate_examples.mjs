@@ -20,6 +20,15 @@ function validate(event) {
   for (const item of event.evidence ?? []) {
     if (!/^sha256:[a-f0-9]{64}$/i.test(item.digest ?? "")) errors.push("evidence:bad-digest");
   }
+  if (event.integrity?.canonicalization !== "jcs-rfc8785") errors.push("integrity:bad-canonicalization");
+  if (!/^sha256:[a-f0-9]{64}$/i.test(event.integrity?.digest ?? "")) errors.push("integrity:bad-digest");
+  for (const signal of event.developmental_signals ?? []) {
+    for (const key of ["context_boundaries", "confidence", "interpreted_at", "review_condition"]) {
+      if (!(key in signal)) errors.push(`developmental-signal:missing-${key}`);
+    }
+    if (!signal.context_boundaries || Object.keys(signal.context_boundaries).length === 0) errors.push("developmental-signal:empty-context-boundaries");
+    if (typeof signal.confidence !== "number" || signal.confidence < 0 || signal.confidence > 1) errors.push("developmental-signal:bad-confidence");
+  }
   return errors;
 }
 

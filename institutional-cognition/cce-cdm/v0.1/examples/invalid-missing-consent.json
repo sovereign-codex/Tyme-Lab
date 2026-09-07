@@ -8,5 +8,5 @@
   "action": { "verb": "investigated", "object": "atmospheric water yield" },
   "evidence": [{ "type": "simulation_result", "digest": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", "location": "urn:example:synthetic-evidence:003" }],
   "provenance": { "recorder": "urn:example:synthetic-learner-02", "source_system": "tyme-hall-synthetic-fixture", "transformations": [] },
-  "integrity": { "digest_algorithm": "sha-256", "signature_type": "data-integrity-proof", "proof": "detached-proof-placeholder" }
+  "integrity": { "digest_algorithm": "sha-256", "canonicalization": "jcs-rfc8785", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "signature_type": "data-integrity-proof", "proof": "detached-proof-placeholder" }
 }
