@@ -1,0 +1,75 @@
+candidate_id: garden-flame-codex-public-review-v0
+artifact_title: Garden Flame Codex
+canonical_scroll_id: null
+wrapper_version: "0.1.0"
+public_posture: PUBLIC_CANDIDATE
+publication_authorized: false
+publication_target: null
+
+artifact_class: ethical_governance_inheritance
+evidence_tier: Canon
+visibility_if_later_authorized: Public
+
+stewardship:
+  office: Governance Hall
+  steward: Canon Steward
+
+authority:
+  posture: non_self_authorizing
+  institutional_effect: review_only
+  avot_can_confer_institutional_authority: false
+  historical_avot_recognition_is_current_credential: false
+
+provenance:
+  reconstruction_verdict: provenance_sufficient_with_unresolved_primary_source
+  strongest_surviving_full_body:
+    repository: sovereign-codex/LoomofTyme
+    commit: b2eddb178960bf5fd5b63d613da708c6f2637531
+    path: client/src/lib/tymeLoomScrolls.ts
+    source_label: tyme_loom_injection_v1
+    repository_entry_timestamp: "2025-09-20T09:22:33Z"
+    preserved_copy: archive/scrolls/garden-flame-codex/historical-body.tyme-loom-injection-v1.md
+    proven_original_source: false
+  unresolved_primary_repository:
+    reference: sovereign-codex/Garden-Flame-Kodex
+    recovered: false
+    uncertainty_preserved: true
+  operational_derivative:
+    repository: sovereign-codex/Tyme
+    version: "1.0.0"
+    relationship: implements_or_interprets
+    supersession_proven: false
+
+epistemic_posture:
+  wrapper_class: conditioned_normative_synthesis
+  historical_body_preserved_separately: true
+  historical_metaphysical_language_endorsed_as_empirical: false
+  empirical_specification: false
+  historical_certification_tiers_active: false
+  durable_normative_inheritance:
+    - harmonic_consent
+    - resonant_responsibility
+    - sacred_reciprocity
+    - traceable_coherence
+    - harmonic_safety
+    - sovereign_stewardship
+    - community_review_and_living_revision
+
+projection:
+  sensitive_material_exposed: false
+  credentials_or_secrets_exposed: false
+  private_infrastructure_exposed: false
+  internal_authority_granted: false
+  candidate_representation: archive/scrolls/garden-flame-codex/public-candidate.md
+  historical_source_is_only_public_copy: false
+
+review_requirements:
+  - confirm provenance uncertainty remains explicit
+  - confirm normative synthesis does not imply empirical validation
+  - confirm historical certification language is non-operative
+  - confirm AVOT-Guardian remains non-authorizing
+  - confirm operational derivative is not presented as supersession
+  - confirm no public Scroll ID is assigned before review supports it
+  - require separate human publication authorization after PUBLIC_REVIEWED
+
+next_gate: canon_steward_epistemic_and_projection_review
