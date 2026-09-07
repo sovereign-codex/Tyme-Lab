@@ -9,6 +9,13 @@
       "target_concept": "relative humidity and temperature jointly affect recoverable atmospheric water"
     }
   },
+  "participant_control": {
+    "mode_choice": "participant_declared_or_confirmed",
+    "mode_override_allowed": true,
+    "capability_effect_contestable": true,
+    "contestation_preserves_evidence": true,
+    "contestation_effect": "mark interpretation contested or unresolved; preserve source evidence and lineage"
+  },
   "runs": [
     {
       "assistance_mode": "learn",
@@ -107,6 +114,9 @@
     "delegate_emits_no_learning_claim": true,
     "co_create_preserves_contribution_boundary": true,
     "capability_effect_independent_of_inheritance_effect": true,
+    "participant_controls_assistance_relationship": true,
+    "capability_effect_is_contestable": true,
+    "contestation_preserves_evidence": true,
     "no_authority_escalation": true,
     "no_ranking_or_human_worth_field": true,
     "no_schema_mutation_required": true
