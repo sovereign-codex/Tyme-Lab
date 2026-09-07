@@ -2,8 +2,8 @@ artifact_id: AGI-0001
 scroll_id: AGI-0001
 title: "AGI Manifesto Scroll - Autonomous Governing Intelligence"
 version: "0.1.0"
-status: review
-public_posture: PUBLIC_REVIEWED
+status: published
+public_posture: PUBLISHED_CANONICAL
 artifact_type: foundational_manifesto
 evidence_tier: Canon
 visibility: Public
@@ -14,7 +14,7 @@ stewardship:
 
 authority:
   posture: non_self_authorizing
-  institutional_effect: publication_authorized_release_committed
+  institutional_effect: public_inheritance_only
   publication_authorized: true
   authorized_by: human_publication_authority
 
@@ -35,6 +35,7 @@ review:
   review_record: "Canon Steward Review - AGI Manifesto Scroll - 2026-09-07"
   final_public_projection_review: passed
   publication_gate_ref: https://github.com/sovereign-codex/Tyme-Lab/blob/main/docs/architecture/SCROLL_PUBLICATION_GATE_V0.md
+  conditions_satisfied: true
   conditions:
     - preserve source digest and historical-source distinction
     - frame the public artifact as foundational manifesto and governance doctrine
@@ -46,12 +47,14 @@ review:
 publication:
   institution: Sovereign Intelligence Research Institute
   publication_number: 1
+  published_at: "2026-09-07"
   canonical_url: https://tymehall.org/scrolls/AGI-0001/
   public_surface_repository: sovereign-codex/Codex-interface-
   release_commit: f9046a64e6790f0c059a268c5ce6b6cd9cd4432b
   release_source_merged: true
-  domain_verification: pending_external
-  intended_posture_after_verification: PUBLISHED_CANONICAL
+  human_surface_verified: true
+  machine_record_verified: true
+  domain_verification: verified_by_human_observation_and_publication_record
   public_machine_record: https://tymehall.org/scrolls/AGI-0001/publication.json
 
 epistemic_posture:
@@ -86,4 +89,5 @@ regenerability:
   public_representation_versioned: true
   public_presentation_is_sole_copy: false
 
-next_gate: canonical_domain_verification
+next_gate: complete
+next_frontier: garden_flame_codex_provenance_recovery

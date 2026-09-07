@@ -21,11 +21,22 @@ public_release:
   machine_record: https://tymehall.org/scrolls/AGI-0001/publication.json
   public_record_posture: PUBLISHED_CANONICAL
 
+verification:
+  human_surface_verified: true
+  machine_record_verified: true
+  domain_verification: verified_by_human_observation_and_publication_record
+  human_surface_evidence: live_tymehall_mobile_observation
+  machine_record_evidence: user_supplied_live_publication_json
+  machine_record_schema: tyme-hall-scroll-publication/0.1.0
+  verified_scroll_id: AGI-0001
+  verified_version: "0.1.0"
+  verified_publication_number: 1
+  verified_public_posture: PUBLISHED_CANONICAL
+
 institutional_return:
-  current_internal_posture: PUBLIC_REVIEWED
-  domain_verification: pending_external
-  verification_limitation: execution_environment_dns_resolution_unavailable
-  final_internal_posture_after_verification: PUBLISHED_CANONICAL
+  current_internal_posture: PUBLISHED_CANONICAL
+  publication_closed: true
+  next_frontier: garden_flame_codex_provenance_recovery
 
 provenance:
   historical_source_filename: AGI_Manifesto_Scroll.pdf
@@ -39,5 +50,6 @@ review:
   final_public_projection_review: passed
   publication_authorization_received: true
   release_review_passed: true
+  publication_conditions_satisfied: true
 
-next_gate: canonical_domain_verification
+next_gate: complete
