@@ -1,10 +1,12 @@
 candidate_id: garden-flame-codex-public-review-v0
-artifact_title: Garden Flame Codex
-canonical_scroll_id: null
+scroll_id: GFC-0001
+artifact_title: "Garden Flame Codex - Ethical Inheritance"
 wrapper_version: "0.1.0"
 public_posture: PUBLIC_CANDIDATE
 publication_authorized: false
 publication_target: null
+historical_body_carried_scroll_id: false
+historical_body_carried_wrapper_version: false
 
 artifact_class: ethical_governance_inheritance
 evidence_tier: Canon
@@ -63,13 +65,19 @@ projection:
   candidate_representation: archive/scrolls/garden-flame-codex/public-candidate.md
   historical_source_is_only_public_copy: false
 
+canon_steward_review:
+  verdict: valid_with_conditions
+  review_record: "Canon Steward Public-Wrapper Review - Garden Flame Codex - 2026-09-07"
+  stable_wrapper_identity_condition_satisfied: true
+  final_exact_diff_projection_review: pending
+
 review_requirements:
   - confirm provenance uncertainty remains explicit
   - confirm normative synthesis does not imply empirical validation
   - confirm historical certification language is non-operative
   - confirm AVOT-Guardian remains non-authorizing
   - confirm operational derivative is not presented as supersession
-  - confirm no public Scroll ID is assigned before review supports it
+  - confirm GFC-0001 and v0.1.0 belong only to the contemporary wrapper
   - require separate human publication authorization after PUBLIC_REVIEWED
 
-next_gate: canon_steward_epistemic_and_projection_review
+next_gate: final_exact_diff_projection_review
