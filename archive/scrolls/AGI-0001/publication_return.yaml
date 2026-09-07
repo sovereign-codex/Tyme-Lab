@@ -1,0 +1,43 @@
+publication_return_id: agi-0001-siri-publication-001-2026-09-07
+artifact_id: AGI-0001
+scroll_id: AGI-0001
+version: "0.1.0"
+
+institution:
+  name: Sovereign Intelligence Research Institute
+  publication_number: 1
+
+publication_authority:
+  authorized: true
+  authorized_by: human_publication_authority
+  system_self_authorizing: false
+
+public_release:
+  repository: sovereign-codex/Codex-interface-
+  pull_request: 4
+  merge_commit: f9046a64e6790f0c059a268c5ce6b6cd9cd4432b
+  source_merged: true
+  canonical_url: https://tymehall.org/scrolls/AGI-0001/
+  machine_record: https://tymehall.org/scrolls/AGI-0001/publication.json
+  public_record_posture: PUBLISHED_CANONICAL
+
+institutional_return:
+  current_internal_posture: PUBLIC_REVIEWED
+  domain_verification: pending_external
+  verification_limitation: execution_environment_dns_resolution_unavailable
+  final_internal_posture_after_verification: PUBLISHED_CANONICAL
+
+provenance:
+  historical_source_filename: AGI_Manifesto_Scroll.pdf
+  historical_source_sha256: 347bfaaa8d6c73c59697a43022c415b2a45819b9e5e39aa7a07862695d0caeca
+  historical_source_version: unversioned_historical_source
+  public_wrapper_preserved: true
+  reviewed_archive: archive/scrolls/AGI-0001
+
+review:
+  canon_steward_verdict: valid_with_conditions
+  final_public_projection_review: passed
+  publication_authorization_received: true
+  release_review_passed: true
+
+next_gate: canonical_domain_verification
