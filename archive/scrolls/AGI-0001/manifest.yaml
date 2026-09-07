@@ -44,8 +44,9 @@ review:
 epistemic_posture:
   artifact_class: normative_doctrine
   empirical_specification: false
-  established_claims_reviewed: false
-  provisional_claims_labeled_in_public_wrapper: true
+  normative_claims_reviewed: true
+  empirical_claims_asserted_by_public_wrapper: false
+  metaphor_and_aspiration_labeled_in_public_wrapper: true
   notes:
     - "Terms such as guardian lattice, harmonic mediation, resonance, and field resonance are treated as philosophical, metaphorical, or aspirational unless separately evidenced."
 
