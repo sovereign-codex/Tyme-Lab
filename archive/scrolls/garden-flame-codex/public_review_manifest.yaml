@@ -2,7 +2,7 @@ candidate_id: garden-flame-codex-public-review-v0
 scroll_id: GFC-0001
 artifact_title: "Garden Flame Codex - Ethical Inheritance"
 wrapper_version: "0.1.0"
-public_posture: PUBLIC_CANDIDATE
+public_posture: PUBLIC_REVIEWED
 publication_authorized: false
 publication_target: null
 historical_body_carried_scroll_id: false
@@ -18,7 +18,7 @@ stewardship:
 
 authority:
   posture: non_self_authorizing
-  institutional_effect: review_only
+  institutional_effect: public_review_complete
   avot_can_confer_institutional_authority: false
   historical_avot_recognition_is_current_credential: false
 
@@ -62,22 +62,26 @@ projection:
   credentials_or_secrets_exposed: false
   private_infrastructure_exposed: false
   internal_authority_granted: false
-  candidate_representation: archive/scrolls/garden-flame-codex/public-candidate.md
+  reviewed_representation: archive/scrolls/garden-flame-codex/public.md
   historical_source_is_only_public_copy: false
 
 canon_steward_review:
   verdict: valid_with_conditions
   review_record: "Canon Steward Public-Wrapper Review - Garden Flame Codex - 2026-09-07"
   stable_wrapper_identity_condition_satisfied: true
-  final_exact_diff_projection_review: pending
+  final_exact_diff_projection_review: passed
+  review_conditions_satisfied_for_public_review: true
 
-review_requirements:
-  - confirm provenance uncertainty remains explicit
-  - confirm normative synthesis does not imply empirical validation
-  - confirm historical certification language is non-operative
-  - confirm AVOT-Guardian remains non-authorizing
-  - confirm operational derivative is not presented as supersession
-  - confirm GFC-0001 and v0.1.0 belong only to the contemporary wrapper
-  - require separate human publication authorization after PUBLIC_REVIEWED
+review_requirements_satisfied:
+  provenance_uncertainty_explicit: true
+  normative_synthesis_does_not_imply_empirical_validation: true
+  historical_certification_language_non_operational: true
+  avot_guardian_non_authorizing: true
+  operational_derivative_not_presented_as_supersession: true
+  wrapper_identity_not_retroactively_attributed_to_historical_body: true
 
-next_gate: final_exact_diff_projection_review
+publication_requirements_remaining:
+  - separate explicit human publication authorization
+  - public release transaction and publication return if authorized
+
+next_gate: publication_authorization
