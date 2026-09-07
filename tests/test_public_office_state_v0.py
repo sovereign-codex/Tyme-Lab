@@ -54,6 +54,50 @@ def test_internal_reference_scheme_fails_closed():
         validate_public_office_state(drifted)
 
 
+def test_authenticated_notion_surface_fails_closed():
+    state = load_fixture()
+    drifted = copy.deepcopy(state)
+    drifted["current_priority"]["public_evidence_refs"] = [
+        "https://app.notion.com/p/private-session-page"
+    ]
+
+    with pytest.raises(ValueError, match="authenticated/session surface"):
+        validate_public_office_state(drifted)
+
+
+def test_localhost_reference_fails_closed():
+    state = load_fixture()
+    drifted = copy.deepcopy(state)
+    drifted["current_priority"]["public_refs"] = [
+        "https://127.0.0.1:8443/internal-status"
+    ]
+
+    with pytest.raises(ValueError, match="non-global IP address"):
+        validate_public_office_state(drifted)
+
+
+def test_embedded_credentials_fail_closed():
+    state = load_fixture()
+    drifted = copy.deepcopy(state)
+    drifted["current_priority"]["public_refs"] = [
+        "https://user:password@example.org/status"
+    ]
+
+    with pytest.raises(ValueError, match="embed credentials"):
+        validate_public_office_state(drifted)
+
+
+def test_secret_query_parameter_fails_closed():
+    state = load_fixture()
+    drifted = copy.deepcopy(state)
+    drifted["current_priority"]["public_refs"] = [
+        "https://example.org/status?token=secret-value"
+    ]
+
+    with pytest.raises(ValueError, match="secret-bearing query parameter"):
+        validate_public_office_state(drifted)
+
+
 def test_current_priority_must_be_now():
     state = load_fixture()
     drifted = copy.deepcopy(state)
