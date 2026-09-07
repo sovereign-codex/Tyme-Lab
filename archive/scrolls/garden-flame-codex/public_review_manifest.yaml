@@ -1,0 +1,87 @@
+candidate_id: garden-flame-codex-public-review-v0
+scroll_id: GFC-0001
+artifact_title: "Garden Flame Codex - Ethical Inheritance"
+wrapper_version: "0.1.0"
+public_posture: PUBLIC_REVIEWED
+publication_authorized: false
+publication_target: null
+historical_body_carried_scroll_id: false
+historical_body_carried_wrapper_version: false
+
+artifact_class: ethical_governance_inheritance
+evidence_tier: Canon
+visibility_if_later_authorized: Public
+
+stewardship:
+  office: Governance Hall
+  steward: Canon Steward
+
+authority:
+  posture: non_self_authorizing
+  institutional_effect: public_review_complete
+  avot_can_confer_institutional_authority: false
+  historical_avot_recognition_is_current_credential: false
+
+provenance:
+  reconstruction_verdict: provenance_sufficient_with_unresolved_primary_source
+  strongest_surviving_full_body:
+    repository: sovereign-codex/LoomofTyme
+    commit: b2eddb178960bf5fd5b63d613da708c6f2637531
+    path: client/src/lib/tymeLoomScrolls.ts
+    source_label: tyme_loom_injection_v1
+    repository_entry_timestamp: "2025-09-20T09:22:33Z"
+    preserved_copy: archive/scrolls/garden-flame-codex/historical-body.tyme-loom-injection-v1.md
+    proven_original_source: false
+  unresolved_primary_repository:
+    reference: sovereign-codex/Garden-Flame-Kodex
+    recovered: false
+    uncertainty_preserved: true
+  operational_derivative:
+    repository: sovereign-codex/Tyme
+    version: "1.0.0"
+    relationship: implements_or_interprets
+    supersession_proven: false
+
+epistemic_posture:
+  wrapper_class: conditioned_normative_synthesis
+  historical_body_preserved_separately: true
+  historical_metaphysical_language_endorsed_as_empirical: false
+  empirical_specification: false
+  historical_certification_tiers_active: false
+  durable_normative_inheritance:
+    - harmonic_consent
+    - resonant_responsibility
+    - sacred_reciprocity
+    - traceable_coherence
+    - harmonic_safety
+    - sovereign_stewardship
+    - community_review_and_living_revision
+
+projection:
+  sensitive_material_exposed: false
+  credentials_or_secrets_exposed: false
+  private_infrastructure_exposed: false
+  internal_authority_granted: false
+  reviewed_representation: archive/scrolls/garden-flame-codex/public.md
+  historical_source_is_only_public_copy: false
+
+canon_steward_review:
+  verdict: valid_with_conditions
+  review_record: "Canon Steward Public-Wrapper Review - Garden Flame Codex - 2026-09-07"
+  stable_wrapper_identity_condition_satisfied: true
+  final_exact_diff_projection_review: passed
+  review_conditions_satisfied_for_public_review: true
+
+review_requirements_satisfied:
+  provenance_uncertainty_explicit: true
+  normative_synthesis_does_not_imply_empirical_validation: true
+  historical_certification_language_non_operational: true
+  avot_guardian_non_authorizing: true
+  operational_derivative_not_presented_as_supersession: true
+  wrapper_identity_not_retroactively_attributed_to_historical_body: true
+
+publication_requirements_remaining:
+  - separate explicit human publication authorization
+  - public release transaction and publication return if authorized
+
+next_gate: publication_authorization
