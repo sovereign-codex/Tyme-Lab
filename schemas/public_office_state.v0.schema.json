@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/public_office_state.v0.schema.json",
+  "title": "TYME Hall Public Office State v0",
+  "description": "Read-only public projection of evidence-backed institutional state. This contract does not grant authority, publish internal source material, or become a source of institutional truth.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "snapshot_id",
+    "generated_at",
+    "authority_posture",
+    "institutional_effect",
+    "projection",
+    "current_priority",
+    "active_matters",
+    "change_log",
+    "next",
+    "waiting",
+    "human_review",
+    "recent_returns",
+    "surface_updates",
+    "contribution_entry_points",
+    "public_notice"
+  ],
+  "$defs": {
+    "public_ref": {
+      "type": "string",
+      "format": "uri"
+    },
+    "state_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "summary", "posture", "public_evidence_refs", "public_refs"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "posture": {
+          "type": "string",
+          "enum": ["NOW", "ACTIVE", "NEXT", "WAITING", "BLOCKED", "REVIEW", "RETURNED", "GRADUATED", "DORMANT"]
+        },
+        "public_evidence_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/public_ref"},
+          "uniqueItems": true
+        },
+        "public_refs": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/public_ref"},
+          "uniqueItems": true
+        }
+      }
+    },
+    "surface_update": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["surface", "change", "public_ref"],
+      "properties": {
+        "surface": {
+          "type": "string",
+          "enum": ["office", "scrolls", "laboratory", "constellation", "contribution"]
+        },
+        "change": {"type": "string", "minLength": 1},
+        "public_ref": {"type": ["string", "null"], "format": "uri"}
+      }
+    },
+    "entry_point": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "description", "entry_surface", "authority_posture", "public_ref"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "entry_surface": {
+          "type": "string",
+          "enum": ["office", "scrolls", "laboratory", "constellation", "contribution"]
+        },
+        "authority_posture": {
+          "type": "string",
+          "enum": ["none", "orientation_only"]
+        },
+        "public_ref": {"type": "string", "format": "uri"}
+      }
+    }
+  },
+  "properties": {
+    "contract": {"const": "public_office_state_v0"},
+    "snapshot_id": {"type": "string", "minLength": 1},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "authority_posture": {"const": "non_authorizing"},
+    "institutional_effect": {"const": "none"},
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_state_digest",
+        "internal_source_refs_exposed",
+        "sensitive_material_exposed",
+        "projection_policy"
+      ],
+      "properties": {
+        "source_state_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "internal_source_refs_exposed": {"const": false},
+        "sensitive_material_exposed": {"const": false},
+        "projection_policy": {"const": "public_projection_v0"}
+      }
+    },
+    "current_priority": {"$ref": "#/$defs/state_item"},
+    "active_matters": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/state_item"},
+      "uniqueItems": true
+    },
+    "change_log": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/state_item"},
+      "uniqueItems": true
+    },
+    "next": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/state_item"},
+      "uniqueItems": true
+    },
+    "waiting": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/state_item"},
+      "uniqueItems": true
+    },
+    "human_review": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/state_item"},
+      "uniqueItems": true
+    },
+    "recent_returns": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/state_item"},
+      "uniqueItems": true
+    },
+    "surface_updates": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/surface_update"},
+      "uniqueItems": true
+    },
+    "contribution_entry_points": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/entry_point"},
+      "uniqueItems": true
+    },
+    "public_notice": {"type": "string", "minLength": 1}
+  }
+}
