@@ -1,10 +1,10 @@
-packet_id: tymehall-scroll-agi-0001-public-review-2026-09-07
-packet_type: scroll_public_review_return
+packet_id: tymehall-scroll-agi-0001-publication-release-2026-09-07
+packet_type: scroll_publication_release_return
 schema_posture: provisional
 observed_at: "2026-09-07"
 
-authority_posture: non_authorizing
-institutional_effect: public_review_complete
+authority_posture: human_authorized
+institutional_effect: publication_authorized_release_committed
 
 artifact:
   artifact_id: AGI-0001
@@ -12,7 +12,8 @@ artifact:
   version: "0.1.0"
   evidence_tier: Canon
   registry_status: Review
-  public_posture: PUBLIC_REVIEWED
+  internal_public_posture: PUBLIC_REVIEWED
+  intended_public_posture_after_domain_verification: PUBLISHED_CANONICAL
 
 source_evidence:
   source_filename: AGI_Manifesto_Scroll.pdf
@@ -21,11 +22,27 @@ source_evidence:
   canon_steward_verdict: valid_with_conditions
   final_public_projection_review: passed
 
+publication_authorization:
+  authorized: true
+  authorized_by: human_publication_authority
+  institution: Sovereign Intelligence Research Institute
+  publication_number: 1
+  canonical_url: https://tymehall.org/scrolls/AGI-0001/
+
+release_return:
+  public_surface_repository: sovereign-codex/Codex-interface-
+  release_pr: 4
+  release_commit: f9046a64e6790f0c059a268c5ce6b6cd9cd4432b
+  release_source_merged: true
+  domain_verification: pending_external
+  verification_limitation: execution_environment_dns_resolution_unavailable
+
 returned_artifacts:
   - archive/scrolls/AGI-0001/manifest.yaml
   - archive/scrolls/AGI-0001/summary.md
   - archive/scrolls/AGI-0001/public.md
   - archive/scrolls/AGI-0001/runtime_packet.yaml
+  - archive/scrolls/AGI-0001/publication_return.yaml
 
 conditions_satisfied:
   source_identity_bound: true
@@ -38,13 +55,14 @@ conditions_satisfied:
   sensitive_material_detected: false
   internal_source_refs_exposed: false
   final_public_projection_review: true
+  publication_authorization_received: true
+  release_source_merged: true
 
 prohibited_transitions:
-  - publish_to_tymehall_without_authorization
-  - mark_published_canonical_without_authorization
   - infer_empirical_validation_from_canon_tier
   - grant_institutional_authority_to_agi
   - overwrite_or_rewrite_historical_source
+  - mark_internal_published_canonical_without_canonical_domain_verification
 
-next_gate: publication_authorization
-next_valid_action: preserve_reviewed_representation_on_main
+next_gate: canonical_domain_verification
+next_valid_action: verify_tymehall_publication_then_close_publication_return
