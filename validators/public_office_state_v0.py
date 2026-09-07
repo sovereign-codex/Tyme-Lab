@@ -7,7 +7,16 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 SCHEMA = Path("schemas/public_office_state.v0.schema.json")
 
-PRIVATE_HOST_SUFFIXES = (".local", ".internal", ".lan", ".home")
+PRIVATE_HOST_SUFFIXES = (
+    ".local",
+    ".localhost",
+    ".internal",
+    ".lan",
+    ".home",
+    ".test",
+    ".invalid",
+    ".example",
+)
 AUTHENTICATED_OR_SESSION_HOSTS = {"app.notion.com"}
 SECRET_QUERY_KEYS = {
     "access_token",
@@ -43,7 +52,7 @@ def _require_public_safe_ref(ref):
     if not host:
         raise ValueError("public reference must include a hostname")
     if host == "localhost" or host.endswith(PRIVATE_HOST_SUFFIXES):
-        raise ValueError(f"public reference may not target a local/private hostname: {host}")
+        raise ValueError(f"public reference may not target a local/reserved hostname: {host}")
     if host in AUTHENTICATED_OR_SESSION_HOSTS:
         raise ValueError(f"public reference may not target an authenticated/session surface: {host}")
 
@@ -51,8 +60,11 @@ def _require_public_safe_ref(ref):
         address = ipaddress.ip_address(host)
     except ValueError:
         address = None
-    if address is not None and not address.is_global:
-        raise ValueError(f"public reference may not target a non-global IP address: {host}")
+    if address is not None:
+        if not address.is_global:
+            raise ValueError(f"public reference may not target a non-global IP address: {host}")
+    elif "." not in host:
+        raise ValueError(f"public reference may not target a single-label hostname: {host}")
 
     for key, _ in parse_qsl(parsed.query, keep_blank_values=True):
         if key.lower() in SECRET_QUERY_KEYS:
@@ -85,6 +97,16 @@ def validate_public_office_state(instance, schema_path=SCHEMA):
         instance["human_review"],
         instance["recent_returns"],
     ]
+
+    now_count = sum(
+        1
+        for collection in state_collections
+        for item in collection
+        if item["posture"] == "NOW"
+    )
+    if now_count != 1:
+        raise ValueError("public Office state must contain exactly one NOW posture")
+
     for collection in state_collections:
         for item in collection:
             for ref in item["public_evidence_refs"] + item["public_refs"]:
