@@ -1,19 +1,18 @@
-packet_id: tymehall-scroll-agi-0001-publication-release-2026-09-07
-packet_type: scroll_publication_release_return
+packet_id: tymehall-scroll-agi-0001-publication-closeout-2026-09-07
+packet_type: scroll_publication_closeout_return
 schema_posture: provisional
 observed_at: "2026-09-07"
 
 authority_posture: human_authorized
-institutional_effect: publication_authorized_release_committed
+institutional_effect: public_inheritance_only
 
 artifact:
   artifact_id: AGI-0001
   scroll_id: AGI-0001
   version: "0.1.0"
   evidence_tier: Canon
-  registry_status: Review
-  internal_public_posture: PUBLIC_REVIEWED
-  intended_public_posture_after_domain_verification: PUBLISHED_CANONICAL
+  registry_status: Published
+  internal_public_posture: PUBLISHED_CANONICAL
 
 source_evidence:
   source_filename: AGI_Manifesto_Scroll.pdf
@@ -34,8 +33,18 @@ release_return:
   release_pr: 4
   release_commit: f9046a64e6790f0c059a268c5ce6b6cd9cd4432b
   release_source_merged: true
-  domain_verification: pending_external
-  verification_limitation: execution_environment_dns_resolution_unavailable
+  human_surface_verified: true
+  machine_record_verified: true
+  domain_verification: verified_by_human_observation_and_publication_record
+  machine_record_public_posture: PUBLISHED_CANONICAL
+
+verification_evidence:
+  human_surface_evidence: live_tymehall_mobile_observation
+  machine_record_evidence: user_supplied_live_publication_json
+  machine_record_schema: tyme-hall-scroll-publication/0.1.0
+  machine_record_scroll_id: AGI-0001
+  machine_record_version: "0.1.0"
+  machine_record_publication_number: 1
 
 returned_artifacts:
   - archive/scrolls/AGI-0001/manifest.yaml
@@ -57,12 +66,13 @@ conditions_satisfied:
   final_public_projection_review: true
   publication_authorization_received: true
   release_source_merged: true
+  canonical_human_surface_verified: true
+  canonical_machine_record_verified: true
 
 prohibited_transitions:
   - infer_empirical_validation_from_canon_tier
   - grant_institutional_authority_to_agi
   - overwrite_or_rewrite_historical_source
-  - mark_internal_published_canonical_without_canonical_domain_verification
 
-next_gate: canonical_domain_verification
-next_valid_action: verify_tymehall_publication_then_close_publication_return
+next_gate: complete
+next_valid_action: begin_garden_flame_codex_provenance_recovery
