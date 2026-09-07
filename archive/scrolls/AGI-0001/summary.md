@@ -6,11 +6,12 @@
 - Wrapper version: `0.1.0`
 - Evidence tier: `Canon`
 - Registry status: `Review`
-- Public posture: `PUBLIC_CANDIDATE`
+- Public posture: `PUBLIC_REVIEWED`
 - Canon Steward verdict: `valid_with_conditions`
+- Final public projection review: **passed**
 - Publication authorized: **no**
 
-This archive unit prepares the historical **AGI Manifesto Scroll** for public review. It does not publish the Scroll and does not grant authority to any system described by it.
+This archive unit preserves the historical **AGI Manifesto Scroll** as a reviewed public-projection candidate. It does not publish the Scroll and does not grant authority to any system described by it.
 
 ## Source identity
 
@@ -55,16 +56,26 @@ The word **governing** does not create authority.
 
 ## Canon Steward conditions
 
-Before `PUBLISHED_CANONICAL`:
+The public-review conditions have been satisfied for the versioned wrapper:
 
-1. Preserve source identity and SHA-256 provenance.
-2. Keep the historical source distinct from the versioned publication wrapper.
-3. Frame the public artifact as manifesto / doctrine, not empirical specification.
-4. Label metaphorical and aspirational language appropriately.
-5. Preserve the non-self-authorizing authority boundary.
-6. Preserve supersession and inheritance semantics.
-7. Complete final public projection review and explicit publication authorization.
+1. Source identity and SHA-256 provenance are preserved.
+2. Historical source and versioned publication wrapper are explicitly distinct.
+3. The artifact is framed as manifesto / doctrine, not empirical specification.
+4. Metaphorical and aspirational language is labeled.
+5. The non-self-authorizing authority boundary is explicit.
+6. Supersession and inheritance fields are present.
+7. Final public projection review passed.
+
+## Remaining publication boundary
+
+`PUBLIC_REVIEWED` is not `PUBLISHED_CANONICAL`.
+
+The remaining gate is **explicit publication authorization** plus the publication record / deployment return. Until then:
+
+- do not deploy this Scroll to tymehall.org as Canon;
+- do not claim that Canon evidence tier validates empirical mechanisms;
+- do not infer institutional authority from the word governing.
 
 ## Current return
 
-This archive unit satisfies **preparation for public review**. The next gate is `final_public_projection_review`.
+The reviewed representation is eligible to be preserved on `main` as durable review inheritance. The next gate is `publication_authorization`.
