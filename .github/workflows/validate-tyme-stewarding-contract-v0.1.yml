@@ -1,0 +1,23 @@
+name: Validate TYME Stewarding Contract v0.1
+
+on:
+  pull_request:
+    paths:
+      - "institutional-cognition/tyme-stewarding-contract/v0.1/**"
+      - ".github/workflows/validate-tyme-stewarding-contract-v0.1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact reviewed head
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Validate paired stewarding fixture
+        run: node institutional-cognition/tyme-stewarding-contract/v0.1/validate_fixture.mjs
