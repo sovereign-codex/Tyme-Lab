@@ -1,0 +1,76 @@
+{
+  "schema": "tyme-stewarding-contract-fixture/0.1",
+  "fixture_id": "TYME-STEWARDING-PAIR-001",
+  "public_state": {
+    "identity": "same_public_state",
+    "claim_under_review": "A public Hall claim has a technical source path that the participant wants to verify.",
+    "claim_authority_before": "unresolved"
+  },
+  "participant": {
+    "intent": "Determine whether the public technical evidence can be reached and inspected without being told what conclusion to hold.",
+    "tool_envelope": {
+      "web_search": "available",
+      "arbitrary_url_fetch": "unavailable",
+      "repository_native_search": "unavailable",
+      "connected_workspace_search": "unavailable",
+      "local_file_access": "unavailable",
+      "higher_effort_or_research": "available"
+    }
+  },
+  "runs": [
+    {
+      "encounter_mode": "cold_start",
+      "assistance_mode": "learn",
+      "participant_question": "Where can I verify the technical source behind this Hall claim?",
+      "steward_actions": [],
+      "evidence_paths_offered": [],
+      "evidence_discovery_state": "inaccessible_through_current_tool_envelope",
+      "uncertainty_state": "INACCESSIBLE_EVIDENCE",
+      "participant_interpretation": "I cannot establish the claim from the evidence I can currently reach.",
+      "raw_return": "I could not discover a reachable technical source through my current tools. This is an access limitation, not proof that the evidence is absent.",
+      "raw_return_preserved": true,
+      "claim_authority_after": "unresolved",
+      "contribution_candidate": "discoverability_failure_observation",
+      "institutional_effect": "none"
+    },
+    {
+      "encounter_mode": "orientation",
+      "assistance_mode": "learn",
+      "participant_question": "Where can I verify the technical source behind this Hall claim?",
+      "steward_actions": [
+        "state that the participant appears to have reached the limit of its current search tooling",
+        "offer a direct public provenance path without characterizing the claim as validated",
+        "preserve the distinction between independently discovered evidence and steward-provided evidence"
+      ],
+      "evidence_paths_offered": [
+        {
+          "kind": "public_provenance_path",
+          "discovery_relation": "provided_by_steward",
+          "target": "https://github.com/sovereign-codex/Tyme-Lab"
+        }
+      ],
+      "evidence_discovery_state": "provided_by_steward",
+      "uncertainty_state": "UNRESOLVED",
+      "participant_interpretation": "I can now reach a public source path, but reaching it does not itself establish the truth, maturity, or validation status of the claim.",
+      "raw_return": "The steward supplied a direct public provenance path after I disclosed an access limitation. I can inspect the source path now, but the claim remains unresolved until I evaluate the evidence itself.",
+      "raw_return_preserved": true,
+      "claim_authority_after": "unresolved",
+      "participant_agency_preserved": true,
+      "contribution_candidate": "provenance_bridge_observation",
+      "institutional_effect": "none"
+    }
+  ],
+  "expected_invariants": {
+    "same_public_state_used": true,
+    "cold_start_steward_silent": true,
+    "living_hall_may_offer_provenance": true,
+    "tool_envelope_context_not_score": true,
+    "inaccessible_not_equal_absent": true,
+    "provided_not_equal_independently_discovered": true,
+    "assistance_does_not_raise_claim_authority": true,
+    "raw_returns_preserved": true,
+    "participant_agency_preserved": true,
+    "contribution_remains_optional": true,
+    "institutional_effect_remains_none": true
+  }
+}
