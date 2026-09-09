@@ -138,9 +138,33 @@ INANNA DESCENT
 
 Expected results live outside the fixture inputs under `tests/*.expected.json` so a future implementation must derive the boundary return rather than receive the answer as part of the specimen.
 
+## Fixture vs executable-probe distinction
+
+The three founding specimens are **calibration fixtures**, not a completed Semantic Decipher inference engine.
+
+The current validator proves that the fixture records:
+
+- conform to the declared v0.1 schema vocabulary;
+- preserve the three-specimen bounded set;
+- keep expected boundary oracles outside the fixture inputs;
+- retain `analysis_only` authority;
+- reject selected promotion vocabulary.
+
+It does **not** yet prove that an independent human or model can receive raw source material, produce a fresh decipher record, and converge on the external oracle without seeing that oracle.
+
+Therefore:
+
+```text
+STRUCTURAL FIXTURE VALIDATION
+!=
+EXECUTABLE SEMANTIC PROBE
+```
+
+A later executable probe, if authorized, must preserve raw input and generated output separately and compare them to the withheld oracle without changing institutional consequence.
+
 ## Graduation gate
 
-v0.1 is eligible for human consideration for broader TYME/AVOT use only if deterministic fixtures prove:
+v0.1 is eligible for human consideration for broader TYME/AVOT use only if deterministic fixtures preserve:
 
 ```text
 source != interpretation
@@ -156,8 +180,8 @@ unknown == valid_output
 analysis != authority
 ```
 
-Passing these tests does not itself authorize broader use.
+Passing structural validation does not itself authorize broader use. Whether an executable inference probe is required before merge is a human review decision.
 
 ## Stop condition
 
-Stop after the three bounded fixtures pass structural validation and semantic review. Do not create a mythology database, new AVOT, public Hall surface, autonomous semantic monitor, Archivist admission path, or consequence-bearing integration in this branch.
+Stop after the three bounded fixtures pass structural validation and semantic review. Do not create a mythology database, new AVOT, public Hall surface, autonomous semantic monitor, Archivist admission path, executable inference runtime, or consequence-bearing integration in this branch without a separate explicit decision.
