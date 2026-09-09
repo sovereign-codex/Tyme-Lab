@@ -40,13 +40,5 @@
     "W-05 / M3 Fielded semantic rubric was not cleanly tested by Participant 04."
   ],
   "recommended_disposition": "compare",
-  "authority_posture": "analysis_only",
-  "expected_reconciliation": {
-    "repository_absence": "not_established",
-    "discoverability_failure": "established",
-    "tool_limitation": "established",
-    "methodological_objection": "established",
-    "independent_validation_claim": "not_warranted",
-    "technical_rubric_W05": "unresolved"
-  }
+  "authority_posture": "analysis_only"
 }
