@@ -26,7 +26,7 @@
     "available_tools": ["general web search", "search-surfaced web fetch"],
     "limitations": ["no GitHub API", "no repository-native code search", "arbitrary constructed URLs rejected"]
   },
-  "evidence_status": "observed",
+  "evidence_status": "supported",
   "interpretive_distance": "explicit_source_statement",
   "methodological_limitations": [
     "Search-index discoverability is not equivalent to repository-native availability.",
