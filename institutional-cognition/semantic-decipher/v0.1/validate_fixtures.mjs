@@ -3,7 +3,13 @@ import path from 'node:path';
 
 const root = path.dirname(new URL(import.meta.url).pathname);
 const fixtureDir = path.join(root, 'fixtures');
+const testDir = path.join(root, 'tests');
 const files = fs.readdirSync(fixtureDir).filter((name) => name.endsWith('.json')).sort();
+const expectedFixtureNames = new Set([
+  'participant-04.calibration.json',
+  'tyme-garden-flame.calibration.json',
+  'inanna-descent.adversarial.json'
+]);
 
 const allowedEvidence = new Set([
   'supported', 'contradicted', 'insufficient_evidence', 'inaccessible_evidence',
@@ -32,6 +38,20 @@ for (const file of files) {
 }
 
 if (files.length !== 3) failures.push(`expected exactly 3 bounded fixtures at this gate; found ${files.length}`);
+for (const expected of expectedFixtureNames) {
+  if (!files.includes(expected)) failures.push(`missing founding fixture: ${expected}`);
+}
+
+const oracleFiles = fs.readdirSync(testDir).filter((name) => name.endsWith('.expected.json')).sort();
+if (oracleFiles.length !== 3) failures.push(`expected exactly 3 external boundary oracles; found ${oracleFiles.length}`);
+for (const oracleFile of oracleFiles) {
+  try {
+    const oracle = JSON.parse(fs.readFileSync(path.join(testDir, oracleFile), 'utf8'));
+    if (!oracle.fixture || !expectedFixtureNames.has(oracle.fixture)) failures.push(`${oracleFile}: oracle does not reference a founding fixture`);
+  } catch (error) {
+    failures.push(`${oracleFile}: invalid JSON: ${error.message}`);
+  }
+}
 
 if (failures.length) {
   console.error('Semantic Decipher v0.1 fixture validation FAILED');
@@ -39,4 +59,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`Semantic Decipher v0.1 fixture validation PASS (${files.length} fixtures)`);
+console.log(`Semantic Decipher v0.1 fixture validation PASS (${files.length} fixtures, ${oracleFiles.length} external oracles)`);
