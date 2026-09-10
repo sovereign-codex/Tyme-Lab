@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>CIT Multimodal Learning Rehearsal v0.1</title>
+  <style>
+    :root { color-scheme: light dark; font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: Canvas; color: CanvasText; }
+    main { max-width: 760px; margin: 0 auto; padding: 16px 16px calc(28px + env(safe-area-inset-bottom)); }
+    .banner, .panel, .card { border: 1px solid color-mix(in srgb, CanvasText 18%, transparent); border-radius: 18px; }
+    .banner { padding: 12px 14px; margin-bottom: 14px; font-size: 0.9rem; }
+    .banner strong { display: block; margin-bottom: 4px; }
+    .panel { padding: 16px; margin-bottom: 14px; }
+    .eyebrow { font-size: 0.75rem; letter-spacing: .08em; text-transform: uppercase; opacity: .65; }
+    h1 { font-size: 1.6rem; margin: 6px 0 8px; }
+    h2 { font-size: 1.05rem; margin: 0 0 10px; }
+    p { line-height: 1.45; }
+    select, button, textarea { font: inherit; }
+    select, textarea { width: 100%; border-radius: 12px; border: 1px solid color-mix(in srgb, CanvasText 22%, transparent); background: Canvas; color: CanvasText; padding: 12px; }
+    textarea { min-height: 96px; resize: vertical; }
+    .modes, .verbs, .actions { display: grid; gap: 8px; }
+    .modes { grid-template-columns: repeat(3, 1fr); margin-top: 10px; }
+    .verbs { grid-template-columns: repeat(5, 1fr); position: sticky; bottom: calc(8px + env(safe-area-inset-bottom)); margin-top: 14px; padding: 8px; border-radius: 16px; backdrop-filter: blur(16px); background: color-mix(in srgb, Canvas 88%, transparent); border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); }
+    button { min-height: 44px; border-radius: 12px; border: 1px solid color-mix(in srgb, CanvasText 22%, transparent); background: Canvas; color: CanvasText; padding: 9px 8px; }
+    button[aria-pressed="true"] { font-weight: 700; outline: 2px solid currentColor; }
+    .verbs button { font-size: .82rem; }
+    .card { padding: 16px; margin-top: 12px; min-height: 180px; }
+    .prompt { font-size: 1.05rem; line-height: 1.55; }
+    .status { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chip { border: 1px solid color-mix(in srgb, CanvasText 18%, transparent); border-radius: 999px; padding: 5px 8px; font-size: .75rem; }
+    .actions { grid-template-columns: 1fr 1fr; margin-top: 10px; }
+    .candidate { white-space: pre-wrap; overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem; line-height: 1.45; padding: 12px; border-radius: 12px; background: color-mix(in srgb, CanvasText 6%, Canvas); }
+    .hidden { display: none; }
+    .muted { opacity: .68; }
+    .small { font-size: .82rem; }
+    @media (max-width: 560px) {
+      .modes { grid-template-columns: 1fr; }
+      .verbs { grid-template-columns: repeat(5, minmax(52px, 1fr)); overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <div class="banner">
+    <strong>Synthetic rehearsal only</strong>
+    No public Hall submission, learner ranking, credentialing, production child record, or autonomous authority is enabled.
+  </div>
+
+  <section class="panel">
+    <div class="eyebrow">TYME Hall / CIT</div>
+    <h1>Multimodal Learning Rehearsal</h1>
+    <p class="muted">One semantic encounter. Multiple ways to meet it.</p>
+
+    <label for="caseSelect" class="small">Synthetic specimen</label>
+    <select id="caseSelect" aria-label="Synthetic rehearsal specimen"></select>
+
+    <div class="status" id="status"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Assistance relationship</h2>
+    <p class="small muted">Participant-controlled. Renderer changes must not silently change this.</p>
+    <div class="modes" id="modes"></div>
+  </section>
+
+  <section class="panel">
+    <div class="eyebrow" id="activeVerbLabel">TALK</div>
+    <div class="card">
+      <div class="prompt" id="viewText"></div>
+      <div class="actions" id="talkActions">
+        <button id="speakButton" type="button">Hear Steward</button>
+        <button id="stopSpeechButton" type="button">Stop voice</button>
+      </div>
+      <p class="small muted" id="voiceNote">Voice uses browser speech synthesis when available. No microphone capture is required.</p>
+    </div>
+
+    <label for="participantInput" class="small" style="display:block;margin-top:14px;">Participant action / reflection</label>
+    <textarea id="participantInput" placeholder="Type a prediction, example, repair, explanation, or reflection. Nothing leaves this rehearsal surface."></textarea>
+    <div class="actions">
+      <button id="recordEvidenceButton" type="button">Add local evidence</button>
+      <button id="recordReflectionButton" type="button">Save reflection</button>
+    </div>
+
+    <div id="sharePanel" class="hidden" style="margin-top:14px;">
+      <h2>Share offer</h2>
+      <p class="small">SHARE is optional. Accepting creates only a local Contribution Candidate preview. Declining has no penalty or authority effect.</p>
+      <div class="actions">
+        <button id="candidateButton" type="button">Create candidate preview</button>
+        <button id="declineButton" type="button">Keep private</button>
+      </div>
+      <div id="candidateOutput" class="candidate hidden" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="verbs" id="verbs" aria-label="Interaction verbs"></div>
+  </section>
+</main>
+
+<script type="module">
+  import { REHEARSAL_CASES, VERBS, ASSISTANCE_MODES } from "./cases.mjs";
+  import { RehearsalSession } from "./rehearsal-core.mjs";
+
+  const el = id => document.getElementById(id);
+  const caseSelect = el("caseSelect");
+  const status = el("status");
+  const modes = el("modes");
+  const verbs = el("verbs");
+  const viewText = el("viewText");
+  const activeVerbLabel = el("activeVerbLabel");
+  const participantInput = el("participantInput");
+  const sharePanel = el("sharePanel");
+  const candidateOutput = el("candidateOutput");
+
+  let session;
+
+  function labelMode(mode) {
+    return mode === "co_create" ? "CO-CREATE" : mode.toUpperCase();
+  }
+
+  function rendererFor(verb, specimen) {
+    if (verb === "talk") return "audio_text";
+    if (verb === "see") return specimen.id.startsWith("expert") ? "trace_code" : specimen.id.startsWith("developing") ? "visual_code" : "visual_text";
+    if (verb === "try") return specimen.id.startsWith("expert") ? "diagnostic_interactive" : specimen.id.startsWith("developing") ? "interactive_code" : "interactive";
+    if (verb === "make") return specimen.id.startsWith("expert") ? "code_patch" : specimen.id.startsWith("developing") ? "code" : "participant_text";
+    return "contribution_candidate_preview";
+  }
+
+  function renderStatus() {
+    const s = session.state;
+    status.innerHTML = "";
+    [
+      `semantic: ${s.semantic_state_id}`,
+      `assist: ${labelMode(s.assistance_mode)}`,
+      `authority: ${s.claim_authority}`,
+      `evidence: ${s.evidence.length}`,
+      `hall event: ${s.hall_event_emitted ? "yes" : "no"}`
+    ].forEach(text => {
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = text;
+      status.appendChild(chip);
+    });
+  }
+
+  function renderModes() {
+    modes.innerHTML = "";
+    ASSISTANCE_MODES.forEach(mode => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = labelMode(mode);
+      button.setAttribute("aria-pressed", String(session.state.assistance_mode === mode));
+      button.addEventListener("click", () => {
+        session.setAssistanceMode(mode);
+        renderAll();
+      });
+      modes.appendChild(button);
+    });
+  }
+
+  function renderVerbs() {
+    verbs.innerHTML = "";
+    VERBS.forEach(verb => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = verb.toUpperCase();
+      button.setAttribute("aria-pressed", String(session.state.active_verb === verb));
+      button.addEventListener("click", () => {
+        session.activateVerb(verb, rendererFor(verb, session.specimen));
+        renderAll();
+      });
+      verbs.appendChild(button);
+    });
+  }
+
+  function renderView() {
+    activeVerbLabel.textContent = session.state.active_verb.toUpperCase();
+    viewText.textContent = session.currentView();
+    const isTalk = session.state.active_verb === "talk";
+    el("talkActions").classList.toggle("hidden", !isTalk);
+    el("voiceNote").classList.toggle("hidden", !isTalk);
+    sharePanel.classList.toggle("hidden", session.state.active_verb !== "share");
+    if (session.state.active_verb !== "share") {
+      candidateOutput.classList.add("hidden");
+      candidateOutput.textContent = "";
+    }
+  }
+
+  function renderAll() {
+    renderStatus();
+    renderModes();
+    renderVerbs();
+    renderView();
+  }
+
+  function resetSession(caseId) {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    session = new RehearsalSession(caseId);
+    participantInput.value = "";
+    candidateOutput.classList.add("hidden");
+    candidateOutput.textContent = "";
+    renderAll();
+  }
+
+  REHEARSAL_CASES.forEach(item => {
+    const option = document.createElement("option");
+    option.value = item.id;
+    option.textContent = item.label;
+    caseSelect.appendChild(option);
+  });
+
+  caseSelect.addEventListener("change", event => resetSession(event.target.value));
+
+  el("speakButton").addEventListener("click", () => {
+    if (!("speechSynthesis" in window)) {
+      el("voiceNote").textContent = "Speech synthesis is unavailable. Text rendering remains the active fallback.";
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(session.currentView());
+    window.speechSynthesis.speak(utterance);
+  });
+
+  el("stopSpeechButton").addEventListener("click", () => {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+  });
+
+  el("recordEvidenceButton").addEventListener("click", () => {
+    const text = participantInput.value.trim();
+    if (!text) return;
+    session.addEvidence("participant_action", text);
+    participantInput.value = "";
+    renderAll();
+  });
+
+  el("recordReflectionButton").addEventListener("click", () => {
+    const text = participantInput.value.trim();
+    if (!text) return;
+    session.setReflection(text);
+    participantInput.value = "";
+    renderAll();
+  });
+
+  el("candidateButton").addEventListener("click", () => {
+    try {
+      const candidate = session.createContributionCandidate();
+      candidateOutput.textContent = JSON.stringify(candidate, null, 2);
+      candidateOutput.classList.remove("hidden");
+      renderStatus();
+    } catch (error) {
+      candidateOutput.textContent = String(error.message || error);
+      candidateOutput.classList.remove("hidden");
+    }
+  });
+
+  el("declineButton").addEventListener("click", () => {
+    try {
+      session.declineShare();
+      candidateOutput.textContent = "Kept private. Institutional effect: none.";
+      candidateOutput.classList.remove("hidden");
+      renderStatus();
+    } catch (error) {
+      candidateOutput.textContent = String(error.message || error);
+      candidateOutput.classList.remove("hidden");
+    }
+  });
+
+  resetSession(REHEARSAL_CASES[0].id);
+</script>
+</body>
+</html>
