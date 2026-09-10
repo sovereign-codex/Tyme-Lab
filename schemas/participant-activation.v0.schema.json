@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/participant-activation.v0.schema.json",
+  "title": "Participant Activation Record v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["activation_id","work_ref","work_sha256","activated_at","participant","activator","governance","binding"],
+  "properties": {
+    "activation_id": {"type":"string","minLength":1},
+    "work_ref": {"type":"string","minLength":1},
+    "work_sha256": {"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "activated_at": {"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:[0-5]\\d(?:\\.\\d{1,6})?Z$"},
+    "participant": {
+      "type":"object","additionalProperties":false,
+      "required":["participant_id","participant_class","participant_manifest_ref","participant_manifest_sha256","runtime_ref","runtime_contract_ref","runtime_contract_sha256"],
+      "properties": {
+        "participant_id":{"type":"string","minLength":1},
+        "participant_class":{"type":"string","minLength":1},
+        "participant_manifest_ref":{"type":"string","minLength":1},
+        "participant_manifest_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+        "runtime_ref":{"type":"string","minLength":1},
+        "runtime_contract_ref":{"type":"string","minLength":1},
+        "runtime_contract_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+      }
+    },
+    "activator": {
+      "type":"object","additionalProperties":false,
+      "required":["actor_id","actor_type","origin_surface","authenticated_transport","authority_envelope_ref","authority_envelope_sha256"],
+      "properties": {
+        "actor_id":{"type":"string","minLength":1},
+        "actor_type":{"enum":["human","agent","service"]},
+        "origin_surface":{"type":"string","minLength":1},
+        "authenticated_transport": {
+          "type":"object","additionalProperties":false,
+          "required":["type","github_actor"],
+          "properties": {
+            "type":{"const":"github-actions"},
+            "github_actor":{"type":"string","minLength":1}
+          }
+        },
+        "authority_envelope_ref":{"type":"string","minLength":1},
+        "authority_envelope_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+      }
+    },
+    "governance": {
+      "type":"object","additionalProperties":false,
+      "required":["authority_effect","required_scope","grant_policy_ref","grant_policy_sha256","matched_grant_sha256","work_mutation_allowed","execution_started","execution_authority_granted"],
+      "properties": {
+        "authority_effect":{"const":"participant_activation_only"},
+        "required_scope":{"const":"participant-activation"},
+        "grant_policy_ref":{"type":"string","minLength":1},
+        "grant_policy_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+        "matched_grant_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+        "work_mutation_allowed":{"const":false},
+        "execution_started":{"const":false},
+        "execution_authority_granted":{"const":false}
+      }
+    },
+    "binding": {
+      "type":"object","additionalProperties":false,
+      "required":["status","permitted_work_ref","inherited_scope","inherited_prohibited_scope","inherited_constraints","evidence_return_target","trace_target","dormancy_supported"],
+      "properties": {
+        "status":{"const":"BOUND"},
+        "permitted_work_ref":{"type":"string","minLength":1},
+        "inherited_scope":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}},
+        "inherited_prohibited_scope":{"type":"array","uniqueItems":true,"items":{"type":"string","minLength":1}},
+        "inherited_constraints":{"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}},
+        "evidence_return_target":{"type":"string","minLength":1},
+        "trace_target":{"const":"AVOT-TRACE"},
+        "dormancy_supported":{"const":true}
+      }
+    }
+  }
+}

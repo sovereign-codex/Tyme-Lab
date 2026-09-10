@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/runtime-evidence.v0.schema.json",
+  "title": "Runtime Evidence v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","runtime_ref","runtime_source_ref","runtime_source_sha256","supported_constraints","evidence_return","trace_target","dormancy_supported"],
+  "properties": {
+    "schema_version": {"const":"0.1"},
+    "runtime_ref": {"type":"string","minLength":1},
+    "runtime_source_ref": {"type":"string","minLength":1},
+    "runtime_source_sha256": {"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "supported_constraints": {"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}},
+    "evidence_return": {"const":true},
+    "trace_target": {"const":"AVOT-TRACE"},
+    "dormancy_supported": {"const":true}
+  }
+}

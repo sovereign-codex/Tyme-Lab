@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://tymehall.org/schemas/participant-evidence.v0.schema.json",
+  "title": "Participant Evidence v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","participant_id","participant_class","identity_source_ref","identity_source_sha256","constitutional_contract_ref","constitutional_contract_sha256","allowed_actions","forbidden_actions"],
+  "properties": {
+    "schema_version": {"const":"0.1"},
+    "participant_id": {"type":"string","minLength":1},
+    "participant_class": {"enum":["human","agent","service"]},
+    "identity_source_ref": {"type":"string","minLength":1},
+    "identity_source_sha256": {"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "constitutional_contract_ref": {"type":"string","minLength":1},
+    "constitutional_contract_sha256": {"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "allowed_actions": {"type":"array","minItems":1,"uniqueItems":true,"items":{"enum":["think","communicate","execute","bind","propose"]}},
+    "forbidden_actions": {"type":"array","uniqueItems":true,"items":{"enum":["think","communicate","execute","bind","propose"]}}
+  }
+}
