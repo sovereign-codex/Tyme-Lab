@@ -1,0 +1,219 @@
+{
+  "schema": "cit-multimodal-learning-continuum-fixture/0.1",
+  "fixture_id": "cit-mlc-v0.1-three-distance-five-mode-001",
+  "authority_posture": "non-authorizing",
+  "public_deployment_authorized": false,
+  "participant_control": {
+    "pace_controlled_by_participant": true,
+    "renderer_preference_contestable": true,
+    "capability_effect_contestable": true,
+    "assistance_mode_declared_or_confirmed": true,
+    "assistance_mode_silent_switch_allowed": false,
+    "share_optional": true
+  },
+  "institutional_boundaries": {
+    "micro_interactions_emit_hall_events": false,
+    "share_creates_contribution_candidate_only": true,
+    "contribution_candidate_requires_intake_for_trail": true,
+    "renderer_change_alters_claim_authority": false,
+    "global_learner_level_allowed": false,
+    "ranking_allowed": false,
+    "credential_issuance_allowed": false,
+    "schema_mutation_authorized": false
+  },
+  "required_verbs": ["talk", "see", "try", "make", "share"],
+  "specimens": [
+    {
+      "specimen_id": "early-learner-synthetic-001",
+      "distance_class": "early_learner",
+      "synthetic_participant": true,
+      "guardian_posture": "required_for_any_real_child_rehearsal",
+      "assistance_mode": "learn",
+      "encounter_mode": "apprenticeship",
+      "semantic_state_id": "phoneme-b-letter-b-001",
+      "capability_target": "connect a spoken phoneme to a visible letter and a new observable example",
+      "initial_claim_authority": "none",
+      "steps": [
+        {
+          "verb": "talk",
+          "renderer": "audio",
+          "semantic_state_ref": "phoneme-b-letter-b-001",
+          "action": "steward presents a spoken phoneme prompt",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "see",
+          "renderer": "visual_text",
+          "semantic_state_ref": "phoneme-b-letter-b-001",
+          "action": "surface displays candidate letters and a concrete example",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "try",
+          "renderer": "interactive",
+          "semantic_state_ref": "phoneme-b-letter-b-001",
+          "action": "participant selects the matching letter and attempts the sound",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "make",
+          "renderer": "physical_observation",
+          "semantic_state_ref": "phoneme-b-letter-b-001",
+          "action": "participant identifies a different nearby object beginning with the same sound",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "share",
+          "renderer": "contribution_offer",
+          "semantic_state_ref": "phoneme-b-letter-b-001",
+          "action": "steward offers an optional return path",
+          "participant_share_decision": "decline",
+          "contribution_candidate_created": false,
+          "hall_event_emitted": false
+        }
+      ],
+      "capability_effect": "unknown",
+      "learning_claim_emitted": false,
+      "developmental_rank_emitted": false,
+      "retention_posture": "minimal_synthetic_fixture_only"
+    },
+    {
+      "specimen_id": "developing-builder-synthetic-001",
+      "distance_class": "developing_builder",
+      "synthetic_participant": true,
+      "guardian_posture": "not_applicable",
+      "assistance_mode": "learn",
+      "encounter_mode": "apprenticeship",
+      "semantic_state_id": "loop-repetition-001",
+      "capability_target": "understand and alter a simple repetition loop",
+      "initial_claim_authority": "none",
+      "steps": [
+        {
+          "verb": "talk",
+          "renderer": "audio",
+          "semantic_state_ref": "loop-repetition-001",
+          "action": "steward explains repetition without supplying a mastery claim",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "see",
+          "renderer": "visual_code",
+          "semantic_state_ref": "loop-repetition-001",
+          "action": "surface animates repeated movement beside pseudocode",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "try",
+          "renderer": "interactive_code",
+          "semantic_state_ref": "loop-repetition-001",
+          "action": "participant predicts and changes the repetition count",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "make",
+          "renderer": "code",
+          "semantic_state_ref": "loop-repetition-001",
+          "action": "participant writes a related loop and explains the changed behavior",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "share",
+          "renderer": "contribution_offer",
+          "semantic_state_ref": "loop-repetition-001",
+          "action": "participant offers the explanation and code as a reusable candidate",
+          "participant_share_decision": "candidate",
+          "contribution_candidate_created": true,
+          "contribution_candidate_status": "candidate",
+          "contribution_trail_created": false,
+          "hall_event_emitted": false
+        }
+      ],
+      "capability_effect": "increased",
+      "learning_claim_emitted": true,
+      "learning_evidence": [
+        "participant_prediction",
+        "independent_variant",
+        "participant_explanation"
+      ],
+      "developmental_rank_emitted": false
+    },
+    {
+      "specimen_id": "expert-practitioner-synthetic-001",
+      "distance_class": "expert_practitioner",
+      "synthetic_participant": true,
+      "guardian_posture": "not_applicable",
+      "assistance_mode": "co_create",
+      "encounter_mode": "contribution",
+      "semantic_state_id": "duplicate-worker-diagnostic-001",
+      "capability_target": "diagnose and repair duplicate distributed-worker execution",
+      "initial_claim_authority": "none",
+      "steps": [
+        {
+          "verb": "talk",
+          "renderer": "audio_text",
+          "semantic_state_ref": "duplicate-worker-diagnostic-001",
+          "action": "participant states failure and steward mirrors bounded hypotheses",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "see",
+          "renderer": "trace_code",
+          "semantic_state_ref": "duplicate-worker-diagnostic-001",
+          "action": "surface aligns trace evidence, relevant code, and competing hypotheses",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "try",
+          "renderer": "diagnostic_interactive",
+          "semantic_state_ref": "duplicate-worker-diagnostic-001",
+          "action": "participant selects a bounded test and predicts discriminating evidence",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "make",
+          "renderer": "code_patch",
+          "semantic_state_ref": "duplicate-worker-diagnostic-001",
+          "action": "participant and steward co-create a bounded repair with explicit human decisions and machine contribution",
+          "hall_event_emitted": false
+        },
+        {
+          "verb": "share",
+          "renderer": "contribution_offer",
+          "semantic_state_ref": "duplicate-worker-diagnostic-001",
+          "action": "participant offers diagnostic pattern, evidence refs, and repair rationale",
+          "participant_share_decision": "candidate",
+          "contribution_candidate_created": true,
+          "contribution_candidate_status": "candidate",
+          "contribution_trail_created": false,
+          "hall_event_emitted": false
+        }
+      ],
+      "capability_effect": "not_assessed",
+      "learning_claim_emitted": false,
+      "participant_decisions": [
+        "selected discriminating test",
+        "accepted bounded repair scope",
+        "approved contribution candidate contents"
+      ],
+      "machine_contributions": [
+        "organized trace/code comparison",
+        "generated candidate hypotheses",
+        "drafted bounded patch alternative"
+      ],
+      "developmental_rank_emitted": false
+    }
+  ],
+  "expected_invariants": {
+    "same_semantic_state_across_renderers": true,
+    "all_five_verbs_present_per_specimen": true,
+    "assistance_mode_stable_within_specimen": true,
+    "share_is_optional": true,
+    "share_is_preinstitutional": true,
+    "micro_interactions_do_not_emit_hall_events": true,
+    "no_global_rank_or_worth_score": true,
+    "no_authority_escalation_from_modality": true,
+    "synthetic_only_child_fixture": true,
+    "contestability_preserved": true,
+    "no_public_deployment_authority": true
+  }
+}
