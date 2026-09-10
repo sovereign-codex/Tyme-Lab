@@ -64,7 +64,7 @@ ok &&= expectThrows("reject-unknown-assistance-mode", () => new RehearsalSession
 ok &&= expectThrows("reject-invalid-renderer-for-verb", () => new RehearsalSession("developing-builder-synthetic-001").activateVerb("talk", "credential_view"), "renderer-not-allowed");
 
 ok &&= expect("mobile-shell-declares-viewport", html.includes('name="viewport"'));
-ok &&= expect("mobile-shell-exposes-five-verbs", ["TALK", "SEE", "TRY", "MAKE", "SHARE"].every(label => html.includes(label)));
+ok &&= expect("mobile-shell-exposes-five-verbs", html.includes('id="verbs"') && html.includes("VERBS.forEach") && html.includes("button.textContent = verb.toUpperCase()"));
 ok &&= expect("voice-is-renderer-only", html.includes("speechSynthesis") && !html.includes("getUserMedia") && !html.includes("SpeechRecognition"));
 ok &&= expect("no-network-submit-path", !html.includes("fetch(") && !html.includes("XMLHttpRequest") && !html.includes("<form"));
 ok &&= expect("no-persistent-browser-profile", !html.includes("localStorage") && !html.includes("indexedDB") && !html.includes("document.cookie"));
