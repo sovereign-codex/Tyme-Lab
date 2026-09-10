@@ -1,0 +1,24 @@
+name: Validate CIT Multimodal Learning Continuum v0.1
+
+on:
+  pull_request:
+    paths:
+      - "institutional-cognition/cit-multimodal-learning-continuum/v0.1/**"
+      - ".github/workflows/validate-cit-multimodal-learning-continuum-v0.1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-three-distance-five-mode-fixture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact reviewed head
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Validate deterministic multimodal fixture
+        run: node institutional-cognition/cit-multimodal-learning-continuum/v0.1/validate_fixture.mjs
