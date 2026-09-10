@@ -1,0 +1,24 @@
+name: Validate CIT Multimodal Learning Rehearsal v0.1
+
+on:
+  pull_request:
+    paths:
+      - "institutional-cognition/cit-multimodal-learning-continuum/v0.1/rehearsal/**"
+      - ".github/workflows/validate-cit-multimodal-rehearsal-v0.1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-mobile-rehearsal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout exact reviewed head
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Validate bounded rehearsal
+        run: node institutional-cognition/cit-multimodal-learning-continuum/v0.1/rehearsal/validate_rehearsal.mjs
