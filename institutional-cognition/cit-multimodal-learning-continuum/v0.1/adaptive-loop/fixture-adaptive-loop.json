@@ -1,0 +1,166 @@
+{
+  "schema": "cit-adaptive-learning-loop-fixture/0.1",
+  "fixture_id": "cit-all-v0.1-three-distance-001",
+  "authority_posture": "non-authorizing",
+  "public_deployment_authorized": false,
+  "synthetic_only": true,
+  "default_inheritance": "none",
+  "participant_control": {
+    "pace_controlled_by_participant": true,
+    "private_exit_available": true,
+    "share_optional": true,
+    "contest_interpretation": true
+  },
+  "prohibitions": {
+    "global_learner_rank": true,
+    "automatic_hall_event": true,
+    "automatic_contribution_acceptance": true,
+    "unreviewed_capability_entitlement": true,
+    "production_child_record": true,
+    "credential_issuance": true
+  },
+  "assistance_mode_contracts": [
+    {
+      "mode": "learn",
+      "goal": "increase_participant_independent_capability",
+      "task_success_implies_capability": false,
+      "scaffolding_withdrawal_allowed": true
+    },
+    {
+      "mode": "delegate",
+      "goal": "bounded_task_completion",
+      "task_success_implies_capability": false,
+      "scaffolding_withdrawal_allowed": false
+    },
+    {
+      "mode": "co_create",
+      "goal": "joint_artifact_with_distinct_material_contributions",
+      "task_success_implies_capability": false,
+      "scaffolding_withdrawal_allowed": false
+    }
+  ],
+  "required_states": [
+    "ENCOUNTER",
+    "ORIENT",
+    "CONNECT",
+    "EXPRESS",
+    "ACT",
+    "OBSERVE",
+    "ADAPT",
+    "REFLECT",
+    "EVIDENCE_DECISION",
+    "COMPLETE"
+  ],
+  "specimens": [
+    {
+      "id": "synthetic-early-symbol",
+      "distance": "early_learner",
+      "assistance_mode": "learn",
+      "concept_or_mission": "connect_spoken_phoneme_to_visible_letter_and_new_example",
+      "semantic_state_ref": "phoneme-A-v1",
+      "connecting_point": {
+        "type": "familiar_object",
+        "value": "apple",
+        "global_level_assigned": false
+      },
+      "renderer_sequence": ["audio", "visual_text", "interactive", "physical_observation"],
+      "verbs_used": ["TALK", "SEE", "TRY", "MAKE"],
+      "participant_action": "identify_or_repeat_then_find_new_example",
+      "evidence_classes": ["recognition", "recall", "transfer"],
+      "adaptation": {
+        "reason": "recognition_present_recall_uncertain",
+        "dimension_changed": "scaffolding",
+        "from": "model",
+        "to": "hint",
+        "authority_changed": false
+      },
+      "capability_effect": "candidate_only",
+      "share": {
+        "offered": true,
+        "accepted_by_participant": false,
+        "result": "PRIVATE_EXIT"
+      },
+      "hall_event_emitted": false,
+      "production_record_created": false
+    },
+    {
+      "id": "synthetic-loop-builder",
+      "distance": "developing_builder",
+      "assistance_mode": "learn",
+      "concept_or_mission": "understand_and_modify_repetition_loop",
+      "semantic_state_ref": "program-loop-v1",
+      "connecting_point": {
+        "type": "prior_demonstrated_skill",
+        "value": "ordered_sequence",
+        "global_level_assigned": false
+      },
+      "renderer_sequence": ["audio_text", "diagram", "interactive_code", "code"],
+      "verbs_used": ["TALK", "SEE", "TRY", "MAKE", "SHARE"],
+      "participant_action": "change_iteration_count_and_explain_result",
+      "evidence_classes": ["prediction", "build", "explanation", "transfer"],
+      "adaptation": {
+        "reason": "prediction_correct_explanation_partial",
+        "dimension_changed": "verification_demand",
+        "from": "recognition",
+        "to": "explanation",
+        "authority_changed": false
+      },
+      "capability_effect": "candidate_only",
+      "share": {
+        "offered": true,
+        "accepted_by_participant": true,
+        "result": "CONTRIBUTION_CANDIDATE",
+        "candidate_status": "candidate",
+        "automatically_accepted": false
+      },
+      "hall_event_emitted": false,
+      "production_record_created": false
+    },
+    {
+      "id": "synthetic-distributed-diagnostic",
+      "distance": "expert_practitioner",
+      "assistance_mode": "learn",
+      "concept_or_mission": "diagnose_duplicate_distributed_worker_execution",
+      "semantic_state_ref": "duplicate-worker-v1",
+      "connecting_point": {
+        "type": "failure_state",
+        "value": "duplicate_trace_id",
+        "global_level_assigned": false
+      },
+      "renderer_sequence": ["trace_code", "evidence_view", "diagnostic_interactive", "code_patch"],
+      "verbs_used": ["SEE", "TRY", "MAKE", "SHARE"],
+      "participant_action": "compare_hypotheses_propose_test_repair_and_rationale",
+      "evidence_classes": ["diagnosis", "prediction", "repair", "critique", "explanation"],
+      "adaptation": {
+        "reason": "hypothesis_set_too_broad",
+        "dimension_changed": "representation",
+        "from": "trace_code",
+        "to": "evidence_view",
+        "authority_changed": false
+      },
+      "capability_effect": "candidate_only",
+      "share": {
+        "offered": true,
+        "accepted_by_participant": true,
+        "result": "CONTRIBUTION_CANDIDATE",
+        "candidate_status": "candidate",
+        "automatically_accepted": false
+      },
+      "hall_event_emitted": false,
+      "production_record_created": false
+    }
+  ],
+  "comparative_reference": {
+    "name": "Oboe",
+    "source": "https://oboe.com/getting-started",
+    "extracted_pattern": [
+      "intent",
+      "calibration",
+      "adaptive_path",
+      "multimodal_representation",
+      "active_practice",
+      "continued_exploration"
+    ],
+    "constitutional_authority": false
+  }
+}
