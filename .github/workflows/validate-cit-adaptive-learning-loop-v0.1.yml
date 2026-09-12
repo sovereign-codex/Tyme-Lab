@@ -1,0 +1,28 @@
+name: Validate CIT Adaptive Learning Loop v0.1
+
+on:
+  pull_request:
+    paths:
+      - "institutional-cognition/cit-multimodal-learning-continuum/v0.1/adaptive-loop/**"
+      - ".github/workflows/validate-cit-adaptive-learning-loop-v0.1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate adaptive loop fixture
+        run: node institutional-cognition/cit-multimodal-learning-continuum/v0.1/adaptive-loop/validate_adaptive_loop.mjs
