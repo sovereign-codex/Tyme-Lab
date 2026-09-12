@@ -1,0 +1,77 @@
+{
+  "record_id": "semantic-decipher-inanna-descent-adversarial",
+  "source": {
+    "claim": "Inana descends to the netherworld, passes successive gates where items of status and adornment are removed, is killed, and is later restored to life before a substitute is required for her return.",
+    "provenance_refs": [
+      "https://etcsl.orinst.ox.ac.uk/cgi-bin/etcsl.cgi?text=c.1.4.1",
+      "https://etcsl.orinst.ox.ac.uk/catalogue/catalogue1.htm"
+    ]
+  },
+  "readings": [
+    {
+      "mode": "literal",
+      "status": "plausible",
+      "confidence": 0.72,
+      "rationale": "Within the narrative world, the underworld, gates, divine powers, death, and restoration are presented as events rather than marked as allegorical explanation. This does not establish modern empirical historicity."
+    },
+    {
+      "mode": "symbolic",
+      "status": "plausible",
+      "confidence": 0.76,
+      "rationale": "The patterned stripping of regalia across successive gates can sustain symbolic readings about status, power, vulnerability, death, or transformation, but such readings remain interpretations rather than demonstrated original intent."
+    },
+    {
+      "mode": "ritual",
+      "status": "unknown",
+      "confidence": 0.38,
+      "rationale": "The text repeatedly invokes the rites or powers of the underworld, but this fixture does not contain enough evidence to establish a specific historical performance context or ritual function for the composition."
+    },
+    {
+      "mode": "dual_coded",
+      "status": "plausible",
+      "confidence": 0.68,
+      "rationale": "A cosmological narrative and later symbolic interpretation can coexist without one proving or cancelling the other."
+    }
+  ],
+  "intentionality": {
+    "status": "unknown",
+    "candidate": null,
+    "evidence_refs": []
+  },
+  "reception": [
+    {
+      "audience": "modern Jungian / archetypal readers",
+      "reading": "descent, stripping, death, and return as a psychological journey toward wholeness or confrontation with a darker self",
+      "evidence_refs": ["https://www.worldhistory.org/article/215/the-descent-of-inanna/"]
+    },
+    {
+      "audience": "modern historical-context readers",
+      "reading": "a Mesopotamian divine narrative situated within a culture that treated the netherworld as part of its cosmological order",
+      "evidence_refs": ["https://www.worldhistory.org/article/701/ancient-mesopotamian-beliefs-in-the-afterlife/"]
+    }
+  ],
+  "observation_basis": "mixed",
+  "access_envelope": {
+    "available_tools": ["ETCSL translation and catalogue", "secondary historical interpretation"],
+    "limitations": ["surviving text reconstructed from multiple manuscripts", "original authorial intention not directly preserved", "modern interpretations may exceed what the text itself establishes"]
+  },
+  "evidence_status": "supported",
+  "interpretive_distance": "contextual_inference",
+  "methodological_limitations": [
+    "Narrative presentation does not by itself establish empirical historicity.",
+    "Later psychological reception does not establish ancient authorial intent.",
+    "Ancient cosmological belief context does not prove every narrative detail was received uniformly or literally by all historical audiences."
+  ],
+  "counter_readings": [
+    "The story is only a psychological allegory and contains no cosmological claim.",
+    "Because the text narrates divine events, modern empirical historicity is established.",
+    "A popular modern Jungian interpretation proves the ancient composer intended a Jungian psychological allegory."
+  ],
+  "unresolved": [
+    "Exact original author or authorship history.",
+    "Exact intended relation between cosmological narration, symbolic pattern, and any ritual performance context.",
+    "Historical variation in reception across periods and communities."
+  ],
+  "recommended_disposition": "compare",
+  "authority_posture": "analysis_only"
+}

@@ -1,0 +1,19 @@
+name: Validate Semantic Decipher v0.1
+
+on:
+  pull_request:
+    paths:
+      - 'institutional-cognition/semantic-decipher/v0.1/**'
+      - '.github/workflows/validate-semantic-decipher-v0.1.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate bounded fixtures
+        run: node institutional-cognition/semantic-decipher/v0.1/validate_fixtures.mjs
