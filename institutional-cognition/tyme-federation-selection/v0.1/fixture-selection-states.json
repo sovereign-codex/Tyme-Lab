@@ -1,0 +1,203 @@
+{
+  "schema": "tyme-federation-selection-fixture/0.1",
+  "logical_capability": {
+    "capability_id": "trusted-federation-chat",
+    "functional_capabilities": ["chat"],
+    "privacy_boundaries": ["trusted_federation"],
+    "trust_level": "trusted",
+    "evidence_capable": true,
+    "strategy": "federated"
+  },
+  "cases": [
+    {
+      "case_id": "eligible-healthy-single-executor",
+      "request": {
+        "privacy_boundary": "trusted_federation",
+        "authority_posture": "analysis_only",
+        "evidence_required": true,
+        "required_capabilities": ["chat"]
+      },
+      "decision": {
+        "selection_state": "eligible",
+        "selection_reasons": ["resilience_need"]
+      },
+      "return": {
+        "status": "completed",
+        "configured_nodes": ["node-a", "node-b"],
+        "reachable_nodes": ["node-a", "node-b"],
+        "participating_nodes": ["node-a"],
+        "selected_executor": "node-a",
+        "topology_state": "healthy",
+        "route_state": "direct",
+        "fallback_used": false,
+        "completion_id": "completion-a-001",
+        "trace_ref": "trace:eligible-healthy-single-executor",
+        "archivist_ref": "archivist:eligible-healthy-single-executor",
+        "authority_effect": "analysis_return",
+        "authority_unchanged": true,
+        "privacy_boundary_unchanged": true,
+        "semantic_compliance": "satisfied"
+      },
+      "public_projection": {
+        "configured_peer_count": 2,
+        "reachable_peer_count": 2,
+        "participating_peer_count": 1,
+        "capability_state": "available",
+        "topology_state": "healthy",
+        "route_state": "direct",
+        "authority_posture": "analysis_only",
+        "privacy_boundary": "trusted_federation"
+      }
+    },
+    {
+      "case_id": "ineligible-local-only",
+      "request": {
+        "privacy_boundary": "local_only",
+        "authority_posture": "analysis_only",
+        "evidence_required": true,
+        "required_capabilities": ["chat"]
+      },
+      "decision": {
+        "selection_state": "ineligible",
+        "selection_reasons": ["privacy_boundary_disallows_federation"]
+      },
+      "return": null,
+      "public_projection": {
+        "capability_state": "not_selected",
+        "authority_posture": "analysis_only",
+        "privacy_boundary": "local_only"
+      }
+    },
+    {
+      "case_id": "degraded-peer-loss-service-preserved",
+      "request": {
+        "privacy_boundary": "trusted_federation",
+        "authority_posture": "analysis_only",
+        "evidence_required": true,
+        "required_capabilities": ["chat"]
+      },
+      "decision": {
+        "selection_state": "eligible",
+        "selection_reasons": ["resilience_need"]
+      },
+      "return": {
+        "status": "degraded",
+        "configured_nodes": ["node-a", "node-b"],
+        "reachable_nodes": ["node-a"],
+        "participating_nodes": ["node-a"],
+        "selected_executor": "node-a",
+        "topology_state": "degraded",
+        "route_state": "degraded",
+        "fallback_used": false,
+        "completion_id": "completion-a-002",
+        "trace_ref": "trace:degraded-peer-loss-service-preserved",
+        "archivist_ref": "archivist:degraded-peer-loss-service-preserved",
+        "authority_effect": "analysis_return",
+        "authority_unchanged": true,
+        "privacy_boundary_unchanged": true,
+        "semantic_compliance": "mismatch"
+      },
+      "public_projection": {
+        "configured_peer_count": 2,
+        "reachable_peer_count": 1,
+        "participating_peer_count": 1,
+        "capability_state": "degraded",
+        "topology_state": "degraded",
+        "route_state": "degraded",
+        "authority_posture": "analysis_only",
+        "privacy_boundary": "trusted_federation"
+      }
+    },
+    {
+      "case_id": "rerouted-preferred-peer-loss",
+      "request": {
+        "privacy_boundary": "trusted_federation",
+        "authority_posture": "analysis_only",
+        "evidence_required": true,
+        "required_capabilities": ["chat"]
+      },
+      "decision": {
+        "selection_state": "eligible",
+        "selection_reasons": ["resilience_need"]
+      },
+      "return": {
+        "status": "degraded",
+        "configured_nodes": ["node-a", "node-b"],
+        "reachable_nodes": ["node-b"],
+        "participating_nodes": ["node-b"],
+        "selected_executor": "node-b",
+        "topology_state": "degraded",
+        "route_state": "rerouted",
+        "fallback_used": true,
+        "completion_id": "completion-b-001",
+        "trace_ref": "trace:rerouted-preferred-peer-loss",
+        "archivist_ref": "archivist:rerouted-preferred-peer-loss",
+        "authority_effect": "analysis_return",
+        "authority_unchanged": true,
+        "privacy_boundary_unchanged": true,
+        "semantic_compliance": "not_assessed"
+      },
+      "public_projection": {
+        "configured_peer_count": 2,
+        "reachable_peer_count": 1,
+        "participating_peer_count": 1,
+        "capability_state": "degraded",
+        "topology_state": "degraded",
+        "route_state": "rerouted",
+        "authority_posture": "analysis_only",
+        "privacy_boundary": "trusted_federation"
+      }
+    },
+    {
+      "case_id": "failed-closed-missing-required-evidence",
+      "request": {
+        "privacy_boundary": "trusted_federation",
+        "authority_posture": "analysis_only",
+        "evidence_required": true,
+        "required_capabilities": ["chat"]
+      },
+      "decision": {
+        "selection_state": "eligible",
+        "selection_reasons": ["comparison_need"]
+      },
+      "return": {
+        "status": "failed",
+        "configured_nodes": ["node-a", "node-b"],
+        "reachable_nodes": ["node-a", "node-b"],
+        "participating_nodes": [],
+        "selected_executor": null,
+        "topology_state": "healthy",
+        "route_state": "failed_closed",
+        "fallback_used": true,
+        "completion_id": null,
+        "trace_ref": "trace:failed-closed-missing-required-evidence",
+        "archivist_ref": "archivist:failed-closed-missing-required-evidence",
+        "authority_effect": "analysis_return",
+        "authority_unchanged": true,
+        "privacy_boundary_unchanged": true,
+        "semantic_compliance": "unknown"
+      },
+      "public_projection": {
+        "configured_peer_count": 2,
+        "reachable_peer_count": 2,
+        "participating_peer_count": 0,
+        "capability_state": "available_but_request_failed_closed",
+        "topology_state": "healthy",
+        "route_state": "failed_closed",
+        "authority_posture": "analysis_only",
+        "privacy_boundary": "trusted_federation"
+      }
+    }
+  ],
+  "expected_invariants": {
+    "selection_is_not_participation": true,
+    "reachability_is_not_participation": true,
+    "topology_is_not_identity": true,
+    "federation_is_not_authority": true,
+    "degradation_is_legible": true,
+    "local_only_cannot_select_federation": true,
+    "bounded_execute_is_not_allowed_in_v0_1": true,
+    "public_projection_omits_operational_secrets": true,
+    "semantic_compliance_is_independent_of_topology": true
+  }
+}
