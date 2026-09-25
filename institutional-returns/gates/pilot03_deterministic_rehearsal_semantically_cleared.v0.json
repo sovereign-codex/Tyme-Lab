@@ -1,51 +1,65 @@
 {
   "schema": "tyme-gate-satisfaction-return.v0",
   "gate": "pilot03_deterministic_rehearsal_semantically_cleared",
-  "disposition": "unresolved",
+  "disposition": "satisfied",
   "subject": {
     "repository": "sovereign-codex/Tyme-Lab",
-    "pull_request": 25,
-    "reviewed_head_sha": "1232acf8dc9de51defc15b8a09eba57bf7f6782a",
-    "merge_commit_sha": "5969f02ca6381bb11a93fe08b1719126c44dce16"
+    "pull_request": 48,
+    "reviewed_head_sha": "f705fbfc5e123d99672c9822b526ad72c1a36922",
+    "merge_commit_sha": "26fd738032bf70c855f1a35fc97039aec4144d52"
   },
   "evidence": [
     {
       "kind": "exact_head_ci",
-      "run_id": 32902869129,
+      "workflow": "TYME Cognition Pilot 02 Tests",
+      "run_id": 36143574650,
       "conclusion": "success",
-      "commit_sha": "1232acf8dc9de51defc15b8a09eba57bf7f6782a",
-      "evidence_ref": "github:actions-run:32902869129"
+      "commit_sha": "f705fbfc5e123d99672c9822b526ad72c1a36922",
+      "evidence_ref": "github:actions-run:36143574650"
     },
     {
-      "kind": "semantic_review_request",
-      "commit_sha": "1232acf8dc9de51defc15b8a09eba57bf7f6782a",
-      "evidence_ref": "github:pr:25#issuecomment-5418635367"
+      "kind": "exact_head_ci",
+      "workflow": "TYME Cognition Pilot 03 Tests",
+      "run_id": 36143574677,
+      "conclusion": "success",
+      "commit_sha": "f705fbfc5e123d99672c9822b526ad72c1a36922",
+      "evidence_ref": "github:actions-run:36143574677"
     },
     {
-      "kind": "unresolved_semantic_review_finding",
-      "severity": "P1",
-      "evidence_ref": "github:pr:25#discussion_r3858546569",
-      "finding": "semantic root identity could be multiplied through authored aliases of one verified repository path"
+      "kind": "exact_head_ci",
+      "workflow": "TYME Cognition Pilot 03B Tests",
+      "run_id": 36143574817,
+      "conclusion": "success",
+      "commit_sha": "f705fbfc5e123d99672c9822b526ad72c1a36922",
+      "evidence_ref": "github:actions-run:36143574817"
     },
     {
-      "kind": "unresolved_semantic_review_finding",
-      "severity": "P1",
-      "evidence_ref": "github:pr:25#discussion_r3858546574",
-      "finding": "unverified observations could influence comparative priority"
+      "kind": "fresh_semantic_review",
+      "conclusion": "no_promotion_blocking_defect",
+      "commit_sha": "f705fbfc5e123d99672c9822b526ad72c1a36922",
+      "evidence_ref": "github:pr:48#issuecomment-5833614770",
+      "findings": {
+        "semantic_root_alias_resistance": "pass",
+        "unverified_observation_priority_firewall": "pass",
+        "equal_evidence_fail_closed": "pass",
+        "non_authorizing_posture": "pass",
+        "chronology_reproducibility_block": "cleared",
+        "fresh_p1_blocker": "none_found"
+      }
     },
     {
       "kind": "merged_pr",
-      "commit_sha": "5969f02ca6381bb11a93fe08b1719126c44dce16",
-      "evidence_ref": "github:pr:25"
+      "commit_sha": "26fd738032bf70c855f1a35fc97039aec4144d52",
+      "evidence_ref": "github:pr:48"
     }
   ],
   "probe_projection": {
     "gate": "pilot03_deterministic_rehearsal_semantically_cleared",
-    "commit_sha": "5969f02ca6381bb11a93fe08b1719126c44dce16",
-    "evidence_ref": "github:pr:25#discussion_r3858546574",
-    "disposition": "unresolved"
+    "commit_sha": "26fd738032bf70c855f1a35fc97039aec4144d52",
+    "evidence_ref": "github:pr:48#issuecomment-5833614770",
+    "disposition": "satisfied"
   },
   "authority_effect": "none",
   "root_mutation": "none",
-  "note": "This return corrects a premature satisfied disposition. Exact-head CI and a semantic-review request did not constitute semantic clearance: two non-outdated P1 findings remained unresolved. A future satisfied return requires repaired exact-head evidence plus a fresh semantic review with no promotion-blocking defect."
+  "note": "This satisfied return supersedes the prior unresolved disposition after the named P1 defects were repaired, the bounded chronology fix was merged, exact-head Pilot 02/03/03B CI passed on the reviewed head, and a fresh semantic review found no promotion-blocking defect. Satisfaction supports only the named gate. It grants no execution authority, performs no root mutation, and does not by itself authorize R1 Notion integration."
 }
