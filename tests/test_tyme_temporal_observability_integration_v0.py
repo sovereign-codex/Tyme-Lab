@@ -6,7 +6,7 @@ from adapters.tyme_snapshot_temporal_view_v0 import build_temporal_gate_view
 
 REPOSITORY = "sovereign-codex/Tyme-Lab"
 ORIGIN = "5969f02ca6381bb11a93fe08b1719126c44dce16"
-CURRENT_HEAD = "63d2a7862769538aa0289d4cd489c8da9416044c"
+CURRENT_HEAD = "3eeedab009955972a50f377cab64ae37b47fabb9"
 GATE = "pilot03_deterministic_rehearsal_semantically_cleared"
 ROOT_PATH = "docs/architecture/TYME_COGNITION_PILOT_03_LIVE_INTEGRATION_DEFERRED.md"
 RETURN_PATH = "institutional-returns/gates/pilot03_deterministic_rehearsal_semantically_cleared.v0.json"
@@ -26,7 +26,7 @@ class RepositoryMemoryReader:
         return {"path": path, "content": content, "git_blob_sha": git_blob_sha(content)}
 
 
-def test_real_recorded_root_and_corrected_repository_return_form_temporal_view():
+def test_real_recorded_root_and_satisfied_repository_return_form_temporal_view():
     root = Path(ROOT_PATH).read_text()
     assert "state: proposed" in root
     assert f"gate: {GATE}" in root
@@ -40,8 +40,12 @@ def test_real_recorded_root_and_corrected_repository_return_form_temporal_view()
         RepositoryMemoryReader(),
     )
 
-    assert resolution["status"] == "UNRESOLVED"
-    assert resolution["supporting_evidence"] == []
+    assert resolution["status"] == "SUPPORTED"
+    assert resolution["supporting_evidence"] == [{
+        "commit_sha": "26fd738032bf70c855f1a35fc97039aec4144d52",
+        "evidence_ref": "github:pr:48#issuecomment-5833614770",
+        "disposition": "satisfied",
+    }]
     assert resolution["authority_effect"] == "none"
     assert resolution["root_mutation"] == "none"
     assert resolution["memory_lookup"]["matching_return_count"] == 1
@@ -58,7 +62,7 @@ def test_real_recorded_root_and_corrected_repository_return_form_temporal_view()
     )
 
     assert view["recorded"]["state"] == "WAITING"
-    assert view["current_resolution"]["status"] == "UNRESOLVED"
+    assert view["current_resolution"]["status"] == "SUPPORTED"
     assert view["authority"]["effect"] == "none"
     assert view["authority"]["root_mutation"] == "none"
     assert view["authority"]["consequence_authorized"] is False
