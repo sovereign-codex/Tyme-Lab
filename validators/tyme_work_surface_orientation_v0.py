@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-from jsonschema import Draft202012Validator, FormatChecker, ValidationError
+from jsonschema import Draft202012Validator, ValidationError
 
 SCHEMA = Path("schemas/tyme-work-surface-orientation.v0.schema.json")
 RFC3339_RE = re.compile(
@@ -50,7 +50,7 @@ def _validate_rfc3339_datetime(value):
 def validate_orientation(instance, schema_path=SCHEMA):
     schema = load_json(schema_path)
     Draft202012Validator.check_schema(schema)
-    validator = Draft202012Validator(schema, format_checker=FormatChecker())
+    validator = Draft202012Validator(schema)
     errors = list(validator.iter_errors(instance))
     if errors:
         raise errors[0]

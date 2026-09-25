@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator, FormatChecker, ValidationError
+from jsonschema import Draft202012Validator, ValidationError
 
 from validators.tyme_work_surface_orientation_v0 import validate_orientation
 
@@ -20,7 +20,7 @@ def load_json(path):
 def validate_schema(instance):
     schema = load_json(SCHEMA)
     Draft202012Validator.check_schema(schema)
-    Draft202012Validator(schema, format_checker=FormatChecker()).validate(instance)
+    Draft202012Validator(schema).validate(instance)
 
 
 def review_fixture():
