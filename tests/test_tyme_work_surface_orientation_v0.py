@@ -1,11 +1,16 @@
 import copy
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
 from jsonschema import Draft202012Validator, ValidationError
 
-from validators.tyme_work_surface_orientation_v0 import validate_orientation
+from validators.tyme_work_surface_orientation_v0 import (
+    LEAP_SECOND_UTC_DATES,
+    _validate_rfc3339_datetime,
+    validate_orientation,
+)
 
 SCHEMA = Path("schemas/tyme-work-surface-orientation.v0.schema.json")
 LEGACY_SCHEMA = Path("schemas/tyme-attention-orientation.v0.schema.json")
@@ -208,3 +213,62 @@ def test_coherence_event_requires_non_effect_marker():
     with pytest.raises(ValidationError): Draft202012Validator(schema).validate(event)
     event["institutional_effect"] = "none_by_event_alone"
     Draft202012Validator(schema).validate(event)
+
+
+EXPECTED_LEAP_DATES = """
+1972-06-30 1972-12-31 1973-12-31 1974-12-31 1975-12-31 1976-12-31
+1977-12-31 1978-12-31 1979-12-31 1981-06-30 1982-06-30 1983-06-30
+1985-06-30 1987-12-31 1989-12-31 1990-12-31 1992-06-30 1993-06-30
+1994-06-30 1995-12-31 1997-06-30 1998-12-31 2005-12-31 2008-12-31
+2012-06-30 2015-06-30 2016-12-31
+""".split()
+
+
+def test_frozen_leap_table_matches_published_insertions():
+    assert LEAP_SECOND_UTC_DATES == frozenset(EXPECTED_LEAP_DATES)
+    assert len(LEAP_SECOND_UTC_DATES) == 27
+
+
+@pytest.mark.parametrize("offset_minutes", [-480, 0, 330, 840])
+def test_published_leap_instant_survives_offset_conversion(offset_minutes):
+    preceding = datetime.fromisoformat("2016-12-31T23:59:59+00:00")
+    local = preceding.astimezone(timezone(timedelta(minutes=offset_minutes)))
+    offset = local.strftime("%z")
+    value = local.strftime("%Y-%m-%dT%H:%M:") + "60.123456789"
+    value += offset[:3] + ":" + offset[3:]
+    _validate_rfc3339_datetime(value)
+
+
+@pytest.mark.parametrize("value", [
+    "2026-08-24T03:06:60Z",
+    "2016-12-31T12:59:60Z",
+    "2016-12-31T23:58:60Z",
+    "2016-12-31T23:59:60+01:00",
+    "2016-06-30T23:59:60Z",
+    "2026-12-31T23:59:60Z",
+    "2030-12-31T23:59:60Z",
+    "1971-12-31T23:59:60Z",
+    "2016-12-31T21:59:60-01:60",
+    "2017-01-01T00:59:60+00:60",
+    "2016-12-31T23:59:60+24:00",
+])
+def test_unpublished_or_impossible_leap_instants_are_rejected(value):
+    with pytest.raises(ValidationError):
+        _validate_rfc3339_datetime(value)
+
+
+def test_canonical_validator_rejects_reported_p2_instant_without_mutation():
+    orientation = review_fixture()
+    orientation["observed_at"] = "2026-08-24T03:06:60Z"
+    original = copy.deepcopy(orientation)
+    with pytest.raises(ValidationError, match="published UTC leap-second"):
+        validate_orientation(orientation)
+    assert orientation == original
+
+
+def test_canonical_validator_preserves_valid_offset_leap_second_packet():
+    orientation = review_fixture()
+    orientation["observed_at"] = "2017-01-01T05:29:60+05:30"
+    original = copy.deepcopy(orientation)
+    assert validate_orientation(orientation) is orientation
+    assert orientation == original
