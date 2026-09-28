@@ -247,3 +247,62 @@ def test_two_page_parent_cycle_stops_before_child_reads():
     assert result["acquisition_status"] == "partial"
     assert result["coverage"]["read"] == 0
     assert result["errors"][0]["code"] == "cyclic_membership"
+
+
+@pytest.mark.parametrize("stage", [
+    "canonical_bytes", "freeze_enumeration", "enumeration_summary", "build_acquisition_bundle",
+])
+@pytest.mark.parametrize("finished_elapsed", [0.999, 1.0, 1.001])
+def test_final_processing_elapsed_budget_and_replay(monkeypatch, stage, finished_elapsed):
+    from adapters import tyme_notion_live_read_v0 as acquisition
+
+    # Start away from zero so the check must measure duration, not absolute time.
+    elapsed = [100.0]
+    reader = Reader()
+    before = deepcopy(reader.pages)
+    injected = False
+    calls_at_processing = []
+    build_results = []
+    original = getattr(acquisition, stage)
+
+    def final_response(body):
+        if reader.list_round == 2:
+            elapsed[0] = 100.99  # The last provider response is still on time.
+        return body
+
+    def processing(*args, **kwargs):
+        nonlocal injected
+        result = original(*args, **kwargs)
+        if stage == "build_acquisition_bundle":
+            build_results.append(deepcopy(result))
+        if reader.list_round == 2 and not injected:
+            injected = True
+            calls_at_processing[:] = reader.calls
+            elapsed[0] = 100.0 + finished_elapsed
+        return result
+
+    reader.edit = final_response
+    monkeypatch.setattr(acquisition, stage, processing)
+    result = capture(reader, limits=AcquisitionLimits(max_elapsed_seconds=1.0),
+                     elapsed_clock=lambda: elapsed[0])
+
+    assert injected
+    assert reader.calls == calls_at_processing  # No further reads or retries.
+    assert reader.pages == before
+    assert result["coverage"]["read"] == 2
+    assert verify_acquisition_bundle(result) == result
+    if finished_elapsed > 1.0:
+        assert result["acquisition_status"] == "partial"
+        assert sum(e["code"] == "elapsed_budget" for e in result["errors"]) == 1
+        if stage == "build_acquisition_bundle":
+            assert len(build_results) == 2  # One diagnostic rebuild, no loop.
+            assert build_results[0]["acquisition_status"] == "complete"
+            assert build_results[1] == result
+            assert build_results[0]["manifest_sha256"] != result["manifest_sha256"]
+            assert build_results[0]["root_record"] == result["root_record"]
+            assert build_results[0]["child_records"] == result["child_records"]
+    else:
+        assert result["acquisition_status"] == "complete"
+        assert not result["errors"]
+        if stage == "build_acquisition_bundle":
+            assert len(build_results) == 1
