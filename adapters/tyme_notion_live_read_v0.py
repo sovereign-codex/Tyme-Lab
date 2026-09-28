@@ -56,6 +56,10 @@ def acquire_notion_snapshot(root_page_id, provider: ReadOnlyNotionProvider, *,
     Each provider call must honor its timeout. Synchronous Python cannot cancel
     an arbitrary injected provider that ignores this contract. No hidden retries
     are permitted in the provider; this orchestrator performs zero retries.
+
+    The elapsed budget also covers local serialization and bundle construction.
+    Synchronous work is not preempted: an overrun is returned as diagnostic
+    evidence, never as a complete acquisition.
     """
     root_id = page_id(root_page_id)
     require(isinstance(connection_scope_ref, str) and bool(connection_scope_ref), "scope_required")
@@ -95,6 +99,7 @@ def acquire_notion_snapshot(root_page_id, provider: ReadOnlyNotionProvider, *,
         require(elapsed_clock() - started_elapsed <= limits.max_elapsed_seconds, "elapsed_budget")
         require(isinstance(body, dict), "invalid_response")
         size = len(canonical_bytes(body))
+        require(elapsed_clock() - started_elapsed <= limits.max_elapsed_seconds, "elapsed_budget")
         require(size <= limits.max_response_bytes, "response_byte_budget")
         require(total_bytes + size <= limits.max_total_bytes, "total_byte_budget")
         total_bytes += size
@@ -144,8 +149,20 @@ def acquire_notion_snapshot(root_page_id, provider: ReadOnlyNotionProvider, *,
                     error("membership_recheck", root_id, "membership_changed")
             except SnapshotError as exc:
                 error("membership_recheck", root_id, str(exc))
-    return build_acquisition_bundle(
-        root_page_id=root_id, connection_scope_ref=connection_scope_ref, provider=identity,
-        capture_started_at=started, capture_completed_at=clock(), root_record=root,
-        enumeration_records=enumerations, child_records=children, errors=errors,
-    )
+    def finalize():
+        return build_acquisition_bundle(
+            root_page_id=root_id, connection_scope_ref=connection_scope_ref, provider=identity,
+            capture_started_at=started, capture_completed_at=clock(), root_record=root,
+            enumeration_records=enumerations, child_records=children, errors=errors,
+        )
+
+    bundle = finalize()
+    if (not any(item["code"] == "elapsed_budget" for item in errors)
+            and elapsed_clock() - started_elapsed > limits.max_elapsed_seconds):
+        error("finalization", root_id, "elapsed_budget")
+        # Rebuild once to bind the failure into coverage and every digest. Do
+        # not mutate a sealed bundle, retry acquisition, or return late success.
+        # Diagnostic sealing may itself finish after the deadline; it cannot
+        # promote this partial/failed capture back to complete.
+        bundle = finalize()
+    return bundle
