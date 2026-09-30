@@ -1,0 +1,56 @@
+name: TYME Notion Native Provider R1 Tests
+
+on:
+  pull_request:
+    paths:
+      - 'adapters/**'
+      - 'tests/test_tyme_*'
+      - 'fixtures/**'
+      - 'schemas/**'
+      - 'validators/tyme_work_surface_orientation_v0.py'
+      - 'institutional-returns/gates/**'
+      - 'docs/architecture/**'
+      - '.github/workflows/tyme-notion-rest-provider-tests.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-native-provider:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest jsonschema
+      - name: Record checkout and environment
+        run: |
+          git rev-parse HEAD
+          python --version
+          python -m pip freeze
+      - name: Native provider and R1 fixture tests
+        run: >-
+          python -m pytest -q
+          tests/test_tyme_notion_rest_provider_v0.py
+          tests/test_tyme_notion_live_read_v0.py
+          tests/test_tyme_institutional_discovery_snapshot_v0.py
+      - name: Inherited Pilot 02 and Pilot 03
+        run: >-
+          python -m pytest -q
+          tests/test_tyme_work_surface_orientation_v0.py
+          tests/test_tyme_repository_snapshot_discovery_v0.py
+      - name: Inherited Pilot 03B
+        run: >-
+          python -m pytest -q
+          tests/test_tyme_github_live_read_v0.py
+          tests/test_tyme_github_snapshot_overview_v0.py
+          tests/test_tyme_gate_resolution_probe_v0.py
+          tests/test_tyme_gate_return_lookup_v0.py
+          tests/test_tyme_snapshot_temporal_view_v0.py
+          tests/test_tyme_temporal_observability_integration_v0.py
+          tests/test_tyme_github_snapshot_overview_integration_v0.py
