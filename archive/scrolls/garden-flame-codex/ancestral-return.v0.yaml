@@ -1,0 +1,83 @@
+packet_id: garden-flame-codex-ancestral-return-2026-09-07
+packet_type: scroll_ancestral_recovery_return
+schema_posture: provisional
+observed_at: "2026-09-07"
+
+authority_posture: non_authorizing
+institutional_effect: ancestral_role_reconstruction_only
+publication_authorized: false
+canon_promotion_authorized: false
+siri_publication_002_assigned: false
+
+artifact:
+  scroll_id: GFC-0001
+  title: "Garden Flame Codex - Ethical Inheritance"
+  current_wrapper_version: "0.1.0"
+  current_review_posture: PUBLIC_REVIEWED
+  current_wrapper_modified: false
+
+recovery_result:
+  result: ancestral_role_materially_supported
+  single_proven_original_source_recovered: false
+  multiple_historical_manifestations_recovered: true
+  current_wrapper_safe_as_ethics_summary: true
+  current_wrapper_complete_as_ancestral_system_model: false
+
+ancestral_roles_supported:
+  upstream_ethics_root: strongly_supported
+  paired_with_living_kodex: strongly_supported
+  inheritance_source: strongly_supported
+  return_basin: strongly_supported
+  avot_birth_tether: historical_role_supported
+  builder_covenant: supported
+  contributor_governance_reference: supported
+  routed_lineage_object: supported
+  identity_continuity_and_seal_layer: provisional
+
+key_relationship_pattern:
+  historical_cycle:
+    - inherit
+    - act_build_or_research
+    - return
+    - preserve
+    - re_inherit
+  interpretation: >-
+    Garden Flame appears repeatedly as a covenant and lineage reference around
+    this cycle, not only as a static list of ethical principles.
+
+living_kodex_relationship:
+  provisional_split:
+    garden_flame: covenant_ethics_root_and_inheritance_return_relationship
+    living_kodex: operating_ethics_for_sovereign_autonomous_agents
+  relationship_established_as_final: false
+  next_dependency: living_kodex_provenance_recovery
+
+evidence_boundaries:
+  - Loom survivor remains strongest surviving full-body candidate, not proven original.
+  - Referenced Garden-Flame-Kodex primary repository remains unresolved.
+  - Repeated backup snapshots are lineage evidence, not independent canonical authorities.
+  - Historical metaphysical, spiritual, and speculative language remains non-empirical unless separately evidenced.
+  - AVOT tethering is historical architecture language, not present institutional subordination or authority.
+  - AVOT-Guardian cannot confer institutional authority by historical association.
+  - Eternal Intelligence Registry identity relationship remains provisional pending exact decompressed context.
+  - Later Tyme runtime remains implements_or_interprets, not proven supersession.
+  - Present Office and TYME Hall parallels are architectural echoes unless direct lineage is established.
+
+returned_artifacts:
+  - archive/scrolls/garden-flame-codex/ancestral-source-map.v0.yaml
+  - archive/scrolls/garden-flame-codex/ancestral-review.v0.md
+  - archive/scrolls/garden-flame-codex/ancestral-return.v0.yaml
+
+recommended_review_outcomes:
+  - provenance_only_context
+  - minor_reviewed_wrapper_edition
+  - separately_reviewed_lineage_companion
+
+recommended_preference: minor_reviewed_wrapper_edition_or_lineage_companion
+prohibited_action: silently_replace_current_public_wrapper
+
+next_gate: canon_steward_ancestral_edition_review
+next_valid_action: >-
+  Review the ancestral source map and narrative, choose whether the recovered
+  role belongs in a revised reviewed wrapper or companion inheritance note,
+  and preserve separate human publication authorization.
