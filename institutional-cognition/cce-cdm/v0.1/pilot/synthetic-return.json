@@ -1,0 +1,104 @@
+{
+  "receipt": {
+    "payload": {
+      "build": "c09acd2451053fc6dba62738d9e764675415f78604674a33cec9d57b01e46100",
+      "test_data": "synthetic-cycle-v1",
+      "actor": "urn:example:synthetic-pilot-runner",
+      "timestamp": "2026-09-07T17:21:13.417Z",
+      "results": [
+        {
+          "name": "capture: missing consent rejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "sign: event and evidence verified with pinned recorder key",
+          "outcome": "pass"
+        },
+        {
+          "name": "verify: event tampering rejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "verify: evidence tampering rejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "verify: wrong recorder key rejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "interpret: signed bounded interpretation verified",
+          "outcome": "pass"
+        },
+        {
+          "name": "disclose: unauthorized or unreviewed issuance rejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "disclose: allowlisted claim excludes private event fields",
+          "outcome": "pass"
+        },
+        {
+          "name": "verify: portable claim accepted with current status",
+          "outcome": "pass"
+        },
+        {
+          "name": "verify: wrong audience rejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "verify: forged claim rejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "revoke: revoked claim and stale status rejected",
+          "outcome": "pass"
+        },
+        {
+          "name": "revoke: source event remains verifiable",
+          "outcome": "pass"
+        }
+      ],
+      "evidence": {
+        "event_digest": "sha256:b6e95c1bcb40d3032a030a1301d457f38362e73faa24fe1ddf0741d02728b459",
+        "claim_digest": "4832e8b825166d5375185bace5c17fab6bd2e09dcf4fee6e1d9814cff32b857b",
+        "revoked_status_digest": "726a60a63dde6ecf7e457b82471301e9831815dfbb1247b4dfa6ffe77e784e66"
+      },
+      "scope": "local synthetic cryptographic cycle; not full integrated pilot acceptance"
+    },
+    "proof": "7b8owPCyxhc9w8xa5wB1mw8ZEHPPClNXA8z5mxE9ysOH5GDYRghfh6S6+T2ohyLV008baOj/fHkxFD9ldELGCQ=="
+  },
+  "recorder_public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA51iAj96kf9T85WwUBHGu4xWshrB0qWe6tGVxa3AUrQ4=\n-----END PUBLIC KEY-----\n",
+  "evaluator_public_key": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAS2ziGguTP5HWXM6VCfPJ6JAsQbKhnfB/Aqxc73wEMLM=\n-----END PUBLIC KEY-----\n",
+  "claim": {
+    "payload": {
+      "id": "urn:example:synthetic-claim-1",
+      "subject": "urn:example:pairwise-learner-1",
+      "audience": "urn:example:synthetic-verifier",
+      "capability": "epistemic correction",
+      "scope": "one synthetic integer simulation",
+      "issuer": "urn:example:synthetic-mentor",
+      "method": "compare prediction and revision",
+      "status_id": "urn:example:synthetic-status-1"
+    },
+    "proof": "ofzcsOQivYYR7MmW0OYtd9ybsSsa85UQRNB/tzYTcTyctK6U+78kD3rqanP/7BCNWChM5cqI/xVq3czGcV01CQ=="
+  },
+  "active_status": {
+    "payload": {
+      "id": "urn:example:synthetic-status-1",
+      "claim_id": "urn:example:synthetic-claim-1",
+      "revoked": false,
+      "sequence": 1
+    },
+    "proof": "pxDyvDjoAFoFVtz0iKy5kpLbFFhP+A1Oei5Y7x7lYrtq+7K+mXlCGox9OydJw1p5LN3f42WmfASeyI9Jww/fDg=="
+  },
+  "revoked_status": {
+    "payload": {
+      "id": "urn:example:synthetic-status-1",
+      "claim_id": "urn:example:synthetic-claim-1",
+      "revoked": true,
+      "sequence": 2
+    },
+    "proof": "E/iiW6FNWzRDqr7puwlzQnWPrqDmhSQfqnPWxEjWWAB3PLFfA9U8v3eOi+mESlxmVzm6F5HRUluZK3IX2XHjAw=="
+  }
+}
