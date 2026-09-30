@@ -120,7 +120,7 @@ def transport(response=None,**kwargs):
     return NotionReadTransport("synthetic-token",connection_factory=c,min_interval=0,**kwargs),c
 
 def test_transport_get_only_and_pinned():
-    client,c=transport(Response(b'{"text":"Ω"}'))
+    client,c=transport(Response('{"text":"Ω"}'.encode("utf-8")))
     assert client.get_json("/v1/users/me",timeout_seconds=1)=={"text":"Ω"}
     assert c.calls[0][0]=="GET" and c.calls[0][2]["Notion-Version"]==API_VERSION
 
