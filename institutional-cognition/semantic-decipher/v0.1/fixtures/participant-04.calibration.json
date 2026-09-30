@@ -1,0 +1,44 @@
+{
+  "record_id": "semantic-decipher-participant-04-calibration",
+  "source": {
+    "claim": "Participant 04 could not reliably discover the relevant technical substrate through its available general web-search/fetch tool envelope.",
+    "provenance_refs": [
+      "notion:TYME-HALL-EXTERNAL-COLD-START-REVIEW-CYCLE-02:Participant-04-Stage-E",
+      "notion:TYME-HALL-EXTERNAL-COLD-START-REVIEW-CYCLE-02:closeout"
+    ]
+  },
+  "readings": [
+    {
+      "mode": "literal",
+      "status": "supported",
+      "confidence": 0.98,
+      "rationale": "The participant explicitly reported its available tools and access limitations."
+    }
+  ],
+  "intentionality": {
+    "status": "unknown",
+    "candidate": null,
+    "evidence_refs": []
+  },
+  "reception": [],
+  "observation_basis": "participant_report",
+  "access_envelope": {
+    "available_tools": ["general web search", "search-surfaced web fetch"],
+    "limitations": ["no GitHub API", "no repository-native code search", "arbitrary constructed URLs rejected"]
+  },
+  "evidence_status": "supported",
+  "interpretive_distance": "explicit_source_statement",
+  "methodological_limitations": [
+    "Search-index discoverability is not equivalent to repository-native availability.",
+    "The participant review was institution-commissioned and must not be promoted into stronger external validation than the method supports."
+  ],
+  "counter_readings": [
+    "Failure to discover the repository proves the repository is absent.",
+    "Participant refusal or access failure proves the tested system failed."
+  ],
+  "unresolved": [
+    "W-05 / M3 Fielded semantic rubric was not cleanly tested by Participant 04."
+  ],
+  "recommended_disposition": "compare",
+  "authority_posture": "analysis_only"
+}

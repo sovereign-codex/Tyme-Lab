@@ -1,0 +1,12 @@
+{
+  "fixture": "participant-04.calibration.json",
+  "expected_reconciliation": {
+    "repository_absence": "not_established",
+    "discoverability_failure": "established",
+    "tool_limitation": "established",
+    "methodological_objection": "established",
+    "independent_validation_claim": "not_warranted",
+    "technical_rubric_W05": "unresolved"
+  },
+  "note": "This oracle is kept outside the input fixture so a future decipher implementation can be evaluated against the reconciled result rather than being given the result as input."
+}

@@ -1,0 +1,13 @@
+{
+  "fixture": "inanna-descent.adversarial.json",
+  "expected_boundaries": {
+    "narrative_event_equals_modern_empirical_historicity": "not_warranted",
+    "modern_symbolic_reception_equals_original_intent": "not_warranted",
+    "cosmological_reading": "plausible",
+    "symbolic_reading": "plausible",
+    "ritual_function": "unresolved",
+    "original_intent": "unresolved",
+    "multiple_readings_may_coexist": "supported",
+    "authority_posture": "analysis_only"
+  }
+}

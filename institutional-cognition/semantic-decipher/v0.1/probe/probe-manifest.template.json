@@ -1,0 +1,35 @@
+{
+  "probe_id": "SDC-v0.1-PROBE-001",
+  "posture": "non_authorizing_pre_merge_evidence",
+  "git_commit": "RECORD_EXACT_SHA_AT_EXECUTION",
+  "model": {
+    "provider": "RECORD_AT_EXECUTION",
+    "model_id": "RECORD_AT_EXECUTION",
+    "parameters": {}
+  },
+  "inputs": {
+    "contract": "../CONTRACT.md",
+    "schema": "../semantic-decipher.schema.json",
+    "specimen": "RECORD_SELECTED_INPUT_PATH",
+    "oracle_supplied_to_model": false
+  },
+  "isolation_attestation": {
+    "expected_oracle_withheld": true,
+    "prior_authored_interpretation_withheld": true,
+    "pr_discussion_withheld": true
+  },
+  "evidence": {
+    "sanitized_request": "RECORD_PATH_AFTER_RUN",
+    "raw_response": "RECORD_PATH_AFTER_RUN",
+    "schema_validation": "RECORD_PATH_AFTER_RUN",
+    "withheld_oracle_comparison": "RECORD_PATH_AFTER_OUTPUT_SEALED",
+    "human_semantic_review": "RECORD_PATH_AFTER_REVIEW"
+  },
+  "authority": {
+    "analysis_only": true,
+    "grants_admission": false,
+    "grants_canon": false,
+    "grants_work": false,
+    "grants_execution": false
+  }
+}

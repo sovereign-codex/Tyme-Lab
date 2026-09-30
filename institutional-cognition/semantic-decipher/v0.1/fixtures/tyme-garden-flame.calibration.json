@@ -1,0 +1,59 @@
+{
+  "record_id": "semantic-decipher-tyme-garden-flame-calibration",
+  "source": {
+    "claim": "Garden Flame functions in the recovered TYME lineage as a covenant / ethical-root / inheritance-return surface; its contemporary reviewed wrapper does not convert historical metaphysical or empirical-sounding language into current institutional fact.",
+    "provenance_refs": [
+      "notion:Garden-Flame-Codex",
+      "notion:Canon-Steward-Public-Wrapper-Review-Garden-Flame-2026-09-07"
+    ]
+  },
+  "readings": [
+    {
+      "mode": "symbolic",
+      "status": "supported",
+      "confidence": 0.93,
+      "rationale": "The recovered institutional role is described as covenant, ethical root, and inheritance-return relationship rather than as a physical-flame proposition."
+    },
+    {
+      "mode": "literal",
+      "status": "unsupported",
+      "confidence": 0.96,
+      "rationale": "The reviewed institutional sources provide no basis for treating the title 'Garden Flame' as a claim about a literal physical flame."
+    }
+  ],
+  "intentionality": {
+    "status": "unknown",
+    "candidate": null,
+    "evidence_refs": []
+  },
+  "reception": [
+    {
+      "audience": "current Canon Steward review",
+      "reading": "conditioned ethical inheritance centered on consent, responsibility, reciprocity, traceable coherence, safety, sovereign stewardship, and living review",
+      "evidence_refs": ["notion:Canon-Steward-Public-Wrapper-Review-Garden-Flame-2026-09-07"]
+    }
+  ],
+  "observation_basis": "mixed",
+  "access_envelope": {
+    "available_tools": ["Notion connected workspace", "repository references in reviewed records"],
+    "limitations": ["unresolved historical Garden-Flame-Kodex primary repository", "historical authorial intent not independently established"]
+  },
+  "evidence_status": "supported",
+  "interpretive_distance": "close_inference",
+  "methodological_limitations": [
+    "The strongest surviving historical body is not represented as a proven original.",
+    "Current institutional reception cannot by itself establish the exact intention of the historical author or authors.",
+    "Canon or PUBLIC_REVIEWED status does not create empirical validation."
+  ],
+  "counter_readings": [
+    "Historical metaphysical language should be treated as current empirical SIRI doctrine.",
+    "The later Tyme Garden Flame Kodex silently supersedes the historical Garden Flame body.",
+    "Current symbolic reception proves the original author's exact intended meaning."
+  ],
+  "unresolved": [
+    "Exact historical primary-repository lineage remains unresolved.",
+    "Exact original intentionality of the Garden Flame metaphor remains unresolved."
+  ],
+  "recommended_disposition": "compare",
+  "authority_posture": "analysis_only"
+}
