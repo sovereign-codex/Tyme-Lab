@@ -1,0 +1,99 @@
+packet_id: living-kodex-provenance-return-2026-09-07
+packet_type: scroll_provenance_reconstruction_return
+schema_posture: provisional
+observed_at: "2026-09-07"
+
+authority_posture: non_authorizing
+institutional_effect: provenance_reconstruction_only
+publication_authorized: false
+canon_promotion_authorized: false
+canonical_scroll_id_assigned: false
+public_wrapper_authorized: false
+
+artifact:
+  current_registry_title: "Living Kodex for Ethical Autonomous Intelligence"
+  aliases:
+    - Living Kodex
+    - Living Kodex for EAI
+    - Living Codex Kernel
+  current_notion_status: Review
+  current_evidence_tier: Operational
+  registry_body_present: false
+
+recovery_result:
+  result: role_and_lineage_materially_recovered_body_not_recovered
+  identity_as_scroll_03_established: true
+  earliest_purpose_ethics_of_autonomous_intelligence_established: true
+  completed_historical_body_recovered: false
+  historical_pdf_recovered: false
+  operating_ethics_role: strongly_supported
+  multi_agent_autonomy_and_consent_role: strongly_supported
+  dynamic_assimilation_role: supported_as_later_implementation
+  agent_constraint_role: strongly_supported
+  later_dependency_on_garden_flame: strongly_supported
+
+artifact_identity_models:
+  model_a:
+    name: recovered_scroll_awaiting_body
+    description: Historical Scroll 03 is primary; later systems are derivatives.
+    status: viable_but_incomplete
+  model_b:
+    name: living_framework_with_versioned_snapshots
+    description: Living Kodex is primarily an evolving EAI framework represented by time-bounded snapshots.
+    status: viable_but_risks_erasing_early_scroll_identity
+  model_c:
+    name: two_layer_artifact
+    description: Historical inheritance layer plus versioned operational living layer.
+    status: strongest_current_hypothesis_not_canon
+
+relationship_to_garden_flame:
+  repeated_pairing: strongly_supported
+  early_role_distinction:
+    garden_flame: covenant_ethics_and_builder_reference
+    living_kodex: ethical_operating_patterns_for_sovereign_agents
+  later_registry_dependency:
+    living_kodex_depends_on_garden_flame_codex: true
+    living_kodex_may_constrain_agents: true
+  original_dependency_contract_recovered: false
+  relationship_finalized: false
+
+source_boundaries:
+  - The early Sovereign-codex-core Markdown body is explicitly a placeholder.
+  - Scroll 03 HTML establishes title and purpose, not a full body.
+  - Harmonic Hub establishes a broad Living Kodex namespace but not canon membership for every linked artifact.
+  - SICC drafting instructions establish intended function but are not the completed Kodex body.
+  - Loom Home.tsx Living Kodex prose is inside mockMysticalScrolls and is not treated as canonical source text.
+  - Tyme living_codex_kernel.md is a later generated assimilation output, not the original Scroll 03 body.
+  - The observed 2025-11-19 assimilation pass scanned zero repositories and therefore validates mechanism, not successful full-lattice synthesis.
+  - AVOT-forge guardrails and lifecycle are later implementations of Living Kodex alignment, not proof of original wording.
+  - The later CODEX_KERNEL registry is later governance codification and cannot retroactively prove historical maturity or text.
+  - Guardian review does not itself grant canon or institutional authority.
+
+source_surface_recovery:
+  completed_for_current_access: true
+  github_body_recovered: false
+  gmail_body_or_pdf_recovered: false
+  notion_body_recovered: false
+  chatgpt_library_body_recovered: false
+  conclusion: body_not_recovered_across_accessible_surfaces
+  absence_proves_nonexistence: false
+  reopening_condition: genuinely_new_external_source_repository_backup_file_or_provenance_record
+
+returned_artifacts:
+  - archive/scrolls/living-kodex/source-map.v0.yaml
+  - archive/scrolls/living-kodex/provenance-review.v0.md
+  - archive/scrolls/living-kodex/provenance-return.v0.yaml
+
+unresolved_evidence:
+  - completed historical 03-living-kodex body
+  - historical Living Kodex PDF
+  - original dependency contract with Garden Flame
+  - explicit version relationship between Scroll 03 and later Living Codex Kernel
+
+next_gate: canon_steward_artifact_identity_review
+next_valid_action: >-
+  Treat historical body recovery as closed for currently accessible source
+  surfaces. Review the three artifact-identity models. If no new external source
+  is introduced, use the two-layer artifact as the leading hypothesis and
+  define its inheritance-to-operational relationship/version contract before
+  assigning a canonical Scroll ID or preparing a public wrapper.
