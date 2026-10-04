@@ -1,0 +1,34 @@
+{
+  "cit_version": "0.1",
+  "envelope_type": "CIT-REQUEST",
+  "origin": {
+    "institution": "TYME Hall",
+    "surface": "SOVEREIGN_CIRCULATION_PILOT_001",
+    "surface_status": "experimental"
+  },
+  "intent": {
+    "mode": "SEEK",
+    "meaning": "investigate"
+  },
+  "participant": {
+    "context": "Synthetic repository-only conformance participant.",
+    "identity_required": false
+  },
+  "request": {
+    "question_or_task": "Analyze the synthetic Sovereign Compute & Agent Infrastructure signal for bounded research significance. Do not create Work or claim Hall standing."
+  },
+  "endpoint": {
+    "intelligence": "synthetic:test-endpoint"
+  },
+  "boundary": {
+    "authority_transfer": false,
+    "institutional_receipt": false,
+    "auto_submission": false,
+    "statement": "Conversation is not authority. This does not submit, approve, publish, deploy, or govern."
+  },
+  "routing": {
+    "SEEK": "investigation or execution",
+    "KNOW": "reviewed standing or inheritance",
+    "KNOCK": "request of institutional consequence"
+  }
+}
