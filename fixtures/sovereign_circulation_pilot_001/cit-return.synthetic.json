@@ -1,0 +1,41 @@
+{
+  "cit_version": "0.1",
+  "envelope_type": "CIT-RETURN",
+  "source": {
+    "intelligence": "synthetic:test-endpoint",
+    "model_or_agent": "phase1-fixture",
+    "session_or_run_ref": "synthetic-run-001"
+  },
+  "handled": {
+    "originating_intent": "SEEK",
+    "result_type": "analysis"
+  },
+  "result": {
+    "summary": "The synthetic signal is suitable for bounded Knowledge Curator review and does not itself create Work, authority, or institutional standing.",
+    "evidence_refs": [
+      "evidence:synthetic:scai-phase1-source"
+    ],
+    "assumptions": [],
+    "uncertainty": [
+      "Repository-only fixture; no live endpoint was contacted."
+    ]
+  },
+  "standing": {
+    "claimed_by_intelligence": "none",
+    "requested_hall_standing": "review_requested",
+    "canon_claimed": false
+  },
+  "consequence": {
+    "action_taken": false,
+    "hall_receipt_claimed": false,
+    "authorization_claimed": false
+  },
+  "routing": {
+    "suggested_next_mode": "none",
+    "reason": "Phase 1 stops after the bounded synthetic return."
+  },
+  "contribution": {
+    "candidate": false,
+    "requires_distinct_submission_action": true
+  }
+}
