@@ -17,10 +17,14 @@ import time
 from urllib.parse import urlencode
 from uuid import UUID
 
+from adapters.tyme_notion_live_read_v0 import AcquisitionLimits
+
 API_VERSION = "2026-03-11"
 REPRESENTATION = "notion_enhanced_markdown_utf8_v1"
 _UUID = r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}"
 _ROUTE = re.compile(rf"/v1/(?:users/me|pages/{_UUID}(?:/markdown)?|blocks/{_UUID}/children)\Z")
+_DEFAULT_MIN_INTERVAL = 0.30
+_THROTTLE_BUDGET_FRACTION = 0.80
 
 
 class ProviderError(ValueError):
@@ -67,6 +71,20 @@ def _json_load(raw):
         raise ProviderError("invalid_json") from None
     _require(isinstance(obj, dict), "invalid_json_object")
     return obj
+
+
+def _transport_profile(limits):
+    """Map the inherited R1 acquisition envelope to native HTTP transport bounds."""
+    _require(isinstance(limits, AcquisitionLimits), "invalid_limits")
+    max_calls = 1 + 3 * (1 + limits.max_children) + 2 * limits.max_listing_pages
+    throttle_budget = limits.max_elapsed_seconds * _THROTTLE_BUDGET_FRACTION
+    min_interval = min(_DEFAULT_MIN_INTERVAL, throttle_budget / max(1, max_calls - 1))
+    return {"max_calls": max_calls, "min_interval": min_interval}
+
+
+def _scope_ref_for_expected_bot(expected_bot_id):
+    """Build the independently approved scope before provider acquisition begins."""
+    return "notion-bot:" + _id(expected_bot_id)
 
 
 class NotionReadTransport:
@@ -335,17 +353,32 @@ def main():
     parser = argparse.ArgumentParser(description="R1 read-only Notion capture; no classification")
     parser.add_argument("--root", required=True)
     parser.add_argument("--output-dir", required=True)
-    parser.add_argument("--expected-bot-id")
+    parser.add_argument("--expected-bot-id", required=True)
     args = parser.parse_args()
     token = os.environ.get("NOTION_API_TOKEN")
     if not token:
         parser.exit(2, "NOTION_API_TOKEN is required in the runtime secret environment.\n")
     destination = Path(args.output_dir)
     destination.mkdir(mode=0o700, parents=False, exist_ok=False)
-    transport = NotionReadTransport(token)
+    limits = AcquisitionLimits()
+    profile = _transport_profile(limits)
+    expected_bot_id = _id(args.expected_bot_id)
+    expected_scope_ref = _scope_ref_for_expected_bot(expected_bot_id)
+    transport = NotionReadTransport(
+        token,
+        max_calls=profile["max_calls"],
+        max_response_bytes=limits.max_response_bytes,
+        max_total_bytes=limits.max_total_bytes,
+        min_interval=profile["min_interval"],
+    )
     try:
-        provider = NotionRESTProvider(transport, args.root, expected_bot_id=args.expected_bot_id)
-        bundle = acquire_notion_snapshot(args.root, provider, connection_scope_ref=provider.connection_scope_ref)
+        provider = NotionRESTProvider(
+            transport, args.root, expected_bot_id=expected_bot_id,
+            timeout_seconds=limits.timeout_seconds,
+        )
+        bundle = acquire_notion_snapshot(
+            args.root, provider, connection_scope_ref=expected_scope_ref, limits=limits,
+        )
         write_acquisition_bundle(bundle, destination / "acquisition.json")
         read_acquisition_bundle(destination / "acquisition.json",
                                 expected_manifest_sha256=bundle["manifest_sha256"])
