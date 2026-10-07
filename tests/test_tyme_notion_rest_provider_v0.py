@@ -9,6 +9,7 @@ from types import SimpleNamespace
 import pytest
 from adapters.tyme_notion_rest_provider_v0 import (
     API_VERSION, NotionReadTransport, NotionRESTProvider, ProviderError,
+    _scope_ref_for_expected_bot, _transport_profile,
 )
 
 ROOT = "10000000-0000-4000-8000-000000000001"
@@ -80,6 +81,35 @@ def test_archived_alias_optional():
 
 def test_scope_identity_is_bot_id():
     assert provider().connection_scope_ref=="notion-bot:"+BOT
+
+def test_transport_profile_covers_full_r1_envelope():
+    from adapters.tyme_notion_live_read_v0 import AcquisitionLimits
+    limits=AcquisitionLimits()
+    profile=_transport_profile(limits)
+    expected=1+3*(1+limits.max_children)+2*limits.max_listing_pages
+    assert profile["max_calls"]==expected==320
+    assert profile["max_calls"]>1+3*(1+40)+2*limits.max_listing_pages
+    assert profile["min_interval"]*(profile["max_calls"]-1) <= limits.max_elapsed_seconds*0.80
+
+def test_wrong_bot_rejected_before_page_acquisition():
+    n=Native()
+    with pytest.raises(ProviderError,match="bot_identity_mismatch"):
+        provider(n,expected_bot_id=OTHER)
+    assert [call[0] for call in n.calls]==["/v1/users/me"]
+
+def test_expected_scope_is_independent_input():
+    assert _scope_ref_for_expected_bot(BOT)=="notion-bot:"+BOT
+
+def test_cli_requires_expected_bot_id(tmp_path):
+    target=tmp_path/"capture"
+    result=subprocess.run(
+        [sys.executable,"-m","adapters.tyme_notion_rest_provider_v0",
+         "--root",ROOT,"--output-dir",str(target)],
+        text=True,capture_output=True,
+    )
+    assert result.returncode==2
+    assert "--expected-bot-id" in result.stderr
+    assert not target.exists()
 
 def test_merged_r1_interop(tmp_path):
     from adapters.tyme_notion_live_read_v0 import acquire_notion_snapshot
