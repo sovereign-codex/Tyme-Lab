@@ -11,7 +11,10 @@ The native API supplies the evidence missing from the ChatGPT connector probe:
 
 The provider is GET-only, fixed to api.notion.com, pinned to Notion-Version 2026-03-11,
 bounded by call/byte/time limits, performs no retries or search, and preserves successful
-raw JSON responses in a private sidecar. It never derives membership from Markdown,
+raw JSON responses in a private sidecar. The native HTTP call ceiling is derived from the
+inherited R1 AcquisitionLimits envelope (root + up to 100 direct children + both listing
+passes), and the throttle interval is capped so its planned delay consumes no more than
+80% of the inherited elapsed budget. It never derives membership from Markdown,
 titles, mentions, links, or model inference.
 
 Use a separately provisioned Notion internal connection with Read content only, grant it
@@ -23,8 +26,13 @@ A live run is explicit only:
 ```sh
 python -m adapters.tyme_notion_rest_provider_v0 \
   --root 38cc51d5-4b75-8187-b66f-c5f9f0032501 \
+  --expected-bot-id <approved-notion-bot-uuid> \
   --output-dir /private/captures/horizon-r1-new
 ```
+
+The expected bot ID is mandatory and must be selected independently of the token being
+presented at runtime. A mismatched bot is rejected immediately after /v1/users/me, before
+any page acquisition, and the approved bot ID determines the scope ref supplied to R1.
 
 The output directory must be new and private. It contains acquisition.json,
 transport.json, and receipt.json. Exit 0 means complete acquisition requiring review,
