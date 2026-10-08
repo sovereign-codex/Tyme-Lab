@@ -23,8 +23,8 @@ API_VERSION = "2026-03-11"
 REPRESENTATION = "notion_enhanced_markdown_utf8_v1"
 _UUID = r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}"
 _ROUTE = re.compile(rf"/v1/(?:users/me|pages/{_UUID}(?:/markdown)?|blocks/{_UUID}/children)\Z")
-_DEFAULT_MIN_INTERVAL = 0.30
-_THROTTLE_BUDGET_FRACTION = 0.80
+_LOWEST_PLAN_REQUESTS_PER_MINUTE = 180
+_LOWEST_PLAN_MIN_INTERVAL = 60.0 / _LOWEST_PLAN_REQUESTS_PER_MINUTE
 
 
 class ProviderError(ValueError):
@@ -51,6 +51,12 @@ def _seconds(value):
     return float(value)
 
 
+def _cursor(value):
+    """Pagination cursors are opaque API strings, not Notion object IDs."""
+    _require(isinstance(value, str) and bool(value), "invalid_cursor")
+    return value
+
+
 def _json_bytes(value):
     return json.dumps(value, ensure_ascii=False, sort_keys=True,
                       separators=(",", ":"), allow_nan=False).encode("utf-8")
@@ -74,12 +80,13 @@ def _json_load(raw):
 
 
 def _transport_profile(limits):
-    """Map the inherited R1 acquisition envelope to native HTTP transport bounds."""
+    """Map inherited R1 coverage to HTTP bounds without exceeding Notion's base plan rate."""
     _require(isinstance(limits, AcquisitionLimits), "invalid_limits")
     max_calls = 1 + 3 * (1 + limits.max_children) + 2 * limits.max_listing_pages
-    throttle_budget = limits.max_elapsed_seconds * _THROTTLE_BUDGET_FRACTION
-    min_interval = min(_DEFAULT_MIN_INTERVAL, throttle_budget / max(1, max_calls - 1))
-    return {"max_calls": max_calls, "min_interval": min_interval}
+    planned_throttle = _LOWEST_PLAN_MIN_INTERVAL * max(0, max_calls - 1)
+    _require(planned_throttle < limits.max_elapsed_seconds,
+             "elapsed_budget_incompatible_with_rate_limit")
+    return {"max_calls": max_calls, "min_interval": _LOWEST_PLAN_MIN_INTERVAL}
 
 
 def _scope_ref_for_expected_bot(expected_bot_id):
@@ -118,7 +125,7 @@ class NotionReadTransport:
             _require(type(params.get("page_size")) is int and 1 <= params["page_size"] <= 100,
                      "invalid_page_size")
             if "start_cursor" in params:
-                params["start_cursor"] = _id(params["start_cursor"])
+                params["start_cursor"] = _cursor(params["start_cursor"])
         elif path.endswith("/markdown"):
             _require(params == {"include_transcript": "false"}, "query_not_allowed")
         else:
@@ -301,7 +308,7 @@ class NotionRESTProvider:
     def list_child_pages(self, parent_page_id, *, cursor, timeout_seconds):
         root = _id(parent_page_id)
         _require(root == self.root_page_id, "enumeration_outside_root")
-        cursor = None if cursor is None else _id(cursor)
+        cursor = None if cursor is None else _cursor(cursor)
         if cursor is None:
             _require(not self._round_active, "pagination_restart")
             self._allowed = {root}
@@ -317,7 +324,7 @@ class NotionRESTProvider:
         _require(type(more) is bool and "next_cursor" in body, "pagination_unknown")
         following = body["next_cursor"]
         if more:
-            following = _id(following)
+            following = _cursor(following)
             _require(following != cursor, "cursor_cycle")
         else:
             _require(following is None, "pagination_inconsistent")
