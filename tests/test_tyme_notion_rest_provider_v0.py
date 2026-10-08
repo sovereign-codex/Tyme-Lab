@@ -16,7 +16,7 @@ ROOT = "10000000-0000-4000-8000-000000000001"
 CHILD = "10000000-0000-4000-8000-000000000002"
 OTHER = "10000000-0000-4000-8000-000000000003"
 BOT = "10000000-0000-4000-8000-000000000004"
-CURSOR = "10000000-0000-4000-8000-000000000005"
+CURSOR = "opaque-cursor:page-2"
 TEXT = '# Body\r\n\tΩ é\n```xml\n<page url="outsider">not membership</page>\n```\n'
 
 def block(identity, kind="child_page"):
@@ -89,7 +89,8 @@ def test_transport_profile_covers_full_r1_envelope():
     expected=1+3*(1+limits.max_children)+2*limits.max_listing_pages
     assert profile["max_calls"]==expected==320
     assert profile["max_calls"]>1+3*(1+40)+2*limits.max_listing_pages
-    assert profile["min_interval"]*(profile["max_calls"]-1) <= limits.max_elapsed_seconds*0.80
+    assert profile["min_interval"] >= 60.0/180.0
+    assert profile["min_interval"]*(profile["max_calls"]-1) < limits.max_elapsed_seconds
 
 def test_wrong_bot_rejected_before_page_acquisition():
     n=Native()
@@ -153,6 +154,26 @@ def test_transport_get_only_and_pinned():
     client,c=transport(Response('{"text":"Ω"}'.encode("utf-8")))
     assert client.get_json("/v1/users/me",timeout_seconds=1)=={"text":"Ω"}
     assert c.calls[0][0]=="GET" and c.calls[0][2]["Notion-Version"]==API_VERSION
+
+def test_transport_preserves_opaque_cursor():
+    client,c=transport(Response(b'{"object":"list"}'))
+    client.get_json(
+        "/v1/blocks/"+ROOT+"/children",
+        {"page_size":100,"start_cursor":CURSOR},
+        timeout_seconds=1,
+    )
+    assert "start_cursor=opaque-cursor%3Apage-2" in c.calls[0][1]
+
+@pytest.mark.parametrize("cursor",["",None,123])
+def test_transport_rejects_invalid_cursor(cursor):
+    client,c=transport()
+    with pytest.raises(ProviderError,match="invalid_cursor"):
+        client.get_json(
+            "/v1/blocks/"+ROOT+"/children",
+            {"page_size":100,"start_cursor":cursor},
+            timeout_seconds=1,
+        )
+    assert not c.calls
 
 @pytest.mark.parametrize("path",["https://evil.example/v1/users/me","//evil.example","/v1/search","/v1/pages/../users/me"])
 def test_transport_route_allowlist(path):
