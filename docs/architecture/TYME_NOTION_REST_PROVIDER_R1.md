@@ -13,9 +13,11 @@ The provider is GET-only, fixed to api.notion.com, pinned to Notion-Version 2026
 bounded by call/byte/time limits, performs no retries or search, and preserves successful
 raw JSON responses in a private sidecar. The native HTTP call ceiling is derived from the
 inherited R1 AcquisitionLimits envelope (root + up to 100 direct children + both listing
-passes), and the throttle interval is capped so its planned delay consumes no more than
-80% of the inherited elapsed budget. It never derives membership from Markdown,
-titles, mentions, links, or model inference.
+passes). The transport also enforces the lowest documented per-connection plan limit
+(180 requests per 60 seconds), and rejects a limits profile whose required throttle alone
+would exceed the inherited elapsed budget. Pagination cursors are preserved as opaque
+strings exactly as returned by Notion; they are never parsed as page or block UUIDs.
+It never derives membership from Markdown, titles, mentions, links, or model inference.
 
 Use a separately provisioned Notion internal connection with Read content only, grant it
 the Horizon root, and store the secret as NOTION_API_TOKEN in the runtime secret store.
@@ -40,6 +42,7 @@ not institutional acceptance. R2/R3 remain closed until a credentialed Horizon r
 offline replay, and semantic review complete.
 
 Official references:
+- https://developers.notion.com/reference/intro
 - https://developers.notion.com/reference/get-block-children
 - https://developers.notion.com/reference/retrieve-page-markdown
 - https://developers.notion.com/reference/retrieve-a-page
