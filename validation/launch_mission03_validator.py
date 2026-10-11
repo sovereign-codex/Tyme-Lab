@@ -140,7 +140,7 @@ def validate_candidate_return(packet: dict[str, Any]) -> dict[str, Any]:
              "unaltered raw response reference required")
     observed = packet.get("observed_urls")
     _require(isinstance(observed, list)
-             and any(_public_url(url) and url.startswith("https://tymehall.org")
+             and any(_public_url(url) and urlparse(url).hostname == "tymehall.org"
                      for url in observed),
              "public Hall starting URL not observed")
     answers = packet.get("answers")
