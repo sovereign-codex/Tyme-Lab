@@ -1,0 +1,26 @@
+name: TYME Hall Mission 03 Context-Zero Specimen
+
+on:
+  pull_request:
+    paths:
+      - "fixtures/launch/tyme_hall_mission03_specimen_v0.json"
+      - "docs/launch/TYME_HALL_MISSION03_*"
+      - "validation/launch_mission03_validator.py"
+      - "tests/test_launch_mission03_v0.py"
+      - ".github/workflows/launch-mission03-context-zero-v0.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-review-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout public, non-authorizing mission specimen
+        uses: actions/checkout@v4
+      - name: Inspect candidate contract and enforce NOT_RUN state
+        run: python3 validation/launch_mission03_validator.py
+      - name: Validate source isolation, provenance and false-authority negative cases
+        run: python3 -m unittest discover -s tests -p 'test_launch_mission03_v0.py' -v
