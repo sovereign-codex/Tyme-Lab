@@ -2,7 +2,7 @@
 
 Status: Experimental architecture artifact
 Branch: `tyme-capability-registry-001`
-Authority: Non-canonical until reviewed and merged
+Authority: Experimental proposal; independent review and explicit promotion required
 
 ## Purpose
 
@@ -20,7 +20,7 @@ AVOTs request capabilities.
 
 TYME evaluates the request against policy, permissions, authority boundaries, and evidence requirements before execution.
 
-Canonical execution pattern:
+Proposed execution pattern (not evidence of a deployed router):
 
 ```text
 participant / system intent
@@ -116,8 +116,8 @@ Default posture:
 
 Determines which capability may be used, under what conditions, and with what evidence obligations.
 
-Current role:
-- CIT / TYME router
+Intended role:
+- CIT / TYME router (runtime availability must be evidenced separately)
 
 Orchestration does not inherit the authority of the capabilities it can route to.
 
@@ -139,7 +139,40 @@ Each registered capability SHOULD define:
 | `approval_threshold` | none, policy-derived, explicit human approval, multi-party, etc. |
 | `fallback_provider` | Alternative provider if the primary capability is unavailable |
 | `replacement_path` | How the provider can be swapped without changing governance semantics |
-| `status` | candidate, experimental, canonical-adapter, canonical, prohibited-by-default, retired |
+| `status` | Registry lifecycle only: candidate, experimental, retired; never an authorization or deployment signal |
+| `provider_standing` | established (existing use evidenced), proposed, or unknown; scoped to the named service |
+| `access_state` | observed-read, observed-bounded-write, blocked, or unverified; name operation, connection context, and evidence |
+| `execution_authorization` | not-applicable, not-established, denied-by-default, blocked-by-scope, or authorized-bounded; both external approval and accepted technical permission are required |
+| `runtime_state` | not-applicable, deployed-observed, none-observed, or unverified; name resource, environment, and observation |
+| `institutional_standing` | pending-review, approved-scoped, or retired; approval requires an independent decision reference |
+| `evidence_basis` | Receipt/commit, observation date or recorded time, scope, and whether independently read back or reported |
+
+## Status Semantics and Evidence Limits
+
+These dimensions are independent, not a promotion ladder. An established provider can expose a readable service while execution is blocked. A deployed resource does not confer permission to modify it. An institutional approval does not create infrastructure or supply API scopes.
+
+`canonical` and `canonical-adapter` are removed as overloaded entry statuses. Existing canonical documents and provider relationships are not revoked by this correction; this experimental registry cannot grant or re-ratify them. Use `institutional_standing: approved-scoped` only with a separate approval record naming the capability, scope, reviewer, and decision. Merge alone is not a blanket execution grant.
+
+For each invocation TYME must check the exact operation/target against external authorization, current connection permission, and required runtime evidence. Missing or stale evidence remains unverified. Class names and proposed scopes are descriptions, never permission grants. A historical successful write is not standing permission for another write.
+
+### Classification review — 2026-10-28
+
+This review reads repository evidence at PR #59 head `7ea064fad679014b0c973a0a861f110d58f4923c`; it does not repeat Cloudflare API observations. Receipt 002 reports one Pages project, zero standalone Worker scripts, zero D1 databases, and HTTP 403 for the Worker upload. Counts are limited to the connected account and recorded inventory; they are not a global or current infrastructure census. No inference is made about Pages Functions.
+
+| Capability / service | Provider standing | Access state | Execution authorization | Runtime state | Institutional standing for this registry entry |
+|---|---|---|---|---|---|
+| CTX7-DOCS-001 | established for reported documentation lookup | observed-read, reported in receipt 001 | not-applicable to read-only lookup | not-applicable | pending-review |
+| GITHUB-OPS-001 | established repository/evidence provider | observed-bounded-write: receipt creation commit independently read back | authorized-bounded for recorded receipt creation only; future actions require their own authorization | not-applicable to repository writes; no CI or hosted runtime validation inferred | pending-review; existing repository standing preserved |
+| CF-EDGE-001 / Pages | established hosting provider | observed-read, reported in receipt 002 | not-established for Pages writes by these receipts | deployed-observed: existing `codex-interface` Pages surface / `tymehall.org`, as recorded; current health not retested | pending-review; existing Pages standing preserved |
+| CF-EDGE-001 / standalone Worker | established provider through Pages; proposed execution service | observed-read inventory; upload blocked | blocked-by-scope: HTTP 403 on `tyme-capability-probe-001` | none-observed in recorded account inventory; probe not created | pending-review |
+| CF-EDGE-001 / D1 | proposed storage service at established provider | observed-read inventory, reported | not-established; D1 write was not tested | none-observed in recorded account inventory | pending-review |
+| TLDRAW-MAP-001 | proposed in this registry; no board receipt supplied | unverified | not-established for board writes | unverified; no board revision supplied | pending-review |
+| REMOTE-OS-001 | proposed; provider TBD | unverified | denied-by-default | unverified; no host identified | pending-review |
+| VPS-WORKER-001 | proposed; provider TBD | unverified | not-established | unverified; no deployed host evidence in these receipts | pending-review |
+
+Evidence basis: [receipt 001](receipts/tyme-capability-validation-001.md), its independently inspected [creation commit](https://github.com/sovereign-codex/Tyme-Lab/commit/4686b78b4a4e65f52fee422fcbb043c5137564c1), and [receipt 002](receipts/tyme-capability-validation-002.md) at [its original commit](https://github.com/sovereign-codex/Tyme-Lab/commit/7ea064fad679014b0c973a0a861f110d58f4923c). The PR discussion records completion on October 28; raw Cloudflare responses and a deployment ID are not embedded in receipt 002. Preserve that provenance limitation rather than treating this review as independent API verification.
+
+This separation follows the repository's [explicit authority rule](governance.md.) and [public surface doctrine](architecture/TYME_HALL_PUBLIC_SURFACE_DOCTRINE_V0.md): publication is not Canon promotion.
 
 ## Initial Registry
 
@@ -156,7 +189,7 @@ Each registered capability SHOULD define:
 - approval_threshold: none for bounded documentation lookup
 - fallback_provider: web search / official documentation
 - replacement_path: any source-grounded documentation adapter
-- status: canonical-adapter
+- status: experimental
 
 ### GITHUB-OPS-001
 
@@ -171,44 +204,44 @@ Each registered capability SHOULD define:
 - approval_threshold: policy-derived; elevated for canonical or protected branches
 - fallback_provider: local Git / other Git remote where supported
 - replacement_path: repository adapter preserving commit and evidence semantics
-- status: canonical
+- status: experimental
 
 ### CF-EDGE-001
 
 - provider: Cloudflare
 - class: execution
-- role: edge control plane, ingress, routing, D1-backed state, durable workflow primitives
-- authority_level: production-bounded
+- role: existing Pages hosting and readable inventory; proposed Worker ingress/routing, D1-backed state, and durable workflows
+- authority_level: read for the recorded connection; Worker upload blocked
 - read_scope: authorized Cloudflare account resources
-- write_scope: explicitly authorized Workers, D1, bindings, rules, and related resources
-- persistence: Cloudflare configuration and bound storage services
+- write_scope: none established by these receipts; Worker upload denied, Pages/D1/binding/rule writes not validated
+- persistence: existing Pages deployment/configuration as recorded; proposed Worker/D1 state is not deployed evidence
 - evidence_required: deployment/configuration/state receipt
-- approval_threshold: explicit for production-impacting or destructive changes
+- approval_threshold: separate explicit authorization and accepted technical scope before any future mutation; this registry grants neither
 - fallback_provider: future self-hosted edge/router implementation
 - replacement_path: preserve router, policy, state, and receipt contracts independently of provider
-- status: canonical
+- status: experimental
 
 ### TLDRAW-MAP-001
 
 - provider: tldraw
-- class: knowledge
-- role: living graphical system topology
-- authority_level: none
+- class: knowledge + execution (board edits only)
+- role: living non-authoritative graphical system topology
+- authority_level: none established by these receipts
 - read_scope: authorized boards
-- write_scope: architecture visualization only
-- persistence: durable external board
+- write_scope: proposed architecture visualization only; board-write permission unverified
+- persistence: proposed durable external board; no board revision validated here
 - evidence_required: board revision / linked architectural note when promoted
 - approval_threshold: none for experimental diagrams
 - fallback_provider: Mermaid / repository-native diagrams
 - replacement_path: export topology into open diagram specification
-- status: canonical-adapter
+- status: experimental
 
 ### REMOTE-OS-001
 
 - provider: TBD
 - class: authority-gated
 - role: remote machine / desktop / operating-system actuator
-- authority_level: privileged
+- authority_level: none granted; privileged operations require separate authorization
 - read_scope: must be explicitly declared per host
 - write_scope: denied by default
 - persistence: host-dependent
@@ -216,17 +249,17 @@ Each registered capability SHOULD define:
 - approval_threshold: explicit human approval unless a narrower pre-authorized policy is later ratified
 - fallback_provider: direct human administration
 - replacement_path: interchangeable actuator behind the same TYME authorization contract
-- status: prohibited-by-default / experimental
+- status: experimental
 
 ### VPS-WORKER-001
 
 - provider: TBD
 - class: execution
-- role: persistent Tier-2 worker host for repositories, containers, Codex, and bounded AVOT workloads
-- authority_level: bounded-write
+- role: proposed persistent Tier-2 worker host for repositories, containers, Codex, and bounded AVOT workloads
+- authority_level: none established; bounded-write is a proposed requirement
 - read_scope: explicitly mounted/staged project data
-- write_scope: host-local runtime and approved remote targets
-- persistence: durable host filesystem and service state
+- write_scope: none established; proposed host-local runtime and separately approved remote targets
+- persistence: proposed durable host filesystem and service state; no host deployment validated here
 - evidence_required: task receipt, process result, deployment/commit/log references as applicable
 - approval_threshold: policy-derived; explicit for privileged host changes
 - fallback_provider: alternate VPS or local machine
@@ -246,13 +279,15 @@ Each registered capability SHOULD define:
 9. Orchestration MAY select a capability but MUST NOT inherit that capability's privileges.
 10. Human final authority remains consistent with TYME governance.
 
-## Immediate Adoption Decisions
+## Proposed Adoption Disposition
 
-Adopt:
+These recommendations do not grant institutional approval or execution permission.
+
+Retain or evaluate within existing boundaries:
 - Context7 as current-documentation grounding.
 - tldraw as a living non-authoritative topology surface.
 - GitHub as canonical repository/evidence infrastructure.
-- Cloudflare as the current edge control-plane candidate.
+- Cloudflare Pages as the existing recorded hosting surface; standalone Worker/D1 execution remains a candidate, blocked or unverified as specified above.
 
 Pilot:
 - persistent VPS / remote Codex worker host.
@@ -266,7 +301,9 @@ Avoid unnecessary duplication:
 
 ## Next Validation
 
-The first bounded validation SHOULD test the complete capability chain:
+Receipt 001 evidences a bounded GitHub write; receipt 002 evidences a blocked Worker attempt and a preserved authorization boundary. Any future execution validation requires separate authorization; this documentation review does not request a scope expansion or a new probe.
+
+The validation contract distinguishes:
 
 ```text
 intent
@@ -274,7 +311,7 @@ intent
  -> current documentation grounding
  -> bounded repository or edge action
  -> evidence receipt
- -> institutional promotion
+ -> independent institutional review (promotion is a separate decision)
 ```
 
 Success criteria:
@@ -283,3 +320,18 @@ Success criteria:
 - evidence is produced;
 - failure remains visible;
 - the provider can be replaced without changing the governance contract.
+
+## Classification Validation Cases
+
+A reviewer must reject the following unsupported inferences:
+
+| Evidence | Required interpretation | Must not infer |
+|---|---|---|
+| Existing Pages surface and readable inventory | Preserve Pages deployment standing; scope access to recorded reads | Worker execution or Pages write authorization |
+| Worker upload returns HTTP 403 | `BLOCKED_BY_CAPABILITY_SCOPE`; boundary enforcement PASS; mutation NOT PERFORMED | Successful execution, created runtime, or institutional approval |
+| Inventory reports zero standalone Workers / D1 | `none-observed` for that account and observation | Operational Worker/D1 resources, or D1 write denial from the Worker error |
+| Receipt 001 creation commit exists | Recorded branch-scoped repository mutation succeeded | CI execution, production deployment, or permission to merge |
+| No host, board, or approval evidence supplied | Unverified runtime/access or pending-review as applicable | Canonical capability from a provider name or proposed scope |
+| Successful technical execution in any future test | Record its own scoped result and evidence | Automatic institutional promotion |
+
+Review method: compare all initial entries against the two receipts and receipt 001's creation commit; separate provider, access, authorization, runtime, and institutional standing; retain original receipt text with dated addenda. These are documentation consistency checks, not runtime tests or fresh Cloudflare measurements.
