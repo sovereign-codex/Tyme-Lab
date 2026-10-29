@@ -32,8 +32,8 @@ import { TymeLedger } from "./tyme/ledger.js";
 import { runMetaDebug } from "./tyme/metaDebug.js";
 
 /* Phase Five / Six imports (non-invasive) */
-import { spawnArbitersFromPolicy } from "./tyme/spawnArbitersFromPolicy.js";
-import { runPhaseSixResolution } from "./tyme/phaseSixResolution.js";
+import { spawnArbitersFromPolicy } from "./tyme/arbitration/spawnArbitersFromPolicy.js";
+import { runPhaseSixResolution } from "./tyme/phase6Resolver.js";
 
 /* UI */
 import { renderProbeList } from "./ui/renderProbeList.js";

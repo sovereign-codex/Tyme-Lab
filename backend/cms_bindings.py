@@ -263,6 +263,78 @@ def run_plan(plan: Dict[str, Any]) -> None:
 
 
 # ----------------------------
+# Fail-closed compatibility interpreter
+# ----------------------------
+# This module retains legacy plan/writer helpers for separately authorized
+# pathways, but its public execute() endpoint MUST NOT invoke them.
+# Until a governed interpreter is implemented, execution stays disabled.
+from dataclasses import dataclass, field
+
+
+@dataclass(frozen=True)
+class CMSExecutionResult:
+    mode: str
+    canonical: Optional[str] = None
+    parsed: Optional[Any] = None
+    result: Any = None
+    error: Optional[str] = None
+    notes: Dict[str, Any] = field(default_factory=dict)
+
+
+_CMS_SHORTHAND = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+\s*\(.*\)", re.DOTALL)
+_CMS_DIRECTIVES = {"refresh index", "refresh system index"}
+
+
+def execute(raw: str) -> CMSExecutionResult:
+    """Classify commands without granting filesystem, shell or Git authority.
+
+    Recognizable commands return BLOCKED until an independently governed
+    interpreter exists. Ordinary chat remains UNKNOWN for AVOT narrative
+    fallback. No legacy writer, LLM, or subprocess is called here.
+    """
+    notes = {
+        "authority_effect": "none",
+        "mutation": "not_performed",
+        "executor": "unavailable",
+    }
+    if not isinstance(raw, str):
+        return CMSExecutionResult(
+            mode="blocked",
+            result={
+                "status": "blocked",
+                "reason": "INVALID_CMS_INPUT",
+                "authority_effect": "none",
+            },
+            error="CMS input must be text; no action performed.",
+            notes=notes,
+        )
+
+    command = raw.strip()
+    if not command:
+        return CMSExecutionResult(mode="unknown", notes=notes)
+
+    is_shorthand = _CMS_SHORTHAND.fullmatch(command) is not None
+    is_directive = (
+        command.lower() in _CMS_DIRECTIVES
+        or command.lower().startswith("proposal:")
+    )
+    if is_shorthand or is_directive:
+        return CMSExecutionResult(
+            mode="blocked",
+            canonical=command,
+            result={
+                "status": "blocked",
+                "reason": "CMS_EXECUTOR_UNAVAILABLE",
+                "authority_effect": "none",
+            },
+            error="CMS execution is not configured; no action performed.",
+            notes=notes,
+        )
+
+    return CMSExecutionResult(mode="unknown", notes=notes)
+
+
+# ----------------------------
 # Main
 # ----------------------------
 
