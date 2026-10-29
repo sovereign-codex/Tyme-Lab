@@ -281,7 +281,7 @@ class CMSExecutionResult:
     notes: Dict[str, Any] = field(default_factory=dict)
 
 
-_CMS_SHORTHAND = re.compile(r"[A-Za-z_]\\w*(?:\\.[A-Za-z_]\\w*)+\\s*\\(.*\\)", re.DOTALL)
+_CMS_SHORTHAND = re.compile(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+\s*\(.*\)", re.DOTALL)
 _CMS_DIRECTIVES = {"refresh index", "refresh system index"}
 
 
