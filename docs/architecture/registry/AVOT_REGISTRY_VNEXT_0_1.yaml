@@ -1,0 +1,345 @@
+registry_version: "avot-registry-vnext/0.1"
+status: experimental_reconciliation
+authority: non_canonical
+work_ref: TYME-RUNTIME-RECONCILIATION-001
+source_repositories:
+  - sovereign-codex/AVOT-forge
+  - sovereign-codex/AVOT-engine
+principles:
+  - identity_is_not_runtime_authority
+  - avots_request_capabilities
+  - work_is_the_institutional_superclass
+  - tyme_is_not_an_avot
+  - executor_authority_is_external
+  - evidence_return_is_required_for_consequence
+
+lifecycle_states:
+  defined_routed:
+    meaning: "Definition and routing evidence exist in current source registries; runtime execution is still separately evidenced."
+  defined_unrouted:
+    meaning: "Manifest exists, but no current routing entry was found in the older routing registry."
+  historical:
+    meaning: "Preserved for lineage; not eligible for new routing."
+  retired:
+    meaning: "Explicitly withdrawn from future use."
+
+agents:
+  - avot_id: avot-convergence
+    name: AVOT-Convergence
+    lifecycle_state: defined_routed
+    manifest_version: "legacy-manifest/1"
+    role: "Cross-source synthesis, convergence analysis, and integration recommendations."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-convergence.yaml"
+    accepted_intents:
+      - synthesize
+      - harmonize
+      - cross_reference
+      - system_cycle
+      - seek_next_phase
+    permitted_actions:
+      - read_authorized_context
+      - synthesize
+      - compare
+      - recommend
+      - emit_evidence
+    prohibited_actions:
+      - authorize_execution
+      - mutate_repository
+      - promote_canon
+      - grant_authority
+      - self_route_outside_assigned_work
+    authority_ceiling: advisory
+    runtime_preference: avot-engine
+    return_contract: EVIDENCE_RETURN_v0.1
+    notes:
+      - "Older manifest calls this a primary orchestrator; vNext reserves institutional orchestration for TYME / Control Center."
+
+  - avot_id: avot-quill
+    name: AVOT-Quill
+    lifecycle_state: defined_routed
+    manifest_version: "legacy-manifest/1"
+    role: "Documentation, scroll drafting, summaries, and narrative coherence."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-quill.yaml"
+    accepted_intents:
+      - write_scroll
+      - summarize
+      - document_state
+    permitted_actions:
+      - read_authorized_context
+      - draft
+      - summarize
+      - format
+      - emit_evidence
+    prohibited_actions:
+      - publish_without_authorization
+      - mutate_canon
+      - authorize_execution
+      - grant_authority
+    authority_ceiling: advisory
+    runtime_preference: avot-engine
+    return_contract: EVIDENCE_RETURN_v0.1
+
+  - avot_id: avot-tyme
+    name: AVOT-Tyme
+    lifecycle_state: defined_routed
+    manifest_version: "legacy-manifest/1"
+    role: "Chronology, temporal interpretation, archive checkpoints, and historical narration."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-tyme.yaml"
+    accepted_intents:
+      - describe_system
+      - chronicle_history
+    permitted_actions:
+      - read_authorized_history
+      - summarize_timeline
+      - identify_temporal_gaps
+      - recommend_checkpoint
+      - emit_evidence
+    prohibited_actions:
+      - impersonate_tyme_orchestrator
+      - authorize_execution
+      - change_institutional_state
+      - mutate_canon
+      - grant_authority
+    authority_ceiling: advisory
+    runtime_preference: avot-engine
+    return_contract: EVIDENCE_RETURN_v0.1
+    notes:
+      - "TYME is the institutional orchestration process; AVOT-Tyme is a bounded participant."
+
+  - avot_id: avot-harmonia
+    name: AVOT-Harmonia
+    lifecycle_state: defined_routed
+    manifest_version: "legacy-manifest/1"
+    role: "Reflective language, calibration, alignment, and resonance-oriented interpretation."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-harmonia.yaml"
+    accepted_intents:
+      - reflective_guidance
+      - explain_resonance
+    permitted_actions:
+      - read_authorized_context
+      - reflect
+      - explain
+      - recommend
+      - emit_evidence
+    prohibited_actions:
+      - classify_as_canon
+      - authorize_execution
+      - mutate_external_state
+      - grant_authority
+    authority_ceiling: advisory
+    runtime_preference: avot-engine
+    return_contract: EVIDENCE_RETURN_v0.1
+
+  - avot_id: avot-initiate
+    name: AVOT-Initiate
+    lifecycle_state: defined_routed
+    manifest_version: "legacy-manifest/1"
+    role: "Onboarding, orientation, simplification, and activation-path guidance."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-initiate.yaml"
+    accepted_intents:
+      - onboard_user
+      - explain_simple
+    permitted_actions:
+      - read_authorized_orientation_material
+      - explain
+      - guide
+      - recommend_next_step
+      - emit_evidence
+    prohibited_actions:
+      - activate_participants
+      - grant_permissions
+      - authorize_execution
+      - mutate_institutional_state
+    authority_ceiling: advisory
+    runtime_preference: avot-engine
+    return_contract: EVIDENCE_RETURN_v0.1
+
+  - avot_id: avot-guardian
+    name: AVOT-Guardian
+    lifecycle_state: defined_routed
+    manifest_version: "legacy-manifest/1"
+    role: "Risk, coherence, ethics, and boundary review."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-guardian.yaml"
+    accepted_intents:
+      - ethics_review
+      - coherence_review
+      - tcop_heartbeat
+    permitted_actions:
+      - inspect_authorized_evidence
+      - evaluate_risk
+      - challenge
+      - recommend_hold
+      - request_human_review
+      - emit_evidence
+    prohibited_actions:
+      - grant_authority
+      - execute
+      - promote_canon
+      - mutate_repository
+      - silently_block_institutional_state
+    authority_ceiling: advisory_review
+    runtime_preference: avot-engine
+    return_contract: EVIDENCE_RETURN_v0.1
+    notes:
+      - "Constraint enforcement belongs to the Value Kernel / governed TYME gate, not to Guardian as an autonomous actor."
+
+  - avot_id: avot-fabricator
+    name: AVOT-Fabricator
+    lifecycle_state: defined_routed
+    manifest_version: "legacy-manifest/1"
+    role: "Implementation design, code/prototype drafting, repository-ready proposals, and bounded fabrication outputs."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-fabricator.yaml"
+    accepted_intents:
+      - generate_code
+      - refactor
+      - propose_workflow
+      - propose_file
+      - modify_repo
+      - scaffold_repo
+    permitted_actions:
+      - read_authorized_context
+      - draft_code
+      - draft_schematic
+      - propose_architecture
+      - prepare_bounded_execution_packet
+      - emit_evidence
+    prohibited_actions:
+      - self_authorize_repository_write
+      - self_authorize_deployment
+      - promote_canon
+      - grant_authority
+      - widen_execution_scope
+    authority_ceiling: proposal
+    runtime_preference: avot-engine
+    return_contract: EVIDENCE_RETURN_v0.1
+    lineage_notes:
+      - "Duplicate Fabricator entries in legacy avot_registry.json collapse into this single identity."
+      - "Actual repository mutation requires a separately authorized capability invocation."
+
+  - avot_id: avot-archivist
+    name: AVOT-Archivist
+    lifecycle_state: defined_routed
+    manifest_version: "legacy-manifest/1"
+    role: "Indexing, provenance, lineage, retrieval, and archival return preparation."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-archivist.yaml"
+    accepted_intents:
+      - index_knowledge
+      - retrieve_context
+    permitted_actions:
+      - read_authorized_artifacts
+      - index
+      - retrieve
+      - compare_provenance
+      - prepare_archive_candidate
+      - emit_evidence
+    prohibited_actions:
+      - promote_canon
+      - mutate_institutional_memory_without_authorization
+      - rewrite_source_history
+      - authorize_execution
+      - grant_authority
+    authority_ceiling: archival_proposal
+    runtime_preference: avot-engine
+    return_contract: EVIDENCE_RETURN_v0.1
+
+  - avot_id: avot-water
+    name: AVOT-Water
+    lifecycle_state: defined_unrouted
+    manifest_version: "legacy-manifest/1"
+    role: "Flow and resilience analysis for water / adaptive-system domains."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-water.yaml"
+    accepted_intents: []
+    permitted_actions:
+      - analyze_assigned_domain
+      - model_flow
+      - recommend
+      - emit_evidence
+    prohibited_actions:
+      - self_route
+      - operate_physical_system
+      - authorize_execution
+      - mutate_infrastructure
+      - grant_authority
+    authority_ceiling: analysis_only
+    runtime_preference: unassigned
+    return_contract: EVIDENCE_RETURN_v0.1
+    notes:
+      - "Manifest exists but no legacy avot_registry.json routing entry was found."
+
+  - avot_id: avot-mana
+    name: AVOT-Mana
+    lifecycle_state: defined_unrouted
+    manifest_version: "legacy-manifest/1"
+    role: "Resource allocation and capacity-planning analysis."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-mana.yaml"
+    accepted_intents: []
+    permitted_actions:
+      - analyze_assigned_resources
+      - forecast_capacity
+      - recommend_allocation
+      - emit_evidence
+    prohibited_actions:
+      - self_route
+      - reallocate_live_resources
+      - authorize_execution
+      - mutate_infrastructure
+      - grant_authority
+    authority_ceiling: analysis_only
+    runtime_preference: unassigned
+    return_contract: EVIDENCE_RETURN_v0.1
+    notes:
+      - "Manifest exists but no legacy avot_registry.json routing entry was found."
+
+  - avot_id: avot-energy
+    name: AVOT-Energy
+    lifecycle_state: defined_unrouted
+    manifest_version: "legacy-manifest/1"
+    role: "Energy / throughput analysis and reliability recommendations."
+    source_manifest: "AVOT-forge/AVOT-core/agents/avot-energy.yaml"
+    accepted_intents: []
+    permitted_actions:
+      - analyze_assigned_energy_domain
+      - inspect_throughput_evidence
+      - recommend
+      - emit_evidence
+    prohibited_actions:
+      - self_route
+      - enforce_live_throughput_policy
+      - remediate_live_infrastructure
+      - authorize_execution
+      - grant_authority
+    authority_ceiling: analysis_only
+    runtime_preference: unassigned
+    return_contract: EVIDENCE_RETURN_v0.1
+    notes:
+      - "Manifest exists but no legacy avot_registry.json routing entry was found."
+
+routing_policy:
+  principle: "Routing resolves Work intent to eligible participant identities; routing never grants capability authority."
+  existing_routed_avots:
+    - avot-convergence
+    - avot-quill
+    - avot-tyme
+    - avot-harmonia
+    - avot-initiate
+    - avot-guardian
+    - avot-fabricator
+    - avot-archivist
+  unrouted_avots:
+    - avot-water
+    - avot-mana
+    - avot-energy
+
+normalization_decisions:
+  - id: AVOT-NORM-001
+    decision: "Collapse duplicate legacy AVOT-Fabricator entries into one stable identity."
+  - id: AVOT-NORM-002
+    decision: "Do not equate manifest status: active with verified live runtime execution."
+  - id: AVOT-NORM-003
+    decision: "Treat Water, Mana, and Energy as defined_unrouted until a reviewed routing/activation record exists."
+  - id: AVOT-NORM-004
+    decision: "Reserve institutional orchestration authority for TYME / Control Center, not AVOT-Convergence or AVOT-Tyme."
+  - id: AVOT-NORM-005
+    decision: "Treat Guardian as advisory review; enforcement belongs to governed policy / Value Kernel gates."
+  - id: AVOT-NORM-006
+    decision: "Treat Fabricator repository writes as capability requests requiring separate authorization."
