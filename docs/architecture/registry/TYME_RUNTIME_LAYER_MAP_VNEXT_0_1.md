@@ -334,6 +334,8 @@ Only reviewed state may advance institutional standing.
 Hall is a projection and participation surface.
 Displayed state MUST derive from underlying institutional/runtime records.
 
+Compatibility note: legacy executor contracts use phrases such as **"Hall remains canonical"** and **"Hall-side custody."** In vNext, those phrases are interpreted as the institution-side custody boundary, not the Hall user-interface layer itself. Canonical Work/authority state remains in the reviewed institutional-state and memory layers; Hall projects that state and may custody references/evidence on the institution side without becoming a second Canon.
+
 ## Explicit Reconciliation Decisions
 
 1. AVOT-forge is definition-only in the vNext architecture.
