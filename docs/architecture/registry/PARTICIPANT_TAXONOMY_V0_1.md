@@ -233,7 +233,7 @@ Reference:
 ### 8. system_service
 
 Definition:
-A non-deliberative technical service that provides transport, storage, routing primitives, observability, or other infrastructure functions.
+A non-deliberative technical service that actively participates in a runtime flow by receiving, transforming, carrying, storing, or returning bounded events or evidence. A provider, host, database, or static deployment is not automatically a participant merely because it exists; it becomes a system-service participant only when a defined service identity acts within a Work/runtime flow.
 
 Examples:
 - GitHub Actions
@@ -394,7 +394,7 @@ AVOT-Tyme remains an `avot` participant.
 | external research model | external_intelligence | contributor_only |
 | GitHub Actions | system_service | technical service |
 | Cloudflare Pages | system_service | technical service |
-| hall-core-0 | system_service host substrate | runtime host, not institutional participant |
+| hall-core-0 | not a participant | physical runtime substrate/resource; services running on it may have separate system_service identities |
 
 ## Explicit Non-Goals
 
