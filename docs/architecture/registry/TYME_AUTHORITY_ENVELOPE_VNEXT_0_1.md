@@ -220,9 +220,9 @@ Typical participants:
 
 ### `sovereign_authority`
 
-Reserved for accountable human stewardship and explicitly ratified institutional authority sources.
+Reserved exclusively for accountable human stewardship.
 
-Machine components MUST NOT self-assign or inherit this ceiling.
+Institutional records, Offices, policies, and approval artifacts may evidence or delegate narrower scoped authority, but they do not themselves hold `sovereign_authority`. Machine components MUST NOT self-assign, inherit, or be delegated this ceiling.
 
 ## Consequence Classes
 
@@ -416,7 +416,7 @@ Transport may change. Authority semantics must not.
 | human_steward | sovereign_authority | explicit accountable decision |
 | avot | role-specific advisory/proposal ceiling | no consequential write by identity alone |
 | monitor | analysis_only | no institutional effect |
-| office | review_authority | review/transition only within constitutional scope |
+| office | review_authority | scoped review/transition authority only where the Office constitution and current Work envelope explicitly permit it; human-reserved transitions remain human-gated |
 | infrastructure_carrier | carrier_only | persistence/transport only |
 | external_intelligence | advisory | candidate contribution only |
 | external_executor | bounded_execute | only from already-authorized packet |
