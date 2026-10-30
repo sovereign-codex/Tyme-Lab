@@ -260,6 +260,25 @@ Existing `_ccc_handoff` metadata SHOULD map into:
 - provenance;
 - authenticated transport observation fields.
 
+### Legacy exact-schema compatibility
+
+The current Control Center and AVOT receiver contracts use strict, exact schemas. The v0.1 event envelope MUST NOT be injected wholesale into those legacy payloads unless the receiving contract is explicitly revised and reviewed.
+
+Until then, a GitHub transport adapter must **compile** the institutional envelope into the exact currently accepted transport payload, while preserving the full institutional event by reference or in a separately validated record/ledger. The adapter must then reconstruct or correlate the institutional event from authenticated transport observations and the preserved event record.
+
+Therefore:
+
+```text
+TYME event
+ -> adapter validation
+ -> exact legacy GitHub payload
+ -> repository_dispatch transport
+ -> authenticated receipt
+ -> correlation to preserved TYME event
+```
+
+Compatibility means semantic equivalence, not field-for-field injection.
+
 ## Future NATS Mapping
 
 Illustrative subjects:
