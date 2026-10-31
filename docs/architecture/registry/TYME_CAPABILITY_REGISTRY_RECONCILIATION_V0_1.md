@@ -129,7 +129,8 @@ institutional_standing:
 - pending_review
 
 participant_eligibility:
-- system_service host only
+- not a participant by host identity
+- services running on this host may receive separate system_service identities when explicitly defined
 - not an AVOT
 - not TYME
 - not institutional memory by identity
@@ -153,11 +154,14 @@ provider: Cloudflare
 
 class:
 - interface delivery
-- system service
 - physical runtime substrate
 
 role:
 - public Hall/Codex-interface hosting
+
+participant_eligibility:
+- static deployment is not automatically a participant
+- any active service identity must be separately defined
 
 provider_standing:
 - established
