@@ -1,0 +1,10 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const html = fs.readFileSync(path.join(__dirname, 'local-hall.html'), 'utf8');
+const core = html.match(/<script id="core">([\s\S]*?)<\/script>/)[1];
+const context = {TextEncoder, TextDecoder, atob, btoa};
+const results = vm.runInNewContext(core+'\ntests()', context);
+console.log(results.join('\n'));
+console.log(results.length+' checks passed');
