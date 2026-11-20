@@ -1,0 +1,17 @@
+{
+  "routing_id": "test-routing-scai-circulation-001",
+  "signal_refs": [
+    "test-signal-scai-circulation-001"
+  ],
+  "decision": "request_review",
+  "receiver": "Knowledge Curator",
+  "rationale": "The synthetic material signal requests bounded research review only; it creates no Work, execution authority, Hall receipt, or Canon standing.",
+  "related_objective": "sovereign-circulation-pilot-001",
+  "related_repository": "sovereign-codex/Tyme-Lab",
+  "requires_human_review": true,
+  "authority_posture": "none",
+  "institutional_effect": "none",
+  "evidence_refs": [
+    "evidence:synthetic:scai-phase1-source"
+  ]
+}

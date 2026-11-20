@@ -1,0 +1,34 @@
+{
+  "signal_id": "test-signal-scai-circulation-001",
+  "monitor_id": "monitor-multi-agent-orchestration-infrastructure-001",
+  "participant_id": "chatgpt-monitor:multi-agent-orchestration",
+  "observed_at": "2026-10-04T14:30:00Z",
+  "source_type": "synthetic_conformance_fixture",
+  "source_refs": [
+    "evidence:synthetic:scai-phase1-source"
+  ],
+  "subject": "Synthetic multi-agent orchestration infrastructure change",
+  "summary": "A synthetic material infrastructure signal is used only to test bounded institutional circulation from signal through advisory review routing.",
+  "novelty_score": 0.78,
+  "confidence": 0.9,
+  "material_change": true,
+  "related_objectives": [
+    "sovereign-circulation-pilot-001"
+  ],
+  "related_repositories": [
+    "sovereign-codex/Tyme-Lab"
+  ],
+  "related_notion_surfaces": [
+    "SOVEREIGN_CIRCULATION_PILOT_001"
+  ],
+  "contradicts_prior_assumption": false,
+  "contradiction_refs": [],
+  "institutional_significance": "Tests whether an existing signal can reach Knowledge Curator responsibility without creating Work or institutional consequence.",
+  "recommended_receiver": "Knowledge Curator",
+  "recommended_disposition": "research_review",
+  "authority_posture": "analysis_only",
+  "institutional_effect": "none",
+  "evidence_refs": [
+    "evidence:synthetic:scai-phase1-source"
+  ]
+}
