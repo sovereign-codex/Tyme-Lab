@@ -40,7 +40,7 @@ def main():
     sys.addaudithook(offline)
     forge = args.forge_root.resolve()
     check_sources({"forge": forge, "lab": LAB})
-    sys.path[:0] = [str(HERE), str(LAB), str(LAB / "tests"), str(forge / "python")]
+    sys.path[:0] = [str(HERE), str(forge / "python"), str(LAB), str(LAB / "tests")]
     if args.report:
         from adapter import assess, build
         with TemporaryDirectory() as tmp:
