@@ -1,0 +1,37 @@
+{
+  "classification": "synthetic_readback_only",
+  "avot_executed": false,
+  "authority_effect": "none",
+  "upstream": {
+    "disposition": "substantive_readback_candidate",
+    "check_posture": "read_only_non_authorizing",
+    "live_office_adoption": "not_established_by_this_check",
+    "authorization_authenticity": "external_observation_required",
+    "independent_runtime_completion": "not_established_by_this_check",
+    "tool_binding": "matches_provided_review",
+    "binding_sha256": "77310e288ab8671a06b5ca2a5bd55d30d4dfadf0ad7497d076cd9a8929f50afd",
+    "provider_authentication": "not_established_by_this_check",
+    "packet_consistency": "pass",
+    "retained_file_sha256": {
+      "approval.txt": "ea2f71ac566bb543f1f3fdf6e9b23050c3f366f928346cdb5856445a44d8a398",
+      "assignment.json": "7696777b066690ed71400641e298adf15aae3e6e09f2df10dedd4ab1d08bbbb8",
+      "error.txt": "83b1265aaea566b9db53429f9c02636d3da1446df0db24700581593a24d4a051",
+      "evidence-return.json": "d3f2c3a43f6a6184a29c819c0dc5365f83da28f97e954c69e1fff9b9d8967514",
+      "phase-packet.json": "97db40bd5c14218d6719078458a5136f147c1997cf47c4a7fc746be15765ad9d",
+      "readback-context.json": "65920bfa4fee0d4438b5c818b5099ec163c5b90f3300b037629ef54815176947",
+      "readback.txt": "e840249a5d1b6eb97043e4c1e08faad944ef92048be2dda89b4228c0bb4508b7",
+      "routing.json": "f7ddc58414f4790b2c8b48808e0556c65f1f55cb18bba23fb62f2bf4ec36466b",
+      "signal.json": "1f7efbfd416679ea3ab0b1eaf5ead9a1cfceb41a295913d97c6b70ae93b797ec",
+      "source.txt": "fa36edb9ea07e52bb3ba35485e8a95313a15a3cd9c01fdd05d43cb30c5eb07db",
+      "tool-binding-presented.json": "005aac7b90a70aa59bc20a3cfde9e678255579ff053d784502a7e9e9aa8c7956",
+      "tool-binding-reviewed.json": "005aac7b90a70aa59bc20a3cfde9e678255579ff053d784502a7e9e9aa8c7956",
+      "tool-schema.json": "6a8ea25e56e9cba16183b27f23f585f5004c118437d1c439af12b01c55cc56ba",
+      "tool.py": "24ef2fae64068e90350289fe3ada748e4fa390d55b19f03e8a24bc355da60fa4",
+      "tracker-properties.json": "6e50a502c6a24a1c1207d38080a6b9c5204c4ea5b86e11c772d9e3c108f2426f",
+      "invocation.json": "a346b0166128bba5cec0844330fd8740ca405df71b8061adbe11254e3574b656",
+      "simulated-result.json": "ba70552f2d5ea22c6e522f833f960236e489f276c49c22d7c1178e3cfb8ed1fa"
+    },
+    "evidence_return_result": "material_signal",
+    "institutional_effect": "none"
+  }
+}

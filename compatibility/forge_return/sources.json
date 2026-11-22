@@ -1,0 +1,35 @@
+{
+  "forge": {
+    "commit": "5c58918435d469193121fbd6ef02ccb8a876a9ee",
+    "files": {
+      "AVOT-core/agents/avot-archivist.yaml": "66c43b614cbac8cdd88fa94f70550527b140b50c",
+      "AVOT-core/agents/avot-convergence.yaml": "f819f6afa3a2c7a85f9fd18233f894d24f97ae6b",
+      "AVOT-core/agents/avot-energy.yaml": "27fcefa3c0b8aea67a724654fc0263ecf23058a3",
+      "AVOT-core/agents/avot-fabricator.yaml": "cc50b5dbde028380674bece0ca2120b4b0f70ae9",
+      "AVOT-core/agents/avot-guardian.yaml": "d4d380283dfe7a080d2a8bbae0a83707865d186d",
+      "AVOT-core/agents/avot-harmonia.yaml": "4f126f9dbd41fe5aa7d94c085f599ef8ddc722a6",
+      "AVOT-core/agents/avot-initiate.yaml": "d6cddcaf755d5a7d28e287c866fb0304338ea932",
+      "AVOT-core/agents/avot-mana.yaml": "0ede963be22b1d1a90401520255e26d320053df6",
+      "AVOT-core/agents/avot-quill.yaml": "50bf4a5eb2ed6cf7a1fe1cca7022093851d79364",
+      "AVOT-core/agents/avot-tyme.yaml": "ae2128b3c70504cad4b3dfe8f24e10c5a9008edc",
+      "AVOT-core/agents/avot-water.yaml": "5b49595777e1dcd30cab08411ea4f8de16a65d6c",
+      "AVOT-core/registry.yaml": "ab8d0aad40edbd982b065fbf82afde16341d9ffb",
+      "python/avot_core/__init__.py": "414371096ba9bc528a5419301ffe580472142df6",
+      "python/avot_core/loader.py": "b2ab7c9d7ff72ef107d19d9160ba8814d4a88d9f",
+      "python/avot_core/models.py": "640e179462f76ed1b6276809650494fc4c3cca3c",
+      "python/avot_core/registry.py": "d3ef090f0f81c8d3a0637ce8eab9d69a5517a7b9",
+      "python/avot_core/runtime.py": "024ab530cd98c598164d2780cca174143c44e8a5",
+      "python/avot_core/sib_bridge.py": "f847f6fb247d7b6bb42cc30694ca5f3727ee2466"
+    }
+  },
+  "lab": {
+    "commit": "1abd2a5e75d166aef5694d82c65b195c8e068917",
+    "files": {
+      "adapters/monitor_circuit_readback_v0.py": "f3a24c311656dd8229afec1c13b024df3960b3f9",
+      "schemas/evidence-return.v0.1.schema.json": "b0caf857eb41da87981e60ba5cd5c16e4626ab5e",
+      "schemas/routing-decision.v0.1.schema.json": "cfd75c3d884de598e8180532f57f256b76a6396b",
+      "schemas/signal-packet.v0.1.schema.json": "ec286e01a9457fd82859bb87426db34a688214d5",
+      "tests/test_monitor_circuit_readback_v0.py": "e35587a0add2854c1d54cc5adb99616bef2d18ee"
+    }
+  }
+}
