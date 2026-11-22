@@ -1,0 +1,11 @@
+{
+  "classification": "simulated_fixture_only",
+  "agent_id": "avot-archivist",
+  "assignment_id": "synthetic-assignment",
+  "assignment_version": "1",
+  "activation_id": "synthetic-activation",
+  "source_refs": ["evidence:synthetic-source"],
+  "result": "material_signal",
+  "observation": "The synthetic monitor source contains the marker ARCHIVE-001.",
+  "execution_claim": "none"
+}
