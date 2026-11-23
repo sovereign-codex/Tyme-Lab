@@ -1,0 +1,25 @@
+name: TYME Lab Runtime Baseline Review
+
+on:
+  pull_request:
+    paths:
+      - 'main.js'
+      - 'backend/cms_bindings.py'
+      - 'tests/test_tyme_runtime_baseline_fail_closed.py'
+      - '.github/workflows/tyme-lab-runtime-baseline-review.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  non_authorizing_checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Run bounded Python contract tests
+        run: python3 -m unittest discover -s tests -p 'test_tyme_runtime_baseline_fail_closed.py' -v
+      - name: Parse browser entrypoint (no execution)
+        run: node --input-type=module --check < main.js
