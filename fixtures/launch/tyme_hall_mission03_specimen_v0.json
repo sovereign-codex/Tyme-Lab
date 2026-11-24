@@ -1,0 +1,220 @@
+{
+  "schema": "tyme-hall/learning/mission03-context-zero/v0.1",
+  "mission_id": "TYME-M03-001",
+  "launch_id": "TYME-HALL-LAUNCH-001",
+  "mission_name": "Intelligence That Survives Handoff",
+  "question": "Can a new participant reconstruct the institution without relying on the original builder?",
+  "status": "REVIEW_CANDIDATE_NOT_EXECUTED",
+  "source_baseline": {
+    "deployed_source_repo": "sovereign-codex/Codex-interface-",
+    "deployed_source_commit": "5342cbaf1098391879a15c7ccca752d3fbc241b8",
+    "pages_deployment_id": "8f2b21b4-9541-471f-b2f7-651373591e4f",
+    "deployment_verification": "verified_cloudflare_metadata_and_independent_get_oct10",
+    "canonical_url": "https://tymehall.org",
+    "public_context_zero_protocol": "https://github.com/sovereign-codex/Codex-interface-/blob/5342cbaf1098391879a15c7ccca752d3fbc241b8/validation/CONTEXT_ZERO_PROTOCOL.md",
+    "institutional_learning_contract": "https://app.notion.com/p/3cec51d54b7581539770e63653f3e095"
+  },
+  "allowed_public_surfaces": [
+    "/",
+    "/.well-known/tyme.json",
+    "/office/",
+    "/office/state.json",
+    "/scrolls/",
+    "/scrolls/AGI-0001/",
+    "/scrolls/AGI-0001/publication.json",
+    "/laboratory/",
+    "/constellation/",
+    "/contribute/",
+    "/terminal/"
+  ],
+  "evaluator_protocol": {
+    "starter_url": "https://tymehall.org",
+    "visible_context": "starter URL and uncoached question list only; reviewer checklists and baseline facts are withheld",
+    "prompt_intro": "Inspect Tyme Hall as if you have never encountered it. Use only the public site and resources it exposes. Cite inspected URLs; distinguish observation, inference and uncertainty. Do not invent facts when public records disagree.",
+    "questions": [
+      "What is Tyme Hall in language an unfamiliar visitor can understand?",
+      "What is Sovereign Intelligence, from public evidence only?",
+      "What do Office, Scrolls, Laboratory, Constellation and Contribution each show or permit, and what do they not authorize?",
+      "What appears to be happening NOW; when was the evidence generated; what changed, what is next and waiting?",
+      "Which public claims are canonical doctrine versus hypothesis, experiment, interpretation, archive or unknown?",
+      "What are the relationships among Hall, Codex, AVOT, TYME and QIL, and which claims are uncertain?",
+      "How can an outsider verify source, provenance or standing?",
+      "How can an outsider challenge, correct, reproduce, document or contribute without assuming authority?",
+      "Do the human Office surface, machine bootstrap, and public Office record materially agree?",
+      "What broken links, stale data, unsupported authority claims, privacy risks, or missing evidence should be recorded?"
+    ],
+    "do_not_disclose_until_after_run": [
+      "internal Notion office history",
+      "known stale-snapshot finding",
+      "previous expert reviews",
+      "expected outcome hints",
+      "code-author explanations",
+      "private ChatGPT context"
+    ],
+    "independence_groups": [
+      "external_machine_with_browser",
+      "technical_outsider",
+      "general_outsider"
+    ],
+    "minimum_independent_cold_starts": 3,
+    "participant_identity_required": false,
+    "private_office_access_allowed": false,
+    "institutional_changes_allowed": false
+  },
+  "reviewer_only": {
+    "scoring_dimensions": [
+      "orientation",
+      "five_public_surfaces",
+      "public_state_and_freshness",
+      "epistemic_standing",
+      "architecture_uncertainty",
+      "source_provenance",
+      "contribution_without_authority",
+      "machine_human_consistency",
+      "failure_discovery",
+      "independent_reconstruction"
+    ],
+    "failure_taxonomy": [
+      "NAVIGATION",
+      "DEFINITION",
+      "EPISTEMIC",
+      "PROVENANCE",
+      "STATE",
+      "ARCHITECTURE",
+      "AUTHORITY",
+      "CONTRIBUTION",
+      "MACHINE",
+      "ACCESSIBILITY",
+      "PRIVACY",
+      "RESILIENCE"
+    ],
+    "checks": [
+      "AGI-0001 is public canonical doctrine, not empirically verified science or authority to govern",
+      "Published content and displayed institutional state are distinct from authorization to act",
+      "External GitHub Issues is an attributable contribution transport, not a native Hall receipt",
+      "Public Office state carries generated_at and must not automatically be treated as current",
+      "Claims about Hall, Codex, AVOT, TYME and QIL have traceable sources or explicit uncertainty",
+      "Cannot declare a context-zero pass after only one coached, internal or correlated evaluator"
+    ],
+    "current_known_freshness_limitation": {
+      "public_office_snapshot_id": "public-office:2026-09-08:cycle-02-preflight-003",
+      "public_office_generated_at": "2026-09-08T10:31:00Z",
+      "frozen_source_status": "STALE_AT_LAUNCH_DAY",
+      "repair_draft_pr": "https://github.com/sovereign-codex/Codex-interface-/pull/19",
+      "displayed_to_uncoached_evaluator_in_advance": false
+    },
+    "review_gate": "independent_human_review_required",
+    "score_or_pass_preassigned": false
+  },
+  "return_envelope": {
+    "envelope_kind": "MISSION_OBSERVATION_CANDIDATE",
+    "origin": "public_context_zero",
+    "participant_role": "UNASSIGNED",
+    "actual_started_at_utc": null,
+    "actual_ended_at_utc": null,
+    "raw_response_ref": null,
+    "observed_urls": [],
+    "answers": [
+      {
+        "question_id": "Q1",
+        "question": "What is Tyme Hall in language an unfamiliar visitor can understand?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      },
+      {
+        "question_id": "Q2",
+        "question": "What is Sovereign Intelligence, from public evidence only?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      },
+      {
+        "question_id": "Q3",
+        "question": "What do Office, Scrolls, Laboratory, Constellation and Contribution each show or permit, and what do they not authorize?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      },
+      {
+        "question_id": "Q4",
+        "question": "What appears to be happening NOW; when was the evidence generated; what changed, what is next and waiting?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      },
+      {
+        "question_id": "Q5",
+        "question": "Which public claims are canonical doctrine versus hypothesis, experiment, interpretation, archive or unknown?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      },
+      {
+        "question_id": "Q6",
+        "question": "What are the relationships among Hall, Codex, AVOT, TYME and QIL, and which claims are uncertain?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      },
+      {
+        "question_id": "Q7",
+        "question": "How can an outsider verify source, provenance or standing?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      },
+      {
+        "question_id": "Q8",
+        "question": "How can an outsider challenge, correct, reproduce, document or contribute without assuming authority?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      },
+      {
+        "question_id": "Q9",
+        "question": "Do the human Office surface, machine bootstrap, and public Office record materially agree?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      },
+      {
+        "question_id": "Q10",
+        "question": "What broken links, stale data, unsupported authority claims, privacy risks, or missing evidence should be recorded?",
+        "answer": null,
+        "evidence_refs": [],
+        "confidence": null,
+        "uncertainty": null
+      }
+    ],
+    "failures": [],
+    "unverified_claims": [],
+    "review_state": "NOT_RUN",
+    "reviewer": null,
+    "next_valid_action": "independent_review_after_uncoached_cold_start",
+    "authority_effect": "none",
+    "contribution_submitted": false,
+    "hall_receipt_claimed": false,
+    "canon_claimed": false,
+    "learning_claimed": false
+  },
+  "boundary": {
+    "no_personal_identity_requirement": true,
+    "no_institutional_authority": true,
+    "no_hall_native_receipt": true,
+    "no_participant_profile_or_rank": true,
+    "no_auto_publication": true,
+    "no_private_sources": true,
+    "no_real_world_physical_experiment": true,
+    "no_public_deployment_without_review": true
+  }
+}
