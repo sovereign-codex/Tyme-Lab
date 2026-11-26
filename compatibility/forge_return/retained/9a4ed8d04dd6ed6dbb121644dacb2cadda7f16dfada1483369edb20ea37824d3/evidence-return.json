@@ -1,0 +1,24 @@
+{
+  "activation_event": "Explicit deterministic chassis test mapping; Forge production runtime was not invoked",
+  "activation_id": "local-chassis-b8149d5d4e074437a3de4c8908802f9b:activation",
+  "authority_posture": "analysis_only",
+  "completed_at": "2026-11-26T01:33:34.812930+00:00",
+  "dormancy_entered": true,
+  "error_refs": [],
+  "handoff_target": null,
+  "institutional_effect": "none",
+  "participant_id": "local-test:AVOT-ARCHIVIST",
+  "result": "no_material_change",
+  "return_status": "returned",
+  "signal_refs": [],
+  "source_refs": [
+    "local:input"
+  ],
+  "started_at": "2026-11-26T01:33:34.751067+00:00",
+  "transform_refs": [
+    "local:mapping",
+    "local:invocation",
+    "local:observer",
+    "local:worker-stdout"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "commit": "4a6ab60069e4d5adea8e29a98670bd90f1536353",
+  "files": {
+    "python/avot_chassis/avot_base.py": {
+      "git_blob": "f74c917df174addbba31d2c30b1d17266edc49de",
+      "sha256": "229a69783b230e59b24f410d5dffe0eb97388ca53da1b436a7a6ad0421e76f28"
+    },
+    "python/avot_chassis/examples/archivist.py": {
+      "git_blob": "8c75f5b5438918ab3fc787debb1378d8025a3bcf",
+      "sha256": "902d0730e52d361332b959e2cf28a317e8bf6913bb3012b857da2af0bbea1512"
+    }
+  },
+  "repository": "sovereign-codex/AVOT-ARCHIVIST"
+}

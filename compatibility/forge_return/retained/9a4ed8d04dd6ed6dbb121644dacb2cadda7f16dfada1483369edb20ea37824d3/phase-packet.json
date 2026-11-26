@@ -1,0 +1,11 @@
+{
+  "contract_version": "return-loop/0.2",
+  "original_execution_handoff_ready": false,
+  "original_execution_outcome": "completed",
+  "promotion_ready": false,
+  "readback_evidence_reference": "local:separate-readback-pending",
+  "recovery_mode": "none",
+  "recovery_pair_handoff_ready": false,
+  "recovery_timestamp": null,
+  "substantive_candidate_ready": false
+}

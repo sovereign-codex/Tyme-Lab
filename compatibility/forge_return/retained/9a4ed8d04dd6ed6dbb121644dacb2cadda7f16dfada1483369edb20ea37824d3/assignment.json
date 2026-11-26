@@ -1,0 +1,19 @@
+{
+  "allowed_actions": [
+    "one bounded deterministic local test",
+    "retain local output",
+    "read-only verification"
+  ],
+  "assignment_id": "local-chassis-b8149d5d4e074437a3de4c8908802f9b",
+  "assignment_version": "1",
+  "authorization_reference": "local:scope-note",
+  "authorized_by": "conversation_operator_scope_unattested",
+  "destination_reference": "local:retained-probe-result",
+  "expires_at": "2026-11-26T01:34:19.715461+00:00",
+  "objective": "Execute the pinned deterministic chassis on one public synthetic input; retain and verify its output.",
+  "source_references": [
+    "local:input"
+  ],
+  "status": "local_test_only",
+  "valid_from": "2026-11-26T01:33:34.715461+00:00"
+}
