@@ -1,0 +1,80 @@
+{
+  "working_id": "GFK-LGV-001",
+  "canonical_scroll_id": null,
+  "title": "The Law of Generative Value",
+  "version": "0.1.0",
+  "origin_date": "2026-11-26",
+  "classification": "foundational_ethical_constitutional_candidate",
+  "public_posture": "PUBLIC_CANDIDATE",
+  "institutional_effect": "none",
+  "authority_posture": "non_authorizing",
+  "publication_authorization": false,
+  "published_at": null,
+  "canonical_promotion": false,
+  "runtime_policy_activation": false,
+  "registry_write": false,
+  "stewardship": {
+    "proposed_receiver": "Canon Steward / Governance Hall",
+    "acceptance_confirmed": false
+  },
+  "candidate_path": "archive/scrolls/law-of-generative-value/candidate.md",
+  "lineage": {
+    "contemporary_formulation": "Thanksgiving 2026; present candidate synthesis",
+    "historical_inheritance_sources": "pending archival reconciliation; private correspondence excluded",
+    "historical_primary_kodex_repository_recovered": false,
+    "related_sources": [
+      {
+        "path": "archive/scrolls/garden-flame-codex/public.md",
+        "relationship": "complements",
+        "blob_sha": "0c217bb6198d249377454e9b0d6650c7c6c71e8b"
+      },
+      {
+        "path": "archive/scrolls/garden-flame-codex/provenance-review.md",
+        "relationship": "preserves_uncertainty",
+        "blob_sha": "712f687f2c5c3f274478ed9a539641190f1d63df"
+      },
+      {
+        "path": "institutional-cognition/learning-capability-covenant/v0.1/COVENANT.md",
+        "relationship": "ethical_foundation_candidate_for",
+        "blob_sha": "f61eb0d912a9adf60d06f4ac58458a9f5500aafc"
+      },
+      {
+        "path": "institutional-cognition/tyme-stewarding-contract/v0.1/CONTRACT.md",
+        "relationship": "ethical_foundation_candidate_for",
+        "blob_sha": "e67e6deef3e5e7545997a5e690f6c27d148b1df6"
+      },
+      {
+        "path": "docs/architecture/SCROLL_PUBLICATION_GATE_V0.md",
+        "relationship": "governed_by",
+        "blob_sha": "c6c7a8ced2c8cb354d28b6687e9a78edb352c9e5"
+      }
+    ],
+    "supersedes": [],
+    "superseded_by": []
+  },
+  "epistemic_boundary": {
+    "normative_axiom": true,
+    "symbolism": "metaphorical",
+    "quantitative_model": "conceptual_unvalidated",
+    "empirical_law_claimed": false
+  },
+  "safeguards": {
+    "dignity_unconditional": true,
+    "consent_and_exit_required": true,
+    "no_compelled_reciprocity": true,
+    "no_participant_ranking": true,
+    "no_authority_from_capability": true,
+    "no_double_counting": true,
+    "ecological_and_successor_burdens_retained": true,
+    "private_correspondence_excluded": true
+  },
+  "review": {
+    "historical_lineage_reconciled": false,
+    "canon_steward_verdict": null,
+    "public_safety_review": "pending",
+    "independent_review": "pending",
+    "validation_specimen": "specified_not_executed",
+    "next_valid_gate": "provenance_and_canon_steward_review",
+    "hall_publication_requires_separate_authorization": true
+  }
+}
