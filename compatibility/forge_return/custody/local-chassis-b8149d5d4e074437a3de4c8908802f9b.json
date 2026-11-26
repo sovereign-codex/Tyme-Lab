@@ -1,0 +1,11 @@
+{
+  "assignment_id": "local-chassis-b8149d5d4e074437a3de4c8908802f9b",
+  "bundle_commit": "f918b2a244fb623e14218b4449d50930a1a3a621",
+  "bundle_path": "compatibility/forge_return/retained/9a4ed8d04dd6ed6dbb121644dacb2cadda7f16dfada1483369edb20ea37824d3",
+  "custody_scope": "repository_snapshot",
+  "institutional_effect": "none",
+  "locator_version": 1,
+  "manifest_sha256": "9a4ed8d04dd6ed6dbb121644dacb2cadda7f16dfada1483369edb20ea37824d3",
+  "repository": "sovereign-codex/Tyme-Lab",
+  "request_id": "local-chassis-b8149d5d4e074437a3de4c8908802f9b:request"
+}
