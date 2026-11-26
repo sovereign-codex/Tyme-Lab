@@ -1,0 +1,21 @@
+{
+  "authorization_verified": false,
+  "comparison_context": {
+    "packet": {
+      "record_reference": "local-chassis-b8149d5d4e074437a3de4c8908802f9b",
+      "snapshot_reference": "local-chassis-b8149d5d4e074437a3de4c8908802f9b:local"
+    },
+    "properties": {
+      "record_reference": "local-chassis-b8149d5d4e074437a3de4c8908802f9b",
+      "snapshot_reference": "local-chassis-b8149d5d4e074437a3de4c8908802f9b:local"
+    }
+  },
+  "return_binding": {
+    "activation_id": "local-chassis-b8149d5d4e074437a3de4c8908802f9b:activation",
+    "assignment_id": "local-chassis-b8149d5d4e074437a3de4c8908802f9b",
+    "assignment_version": "1",
+    "destination_reference": "local:retained-probe-result",
+    "participant_id": "local-test:AVOT-ARCHIVIST"
+  },
+  "source_status": "available"
+}

@@ -1,0 +1,25 @@
+{
+  "declared": {
+    "agent_id": "avot-archivist",
+    "function": "run",
+    "module": "avot_agents.archivist",
+    "repository": "sovereign-intel/avot-archivist"
+  },
+  "permission_scope": {
+    "child_processes_after_preload": false,
+    "combined_output_bytes": 1048576,
+    "input": "fixed_public_synthetic_text",
+    "network": false,
+    "wall_seconds": 30,
+    "workload_filesystem_access_after_preload": false,
+    "workload_output": "stdout_stderr_pipes_only"
+  },
+  "production_alias_changed": false,
+  "scope": "local_test_only",
+  "selected": {
+    "agent_id": "AVOT-ARCHIVIST",
+    "callable": "avot_chassis.examples.archivist.Archivist.summarize",
+    "commit": "4a6ab60069e4d5adea8e29a98670bd90f1536353",
+    "repository": "sovereign-codex/AVOT-ARCHIVIST"
+  }
+}

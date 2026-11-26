@@ -1,0 +1,22 @@
+{
+  "activation_id": "local-chassis-b8149d5d4e074437a3de4c8908802f9b:activation",
+  "assignment_id": "local-chassis-b8149d5d4e074437a3de4c8908802f9b",
+  "assignment_version": "1",
+  "combined_output_bytes": 1048576,
+  "completed_at": "2026-11-26T01:33:34.812930+00:00",
+  "controller_scope": "local_parent_observation_not_authenticated_custody",
+  "duration_seconds": 0.061863078999977006,
+  "exit_code": 0,
+  "input_sha256": "4aa8eb3aa2bd11d6eade042b50721a085b287d3e4b3662b44d86d9408c9f1430",
+  "outcome": "completed",
+  "pid": 7,
+  "probe_source_sha256": "1fb35ac2eb8b547fbe649272e562f3e3379a729ed4db1a12bc3a646be6f72a0c",
+  "request_id": "local-chassis-b8149d5d4e074437a3de4c8908802f9b:request",
+  "started_at": "2026-11-26T01:33:34.751067+00:00",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdout_sha256": "a9389a4b70f009cb9ef83cc7a3350d3f792c6fe32f48c4748de79f69e8f2e717",
+  "termination_reason": null,
+  "wall_seconds": 30,
+  "worker_request_sha256": "cc7e230ed3820754662fa84c52cb529b1bb84807916d5317224b7d1771b49655",
+  "worker_source_sha256": "0331c443c39836ec911cfef9d952cbd7d76867b6cc7c7ff3092ab9657cf40919"
+}

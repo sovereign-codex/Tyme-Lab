@@ -20,3 +20,12 @@ restricted child, retains output, and verifies a separate readback against a
 caller-held anchor. The production Forge registration and this synthetic
 fixture remain unchanged. Its full institutional monitor gate remains blocked;
 local execution does not establish authenticated custody or Office adoption.
+
+## Repository retention and receipt readback
+
+[CHASSIS_CUSTODY.md](CHASSIS_CUSTODY.md) connects that exact retained run to a
+content-addressed review path and a separate immutable location record. The
+read-only adapter checks caller-held identities and digests, retrieves the
+fixed file set through an injected reader, and reuses the original semantic
+readback. Saved-response replay is explicitly labelled as replay. Repository
+retrieval evidence remains separate from institutional acceptance.

@@ -1,0 +1,13 @@
+{
+  "header": {
+    "id": "fixture:chassis-header",
+    "purpose": "deterministic local test",
+    "steward": "synthetic-test-context"
+  },
+  "registry_entry": {
+    "binding": false,
+    "lifecycle_state": "S3",
+    "maturity": "M0"
+  },
+  "text": "  SYNTHETIC CHASSIS PROBE. Preserve evidence, uncertainty, and the boundary between local verification and institutional authority. This text is public test input and contains no operational monitor data.  "
+}

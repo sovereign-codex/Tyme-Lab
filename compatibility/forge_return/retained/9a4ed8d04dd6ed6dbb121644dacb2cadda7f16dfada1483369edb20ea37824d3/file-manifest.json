@@ -1,0 +1,80 @@
+[
+  {
+    "path": "assignment.json",
+    "ref": "local:assignment",
+    "sha256": "57a49843a08cbf105b0f15852642e6ca4183abfa307efc8010559486754d1c6d",
+    "size_bytes": 700
+  },
+  {
+    "path": "evidence-return.json",
+    "ref": "local:return",
+    "sha256": "373b88712fa66ab866f72f1c66ec84353b96b4ce67b6ced18415fe2470982830",
+    "size_bytes": 745
+  },
+  {
+    "path": "input.json",
+    "ref": "local:input",
+    "sha256": "494856948c6ba7b0c2149b6f99b8583d1e493a3b88bdc1e2f7032dc7cfe2a0ad",
+    "size_bytes": 460
+  },
+  {
+    "path": "invocation.json",
+    "ref": "local:invocation",
+    "sha256": "2d3e3f0554b138496d977ee28a6a3041ea72eafb08acfc864a5bbb9a085411fb",
+    "size_bytes": 555
+  },
+  {
+    "path": "mapping.json",
+    "ref": "local:mapping",
+    "sha256": "a9e598462fc957d7f26ecde8f5a69be05e20c777e26e187d6a708e5cd276a02b",
+    "size_bytes": 779
+  },
+  {
+    "path": "observer.json",
+    "ref": "local:observer",
+    "sha256": "0e55ef07ca9043252f8011c0c6228aefdbc8e8a332ca1c27df2783e961dee2ad",
+    "size_bytes": 1167
+  },
+  {
+    "path": "phase-packet.json",
+    "ref": "local:phase",
+    "sha256": "de1d1ed98b187e5afe4fd80e80c29db6b715183348ad7b70f87ce742fb33650f",
+    "size_bytes": 367
+  },
+  {
+    "path": "readback-context.json",
+    "ref": "local:readback-context",
+    "sha256": "30c48edc194554c35ede6f0d47ca6eb0f930acea9c5753d9e6c9e3dee2b30bbc",
+    "size_bytes": 789
+  },
+  {
+    "path": "scope.txt",
+    "ref": "local:scope-note",
+    "sha256": "4543722ea9da453d3b5a21a3abbe246f9f804268c6472d15b7435c0bcbe287ff",
+    "size_bytes": 293
+  },
+  {
+    "path": "source-pins.json",
+    "ref": "local:source-pins",
+    "sha256": "09113669e62f0fa1a8d5dd361b3a05d998b626e220ea805cdc33cbecde0bd10d",
+    "size_bytes": 523
+  },
+  {
+    "path": "tracker-properties.json",
+    "ref": "local:tracker",
+    "sha256": "954e18389a252178c10b4623c11c568a8ed42ff1fffd6839319c563ba3ef29e3",
+    "size_bytes": 375
+  },
+  {
+    "path": "worker.stderr.txt",
+    "ref": "local:worker-stderr",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "size_bytes": 0
+  },
+  {
+    "path": "worker.stdout.json",
+    "ref": "local:worker-stdout",
+    "sha256": "a9389a4b70f009cb9ef83cc7a3350d3f792c6fe32f48c4748de79f69e8f2e717",
+    "size_bytes": 1927
+  }
+]

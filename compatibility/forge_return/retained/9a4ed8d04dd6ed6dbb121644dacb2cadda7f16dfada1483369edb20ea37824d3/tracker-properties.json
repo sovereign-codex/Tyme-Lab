@@ -1,0 +1,11 @@
+{
+  "Contract Version": "return-loop/0.2",
+  "Original Execution Handoff Ready": "false",
+  "Original Execution Outcome": "completed",
+  "Promotion Ready": "false",
+  "Readback Evidence Reference": "local:separate-readback-pending",
+  "Recovery Mode": "none",
+  "Recovery Pair Handoff Ready": "false",
+  "Recovery Timestamp": null,
+  "Substantive Candidate Ready": "false"
+}

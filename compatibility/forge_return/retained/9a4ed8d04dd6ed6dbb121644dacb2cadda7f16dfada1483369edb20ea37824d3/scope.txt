@@ -1,0 +1,3 @@
+Local implementation/test scope follows the user's agreement in the conversation.
+This note has no platform signature or message identifier and does not authenticate institutional authority.
+The input and header/registry context are synthetic. Returned/dormant refer only to this local child.
